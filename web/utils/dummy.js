@@ -61,6 +61,20 @@ module.exports = {
                 name: "Leeroy Jenkins",
                 number: "1098765432",
             }
+        ],
+        
+        message: [
+            {
+                id: 1,
+                body: "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+                recipient: "+447769774859"
+            },
+            {
+                id: 2,
+                body: "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+                recipient: "+447783109327"
+            }
+            
         ]
     }
 };
