@@ -10,6 +10,17 @@ const firebase = require('firebase-admin');
 module.exports = function(app) {
     
     
+    
+    // Load our secrets file & setup firebase
+    const serviceAccount = require('../../secrets/firebase.json');
+    firebase.initializeApp({
+        credential: firebase.credential.cert(serviceAccount),
+        databaseURL: "https://sms-relay-a42ab.firebaseio.com"
+    });
+    
+    
+    
+    
     /**
      * @api {post} announcement/send/ AnnouncementSend
      * @apiName AnnouncementSend
@@ -19,12 +30,7 @@ module.exports = function(app) {
         
         // TODO: Check params ...
         
-        // Load our secrets file & setup firebase
-        const serviceAccount = require('../../secrets/firebase.json');
-        firebase.initializeApp({
-            credential: firebase.credential.cert(serviceAccount),
-            databaseURL: "https://sms-relay-a42ab.firebaseio.com"
-        });
+        
         
         
         // A static token for now
