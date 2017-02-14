@@ -12,7 +12,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationIndex
+     * @api {get} /organisations OrganisationIndex
+     * @apiName OrganisationIndex
+     * @apiGroup Organisation
      */
     app.get('/organisations', function(req, res) {
         
@@ -23,7 +25,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationCreate
+     * @api {post} /organisation/add OrganisationCreate
+     * @apiName OrganisationCreate
+     * @apiGroup Organisation
      */
     app.post('/organisation/add', function(req, res) {
         
@@ -40,7 +44,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationShow
+     * @api {get} /organisation/:id OrganisationShow
+     * @apiName OrganisationShow
+     * @apiGroup Organisation
      */
     app.get('/organisation/:id', function(req, res) {
         
@@ -56,7 +62,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationDonorIndex
+     * @api {get} /organisation/:id/donors OrganisationDonorIndex
+     * @apiName OrganisationDonorIndex
+     * @apiGroup Organisation
      */
     app.get('/organisation/:id/donors', function(req, res) {
         
@@ -72,7 +80,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationMemberIndex
+     * @api {get} /organisation/:id/members OrganisationMemberIndex
+     * @apiName OrganisationMemberIndex
+     * @apiGroup Organisation
      */
     app.get('/organisation/:id/members', function(req, res) {
         
@@ -87,7 +97,9 @@ module.exports = function(app) {
     
     
     /*
-     *  OrganisationDonorCreate
+     * @api {post} /organisation/:id/donor/add OrganisationDonorCreate
+     * @apiName OrganisationDonorCreate
+     * @apiGroup Organisation
      */
     app.post('/organisation/:id/donor/add', function(req, res) {
         

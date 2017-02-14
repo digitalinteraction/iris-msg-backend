@@ -8,7 +8,9 @@ module.exports = function(app) {
     
     
     /*
-     *  Member Index route
+     * @api {get} /member MemberIndex
+     * @apiName MemberIndex
+     * @apiGroup Member
      */
     app.get('/member', function(req, res) {
         
@@ -18,7 +20,9 @@ module.exports = function(app) {
     
     
     /*
-     *  MemberInvite
+     * @api {post} /member/invite MemberInvite
+     * @apiName MemberInvite
+     * @apiGroup Member
      */
     app.post('/member/invite', function(req, res) {
         

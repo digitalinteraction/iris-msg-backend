@@ -8,7 +8,9 @@ module.exports = function(app) {
     
     
     /**
-     *  AnnouncementSend
+     * @api {post} /announcement/send AnnouncementSend
+     * @apiName AnnouncementSend
+     * @apiGroup Announcement
      */
     app.post('/announcement/send', function(req, res) {
         
@@ -19,7 +21,9 @@ module.exports = function(app) {
     
     
     /**
-     *  MessageResponse
+     * @api {post} /message/response MessageResponse
+     * @apiName MessageResponse
+     * @apiGroup Announcement
      */
     app.post('/message/response', function(req, res) {
         
@@ -29,7 +33,14 @@ module.exports = function(app) {
     });
     
     
+    /**
+     * @api {get} /announcement/:id/messages Request User information
+     * @apiName AnnouncementMessages
+     * @apiGroup Announcement
+     */
     app.get('/announcement/:id/messages', function(req, res) {
+        
+        // TODO: Check params ...
         
         api.success(res, dummy.list.message);
     });

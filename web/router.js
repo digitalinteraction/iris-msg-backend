@@ -22,9 +22,21 @@ function configureRouter(object, app) {
 
 module.exports = function(app) {
     
+    
+    
+    // Enable cross-origin stuff
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+    
+    
+    
     // Configure routes from the controllers
     const routes = require('./controllers');
     configureRouter(routes, app);
+    
     
     
     
