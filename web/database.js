@@ -46,7 +46,7 @@ function registerModels(object, orm) {
             registerModels(object[key], app);
         }
         else {
-            
+            orm.registerModel(object[key]);
         }
     }
 }

@@ -40,7 +40,7 @@ module.exports = function(app) {
         // Define the payload of our message
         var payload = {
             data: {
-                title: '1',
+                id: '1',
             }
         };
         
