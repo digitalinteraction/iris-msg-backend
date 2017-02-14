@@ -13,6 +13,11 @@ services:
       - mysql
     volumes:
       - ./web:/app/web
+    env_file:
+      - web/secrets/secrets.env
+    environment:
+      SQL_URL: 'mysql://user:secret@mysql/relay-server'
+      NODE_ENV: 'dev'
   
   mysql:
     image: mysql:latest

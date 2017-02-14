@@ -30,7 +30,7 @@ module.exports = {
                 name: 'Greek Solidary Movement'
             },
             {
-                id: 2,
+                id: 3,
                 name: 'Movement of Greek Solidarity'
             }
         ],

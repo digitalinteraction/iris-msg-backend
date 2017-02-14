@@ -24,7 +24,7 @@ EXPOSE 8080
 COPY web /app/web
 
 
-RUN node node_modules/.bin/apidoc -i web/ -o api/
+RUN node node_modules/.bin/apidoc -i web/ -o api/ --silent
 
 
 CMD [ "node_modules/.bin/nodemon", "web/server.js" ]

@@ -23,6 +23,8 @@ setupDatabase.then(function(something) {
 }, function(error) {
     
     console.log('Couldn\'t connect to db');
+    console.log(error);
+    // throw error;
 });
 
 // Other setup ...

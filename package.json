@@ -1,7 +1,7 @@
 {
-  "name": "node-test",
+  "name": "sms-relay-server",
   "version": "1.0.0",
-  "description": "An app to test node.js",
+  "description": "The API behind the sms relay platform, responsible for handling the apps data and sending push notifications to donors.",
   "main": "server.js",
   "apidoc": {
     "title": "Relay Server API",
@@ -16,6 +16,7 @@
   "dependencies": {
     "apidoc": "^0.17.5",
     "express": "^4.13.3",
+    "firebase-admin": "^4.1.0",
     "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
     "require-directory": "^2.1.1",

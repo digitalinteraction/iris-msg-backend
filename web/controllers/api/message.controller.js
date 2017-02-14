@@ -3,6 +3,9 @@
 const api = require('../../utils/api');
 const dummy = require('../../utils/dummy');
 
+const firebase = require('firebase-admin');
+
+
 
 module.exports = function(app) {
     
@@ -16,7 +19,43 @@ module.exports = function(app) {
         
         // TODO: Check params ...
         
-        api.success(res, "Announcement sent ...");
+        // Load our secrets file & setup firebase
+        const serviceAccount = require('../../secrets/firebase.json');
+        firebase.initializeApp({
+            credential: firebase.credential.cert(serviceAccount),
+            databaseURL: "https://sms-relay-a42ab.firebaseio.com"
+        });
+        
+        
+        // A static token for now
+        var token = process.env.FRB_TEST_TOKEN;
+        
+        
+        // Define the payload of our message
+        var payload = {
+            data: {
+                title: '1',
+            }
+        };
+        
+        // Define the options of the message
+        var options = {
+            priority: "high",
+            timeToLive: 60 * 60 * 24
+        };
+        
+        
+        // Send the message
+        firebase.messaging().sendToDevice(token, payload, options)
+            .then(function(response) {
+                
+                api.success(res, response);
+            })
+            .catch(function(error) {
+                console.log("Error sending message:", error);
+                api.failure(res, "Announcement Failed!");
+            });
+        
     });
     
     
