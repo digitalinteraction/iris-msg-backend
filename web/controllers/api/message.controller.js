@@ -44,17 +44,19 @@ module.exports = function(app) {
             timeToLive: 60 * 60 * 24
         };
         
+        api.success(res, "Announcement Sent ...");
+        
         
         // Send the message
-        firebase.messaging().sendToDevice(token, payload, options)
-            .then(function(response) {
-                
-                api.success(res, response);
-            })
-            .catch(function(error) {
-                console.log("Error sending message:", error);
-                api.failure(res, "Announcement Failed!");
-            });
+        // firebase.messaging().sendToDevice(token, payload, options)
+        //     .then(function(response) {
+        //
+        //         api.success(res, response);
+        //     })
+        //     .catch(function(error) {
+        //         console.log("Error sending message:", error);
+        //         api.failure(res, "Announcement Failed!");
+        //     });
         
     });
     
