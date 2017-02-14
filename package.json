@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "express": "^4.13.3",
+    "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
+    "require-directory": "^2.1.1",
     "sails-mysql": "^0.11.5",
     "waterline": "^0.11.8"
   },

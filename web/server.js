@@ -1,20 +1,30 @@
 /*jshint esversion: 6 */
 
-(function(express) {
-    'use strict';
+
+// Imports
+const express = require('express');
+const setupRoutes = require('./router');
+const setupDatabase = require('./database');
+
+
+
+
+
+// App
+const app = express();
+
+
+// Setup db ... ?
+setupDatabase.then(function(something) {
     
-    // Constants
-    const PORT = 80;
+    console.log('connected!');
+    setupRoutes(app);
     
-    // App
-    const app = express();
-    app.get('/', function (req, res) {
-        res.send('<h1>SMS Relay Server</h1>');
-    });
+}, function(error) {
     
-    
-    // Start app
-    app.listen(PORT);
-    console.log('Running on http://localhost:' + PORT);
-    
-})(require('express'));
+    console.log('Couldn\'t connect to db');
+});
+
+// Other setup ...
+
+// ...
