@@ -1,0 +1,19 @@
+{
+  "name": "node-test",
+  "version": "1.0.0",
+  "description": "An app to test node.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node web/server.js",
+    "nodemon": "node nodemon"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "nodemon": "^1.11.0",
+    "sails-mysql": "^0.11.5",
+    "waterline": "^0.11.8"
+  },
+  "author": "robb-j",
+  "license": "ISC"
+}

@@ -1,0 +1,27 @@
+version: '2'
+
+volumes:
+  database_data:
+    driver: local
+
+services:
+  web:
+    build: .
+    ports:
+      - 80
+    links:
+      - mysql
+    volumes:
+      - ./web:/app/web
+  
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - database_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: relay-server
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
