@@ -5,8 +5,8 @@
   "main": "server.js",
   "apidoc": {
     "title": "Relay Server API",
-    "url": "192.168.40.43:3000",
-    "sampleUrl": "http://localhost:3000"
+    "url": "192.168.40.43:3000/",
+    "sampleUrl": "/"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

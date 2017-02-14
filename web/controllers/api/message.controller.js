@@ -8,7 +8,7 @@ module.exports = function(app) {
     
     
     /**
-     * @api {post} /announcement/send AnnouncementSend
+     * @api {post} announcement/send/ AnnouncementSend
      * @apiName AnnouncementSend
      * @apiGroup Announcement
      */
@@ -21,7 +21,7 @@ module.exports = function(app) {
     
     
     /**
-     * @api {post} /message/response MessageResponse
+     * @api {post} message/response/ MessageResponse
      * @apiName MessageResponse
      * @apiGroup Announcement
      */
@@ -34,7 +34,7 @@ module.exports = function(app) {
     
     
     /**
-     * @api {get} /announcement/:id/messages Request User information
+     * @api {get} announcement/:id/messages/ Request User information
      * @apiName AnnouncementMessages
      * @apiGroup Announcement
      */

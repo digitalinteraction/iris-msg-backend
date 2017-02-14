@@ -8,7 +8,7 @@ module.exports = function(app) {
     
     
     /**
-     * @api {get} /member MemberIndex
+     * @api {get} member/ MemberIndex
      * @apiName MemberIndex
      * @apiGroup Member
      */
@@ -20,7 +20,7 @@ module.exports = function(app) {
     
     
     /**
-     * @api {post} /member/invite MemberInvite
+     * @api {post} member/invite/ MemberInvite
      * @apiName MemberInvite
      * @apiGroup Member
      */
