@@ -6,7 +6,7 @@ module.exports = {
         org: {
             id: 1,
             name: 'Solidary Greek Movement',
-            desc: 'Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.',
+            description: 'Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.',
             members: 7,
             donors: 42,
             messages: 1337,

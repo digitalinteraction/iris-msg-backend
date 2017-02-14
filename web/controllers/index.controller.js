@@ -1,5 +1,8 @@
 /*jshint esversion: 6 */
 
+const api = require('../utils/api');
+const dummy = require('../utils/dummy');
+
 
 module.exports = function(app) {
     
@@ -10,15 +13,16 @@ module.exports = function(app) {
      */
     app.get('/', function(req, res) {
         
-        res.send({
-            meta: {
-                success: 1,
-                messages: []
-            },
-            data: {
-                msg: 'SMS Relay Server v0',
-                status: 'wip'
-            }
+        api.success(res, {
+            msg: 'SMS Relay Server v0',
+            status: 'wip'
         });
     });
+    
+    
+    
+    /*
+     *  Setup routes for apidocs
+     */
+    app.use('/docs', require('express').static('api'));
 };

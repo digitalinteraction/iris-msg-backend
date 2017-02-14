@@ -1,5 +1,8 @@
 /*jshint esversion: 6 */
 
+const api = require('./utils/api');
+const dummy = require('./utils/dummy');
+
 
 // Constants
 const PORT = 80;
@@ -37,6 +40,13 @@ module.exports = function(app) {
     const routes = require('./controllers');
     configureRouter(routes, app);
     
+    
+    
+    // Configure error pages
+    app.use(function(req, res, next){
+      
+      api.failure(res, 'Endpoint not found', req.url);
+    });
     
     
     

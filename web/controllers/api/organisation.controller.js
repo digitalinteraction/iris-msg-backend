@@ -11,7 +11,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {get} /organisations OrganisationIndex
      * @apiName OrganisationIndex
      * @apiGroup Organisation
@@ -24,7 +24,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {post} /organisation/add OrganisationCreate
      * @apiName OrganisationCreate
      * @apiGroup Organisation
@@ -43,7 +43,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {get} /organisation/:id OrganisationShow
      * @apiName OrganisationShow
      * @apiGroup Organisation
@@ -61,7 +61,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {get} /organisation/:id/donors OrganisationDonorIndex
      * @apiName OrganisationDonorIndex
      * @apiGroup Organisation
@@ -79,7 +79,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {get} /organisation/:id/members OrganisationMemberIndex
      * @apiName OrganisationMemberIndex
      * @apiGroup Organisation
@@ -96,7 +96,7 @@ module.exports = function(app) {
     
     
     
-    /*
+    /**
      * @api {post} /organisation/:id/donor/add OrganisationDonorCreate
      * @apiName OrganisationDonorCreate
      * @apiGroup Organisation
