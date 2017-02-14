@@ -7,6 +7,10 @@ const mysqlAdapter = require('sails-mysql');
 
 
 
+console.log(Waterline.Model);
+
+
+
 // Database Config
 const dbConfig = {
     
@@ -33,16 +37,31 @@ const dbConfig = {
 
 
 
+function registerModels(object, orm) {
+    
+    for (var key in object) {
+        
+        // If a nested object, register recursively
+        if (object[key].constructor === Object) {
+            registerModels(object[key], app);
+        }
+        else {
+            
+        }
+    }
+}
+
+
+
 module.exports = new Promise(function(resolve, reject) {
     
     // Setup the orm
-    // const orm = new Waterline();
+    const orm = new Waterline();
     
     //  Load our modules
-    // const models = require('./models');
+    const models = require('./models');
     
-    // console.log('A');
-    // console.log(models);
+    console.log(models);
     
     console.log('connecting to db ... ');
     resolve();
