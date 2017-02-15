@@ -24,7 +24,7 @@ module.exports = Waterline.Collection.extend({
             type: 'datetime'
         },
 
-        exiresOn: {
+        expiresOn: {
             type: 'datetime'
         },
 
