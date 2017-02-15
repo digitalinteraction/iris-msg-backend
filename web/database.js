@@ -5,6 +5,7 @@
 const _ = require('lodash');
 const Waterline = require('waterline');
 const mysqlAdapter = require('sails-mysql');
+const dummyModel = require('./utils/dummyModel');
 
 
 
@@ -62,6 +63,37 @@ module.exports = new Promise(function(resolve, reject) {
         if(error) {
             reject(error);
         }
+        
+        
+        models.collections.organisations.destroy({}).exec(function(error){
+            if (error) {
+                reject(error);
+            }
+            
+            models.collections.organisations.create(dummyModel.organisation, function(error){
+                if (error) reject(error);
+            });
+        });
+        
+        models.collections.members.destroy({}).exec(function(error){
+            if (error) {
+                reject(error);
+            }
+            
+            models.collections.members.create(dummyModel.member, function(error){
+                if (error) reject(error);
+            });
+        });
+        
+        models.collections.organisation_members.destroy({}).exec(function(error){
+            if (error) {
+                console.log(error);
+            }
+            
+            models.collections.organisation_members.create(dummyModel.organisationMember, function(error){
+                if (error) reject(error);
+            });
+        });
         
         resolve({
             orm: orm,
