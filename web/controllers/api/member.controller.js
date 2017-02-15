@@ -5,7 +5,7 @@ const dummy = require('../../utils/dummy');
 const client = require("twilio")(process.env.TWILIO_SID, process.env.TWILIO_SECRET);
 var twilio_account = client.accounts(process.env.TWILIO_ACCOUNT_SID);
 
-module.exports = function(app) {
+module.exports = function(app, db) {
     
     
     /**

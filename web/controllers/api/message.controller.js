@@ -7,7 +7,7 @@ const firebase = require('firebase-admin');
 
 
 
-module.exports = function(app) {
+module.exports = function(app, db) {
     
     
     
