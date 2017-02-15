@@ -17,7 +17,7 @@ module.exports = {
     
     failure: function(res, messages) {
         
-        if (!_.isArray(Array)) {
+        if (!_.isArray(messages)) {
             messages = [messages];
         }
         

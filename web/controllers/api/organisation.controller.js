@@ -30,9 +30,56 @@ module.exports = function(app, db) {
      */
     app.post('/organisation/add', function(req, res) {
         
-        var orgId = req.params.orgId;
-        
-        api.success(res, dummy.model.org);
+        req.check({
+            'name': {
+                in: 'body',
+                notEmpty: true,
+                isLength: {
+                    options: [{ min: 3, max: 50 }],
+                    errorMessage: 'Organisation name must be between 3 and 50 characters in length'
+                },
+                errorMessage: 'Organisation name invalid'
+            },
+            'description': {
+                in: 'body',
+                isLength: {
+                    options: [{ min: 0, max: 300 }],
+                    errorMessage: 'Organisation name must be less than 300 characters in length'
+                },
+                errorMessage: 'Organisation description invalid'
+            },
+            'phone': {
+                in: 'body',
+                notEmpty: true,
+                errorMessage: 'Organisation phone invalid'
+            },
+            'quota': {
+                in: 'body',
+                notEmpty: true,
+                errorMessage: 'Organisation quota invalid'
+            }
+        });
+
+        req.asyncValidationErrors().then(function() {
+            var name = req.params.name;
+            var description = req.params.description;
+            var phone = req.params.phone;
+            var quota = req.params.quota;
+
+            api.success(res, dummy.model.org);
+        }, function(errors) {
+            api.failure(res, _.map(errors, 'msg'));
+        });
+
+        // req.getValidationResult().then(function(result) {
+        //     if (!result.isEmpty()) {
+        //         api.failure(res, _.map(result.array(), 'msg'));
+        //     }
+        //     else {
+                
+        //     }
+        // });
+
     });
     
     app.get('/organisation/add', function(req, res) {

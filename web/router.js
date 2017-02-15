@@ -5,16 +5,17 @@
 const _ = require('lodash');
 const api = require('./utils/api');
 const dummy = require('./utils/dummy');
-
+const validator = require('express-validator');
+const bodyParser = require('body-parser');
 
 // Constants
 const PORT = 80;
 
 
 function configureRouter(object, app, db) {
-    
+
     for (var key in object) {
-        
+
         // If a nested object, add it recursively
         if (object[key].constructor === Object) {
             configureRouter(object[key], app, db);
@@ -27,7 +28,13 @@ function configureRouter(object, app, db) {
 
 
 module.exports = function(app, db) {
-    
+
+    // Setup body parser
+    app.use(validator());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json())
+
+
     // Enable cross-origin stuff
     app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -35,23 +42,23 @@ module.exports = function(app, db) {
         res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         next();
     });
-    
-    
-    
+
+
+
     // Configure routes from the controllers
     const routes = require('./controllers');
     configureRouter(routes, app, db);
-    
-    
-    
+
+
+
     // Configure error pages
     app.use(function(req, res, next){
         api.failure(res, 'Endpoint not found', req.url);
     });
-    
-    
-    
-    
+
+
+
+
     // Start app
     app.listen(PORT);
     console.log('Running on http://localhost:' + PORT);
