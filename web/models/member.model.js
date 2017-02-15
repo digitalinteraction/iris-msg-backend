@@ -6,7 +6,7 @@ const Waterline = require('waterline');
 
 
 module.exports = Waterline.Collection.extend({
-    identity: 'organisations',
+    identity: 'members',
     connection: 'mysqlAdapter',
 
     attributes: {
@@ -16,8 +16,9 @@ module.exports = Waterline.Collection.extend({
             required: true
         },
         
-        description: {
-            type: 'string'
+        phone: {
+            type: 'string',
+            required: true
         }
     }
 });

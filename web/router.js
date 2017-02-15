@@ -1,5 +1,8 @@
 /*jshint esversion: 6 */
 
+
+// Imports
+const _ = require('lodash');
 const api = require('./utils/api');
 const dummy = require('./utils/dummy');
 const validator = require('express-validator');

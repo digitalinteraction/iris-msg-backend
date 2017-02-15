@@ -2,12 +2,11 @@
 
 
 // Imports
+const _ = require('lodash');
 const Waterline = require('waterline');
 const mysqlAdapter = require('sails-mysql');
+const dummyModel = require('./utils/dummyModel');
 
-
-
-console.log(Waterline.Model);
 
 
 
@@ -20,11 +19,8 @@ const dbConfig = {
     },
     
     connections: {
-        myLocalDisk: {
-          adapter: 'disk'
-        },
         
-        myLocalMySql: {
+        mysqlAdapter: {
             adapter: 'mysql',
             url: process.env.SQL_URL,
         }
@@ -41,13 +37,7 @@ function registerModels(object, orm) {
     
     for (var key in object) {
         
-        // If a nested object, register recursively
-        if (object[key].constructor === Object) {
-            registerModels(object[key], app);
-        }
-        else {
-            orm.registerModel(object[key]);
-        }
+        orm.loadCollection(object[key]);
     }
 }
 
@@ -55,14 +45,65 @@ function registerModels(object, orm) {
 
 module.exports = new Promise(function(resolve, reject) {
     
+    
+    var org = require('./models/organisation.model.js');
+    
+    
     // Setup the orm
-    const orm = new Waterline();
+    var orm = new Waterline();
     
-    //  Load our modules
-    const models = require('./models');
     
-    console.log(models);
+    //  Load our models
+    registerModels(require('./models'), orm);
     
-    console.log('connecting to db ... ');
-    resolve();
+    
+    // initialize the orm
+    orm.initialize(dbConfig, function(error, models) {
+        
+        if(error) {
+            reject(error);
+        }
+        
+        
+        models.collections.organisations.destroy({}).exec(function(error){
+            if (error) {
+                reject(error);
+            }
+            
+            models.collections.organisations.create(dummyModel.organisation, function(error){
+                if (error) reject(error);
+            });
+        });
+        
+        models.collections.members.destroy({}).exec(function(error){
+            if (error) {
+                reject(error);
+            }
+            
+            models.collections.members.create(dummyModel.member, function(error){
+                if (error) reject(error);
+            });
+        });
+        
+        models.collections.organisation_members.destroy({}).exec(function(error){
+            if (error) {
+                console.log(error);
+            }
+            
+            models.collections.organisation_members.create(dummyModel.organisationMember, function(error){
+                if (error) reject(error);
+            });
+        });
+        
+        resolve({
+            orm: orm,
+            models: models.collections,
+            connections: models.connections
+        });
+    });
+    
+    
+    
+    // console.log('connecting to db ... ');
+    // resolve();
 });
