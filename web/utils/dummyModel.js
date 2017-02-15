@@ -13,7 +13,8 @@ module.exports = {
         id: 1,
         organisationId: 1,
         memberId: 1,
-        role: "ORGANISER"
+        role: "ORGANISER",
+        code: null
     },
     
     donor: {

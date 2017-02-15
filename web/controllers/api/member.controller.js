@@ -43,14 +43,55 @@ module.exports = function(app, db) {
             .exec(function (errors, data){
 
                 if (errors) {
-                    return api.failure(res, errors);
+                    api.failure(res, errors);
                 }
                 if (!data) {
-                    return api.failure(res, ['User not found']);
+                    api.failure(res, ['User not found']);
                 }
 
-                return api.success(res, {from: process.env.TWILIO_NUMBER});
-                
+                var member = data;
+                var verificationCode = _.random(1000, 9999);
+
+                var now = new Date (),
+                expiryDatetime = new Date ( now );
+                expiryDatetime.setMinutes ( now.getMinutes() + 5 );
+
+                var verificationRecord = {
+                    memberId: member.id,
+                    code: verificationCode,
+                    expiresOn: expiryDatetime
+                }
+
+                db.models.verifications.create(verificationRecord, function(errors){
+                    if (errors) {
+                        api.failure(res, errors);
+                    }
+
+                    twilio_account.messages.create({
+                        to: member.phone,
+                        from: process.env.TWILIO_NUMBER,
+                        body: verificationCode
+                    }, (error, messageData) => {
+                        
+                        if (error) {
+                            console.log(error);
+                        }
+                        
+                        if (messageData) {
+                            verificationRecord.sId = messageData.sid;
+                            
+                            db.models.verifications.create(verificationRecord, function(errors){
+                                if (errors) {
+                                    api.failure(res, errors);
+                                }
+                            });
+                        }
+
+                    });
+
+                    api.success(res, {from: process.env.TWILIO_NUMBER});
+                });
+
             });
         }, function(errors) {
             api.failure(res, _.map(errors, 'msg'));
@@ -104,17 +145,6 @@ module.exports = function(app, db) {
             api.failure(res, _.map(errors, 'msg'));
         });
     });
-
-    // var verificationCode = _.random(1000, 9999);
-    // twilio_account.messages.create({
-    //     to: phone,
-    //     from: process.env.TWILIO_NUMBER,
-    //     body: verificationCode
-    // }, (err, messageData) => {
-    //     // print SID of the message you just sent
-    //     console.log(err);
-    //     console.log(messageData.sid);
-    // });
     
     
     /**

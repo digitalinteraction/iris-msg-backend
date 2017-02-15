@@ -22,6 +22,10 @@ module.exports = Waterline.Collection.extend({
         role: {
             type: 'string',
             enum: ['ORGANISER', 'DONOR', 'SUBSCRIBER']
+        },
+
+        code: {
+            type: 'integer'
         }
     }
 });
