@@ -27,36 +27,94 @@ module.exports = function(app, db) {
 
         req.check({
             'id': {
-                in: 'body',
+                in: 'params',
                 notEmpty: true,
-                isInt : {
+                isInt: {
                     errorMessage: 'Invalid member id format'
                 }, 
-                errorMessage: 'Member id invalid'
+                errorMessage: 'Member id required'
             }
         });
 
         req.asyncValidationErrors().then(function() {
-            api.success(res, "Member Index ...");
 
-            var verificationCode = _.random(1000, 9999);
+            var memberId = req.params.id;
+            db.models.members.findOne({id: memberId})
+            .exec(function (errors, data){
 
-            // twilio_account.messages.create({
-            //     to: phone,
-            //     from: process.env.TWILIO_NUMBER,
-            //     body: verificationCode
-            // }, (err, messageData) => {
-            //     // print SID of the message you just sent
-            //     console.log(err);
-            //     console.log(messageData.sid);
-            // });
+                if (errors) {
+                    return api.failure(res, errors);
+                }
+                if (!data) {
+                    return api.failure(res, ['User not found']);
+                }
 
-            api.success(res, dummy.model.org);
+                return api.success(res, {from: process.env.TWILIO_NUMBER});
+                
+            });
         }, function(errors) {
             api.failure(res, _.map(errors, 'msg'));
         });
     });
-    
+
+
+    /**
+     * @api {post} member/:id/verify/check MemberVerifyCheck
+     * @apiName MemberVerifyCheck 
+     * @apiGroup Member
+     */
+    app.post('/member/:id/verify/check', function(req, res) {
+
+        req.check({
+            'id': {
+                in: 'params',
+                notEmpty: true,
+                isInt: {
+                    errorMessage: 'Invalid member id format'
+                }, 
+                errorMessage: 'Member id required'
+            },
+            'code': {
+                in: 'body',
+                notEmpty: true,
+                isInt: {
+                    errorMessage: 'Invalid code format'
+                },
+                errorMessage: 'Code required'
+            }
+        });
+
+        req.asyncValidationErrors().then(function() {
+
+            var memberId = req.params.id;
+            db.models.members.findOne({id: memberId})
+            .exec(function (errors, data){
+
+                if (errors) {
+                    return api.failure(res, errors);
+                }
+                if (!data) {
+                    return api.failure(res, ['User not found']);
+                }
+
+                return api.success(res, {from: process.env.TWILIO_NUMBER});
+                
+            });
+        }, function(errors) {
+            api.failure(res, _.map(errors, 'msg'));
+        });
+    });
+
+    // var verificationCode = _.random(1000, 9999);
+    // twilio_account.messages.create({
+    //     to: phone,
+    //     from: process.env.TWILIO_NUMBER,
+    //     body: verificationCode
+    // }, (err, messageData) => {
+    //     // print SID of the message you just sent
+    //     console.log(err);
+    //     console.log(messageData.sid);
+    // });
     
     
     /**
