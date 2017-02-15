@@ -2,7 +2,8 @@
 
 const api = require('./utils/api');
 const dummy = require('./utils/dummy');
-
+const validator = require('express-validator');
+const bodyParser = require('body-parser');
 
 // Constants
 const PORT = 80;
@@ -25,8 +26,6 @@ function configureRouter(object, app) {
 
 module.exports = function(app) {
     
-    
-    
     // Enable cross-origin stuff
     app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -35,7 +34,8 @@ module.exports = function(app) {
         next();
     });
     
-    
+    app.use(validator([]));
+    app.use(bodyParser.urlencoded({ extended: true }));
     
     // Configure routes from the controllers
     const routes = require('./controllers');

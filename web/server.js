@@ -6,13 +6,12 @@ const express = require('express');
 const setupRoutes = require('./router');
 const setupDatabase = require('./database');
 
-
+global._ = require('lodash');
 
 
 
 // App
 const app = express();
-
 
 // Setup db ... ?
 setupDatabase.then(function(something) {
