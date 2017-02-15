@@ -15,7 +15,9 @@ module.exports = function(app, db) {
      */
     app.get('/organisations', function(req, res) {
         
-        api.success(res, dummy.list.org);
+        db.models.organisations.find().then(function(orgs) {
+            api.success(res, orgs);
+        });
     });
     
     
@@ -95,11 +97,25 @@ module.exports = function(app, db) {
     app.get('/organisation/:id', function(req, res) {
         
         if (isNaN(req.params.id)) {
-            
             api.failure(res, "Invalid Organisation Id");
         }
         else {
-            api.success(res, dummy.model.org);
+            
+            db.models.organisations.findOne(req.params.id).then(function(org) {
+                
+                if (org) {
+                    api.success(res, org);
+                }
+                else {
+                    api.failure(res, 'Organisation not found');
+                }
+                
+            }, function(error) {
+                
+                api.failure(res, error);
+            });
+            
+            // api.success(res, dummy.model.org);
         }
     });
     
