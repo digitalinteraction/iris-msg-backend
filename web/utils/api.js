@@ -15,7 +15,7 @@ module.exports = {
         });
     },
     
-    failure: function(res, messages, data) {
+    failure: function(res, messages) {
         
         if (!_.isArray(Array)) {
             messages = [messages];
@@ -25,8 +25,7 @@ module.exports = {
             meta: {
                 success: false,
                 messages: messages
-            },
-            data: data
+            }
         });
     },
     
