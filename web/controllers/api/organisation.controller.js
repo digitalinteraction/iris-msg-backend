@@ -34,7 +34,6 @@ module.exports = function(app) {
      */
     app.post('/organisation/add', function(req, res) {
         
-        console.log(req.body);
         req.check({
             'name': {
                 in: 'body',
@@ -71,17 +70,17 @@ module.exports = function(app) {
             var phone = req.params.phone;
             var quota = req.params.quota;
 
-            var verificationCode = _.random(1000, 10000);
+            var verificationCode = _.random(1000, 9999);
 
-            twilio_account.messages.create({
-                to: phone,
-                from: process.env.TWILIO_NUMBER,
-                body: verificationCode
-            }, (err, messageData) => {
-                // print SID of the message you just sent
-                console.log(err);
-                console.log(messageData.sid);
-            });
+            // twilio_account.messages.create({
+            //     to: phone,
+            //     from: process.env.TWILIO_NUMBER,
+            //     body: verificationCode
+            // }, (err, messageData) => {
+            //     // print SID of the message you just sent
+            //     console.log(err);
+            //     console.log(messageData.sid);
+            // });
 
             api.success(res, dummy.model.org);
         }, function(errors) {

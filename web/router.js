@@ -25,6 +25,12 @@ function configureRouter(object, app) {
 
 
 module.exports = function(app) {
+
+    // Setup body parser
+    app.use(validator());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json())
+
     
     // Enable cross-origin stuff
     app.use(function(req, res, next) {
@@ -33,9 +39,8 @@ module.exports = function(app) {
         res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         next();
     });
+
     
-    app.use(validator([]));
-    app.use(bodyParser.urlencoded({ extended: true }));
     
     // Configure routes from the controllers
     const routes = require('./controllers');
