@@ -11,24 +11,22 @@ const dummy = require('./utils/dummy');
 const PORT = 80;
 
 
-function configureRouter(object, app) {
+function configureRouter(object, app, db) {
     
     for (var key in object) {
         
         // If a nested object, add it recursively
         if (object[key].constructor === Object) {
-            configureRouter(object[key], app);
+            configureRouter(object[key], app, db);
         }
-        else {
-            object[key](app);
+        else if (_.isFunction(object[key])){
+            object[key](app, db);
         }
     }
 }
 
 
-module.exports = function(app) {
-    
-    
+module.exports = function(app, db) {
     
     // Enable cross-origin stuff
     app.use(function(req, res, next) {
@@ -42,14 +40,13 @@ module.exports = function(app) {
     
     // Configure routes from the controllers
     const routes = require('./controllers');
-    configureRouter(routes, app);
+    configureRouter(routes, app, db);
     
     
     
     // Configure error pages
     app.use(function(req, res, next){
-      
-      api.failure(res, 'Endpoint not found', req.url);
+        api.failure(res, 'Endpoint not found', req.url);
     });
     
     

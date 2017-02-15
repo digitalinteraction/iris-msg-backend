@@ -15,10 +15,10 @@ const app = express();
 
 
 // Setup db ... ?
-setupDatabase.then(function(something) {
+setupDatabase.then(function(db) {
     
     console.log('connected!');
-    setupRoutes(app);
+    setupRoutes(app, db);
     
 }, function(error) {
     

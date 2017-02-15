@@ -4,7 +4,7 @@ const api = require('../../utils/api');
 const dummy = require('../../utils/dummy');
 
 
-module.exports = function(app) {
+module.exports = function(app, db) {
     
     
     /**

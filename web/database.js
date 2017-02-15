@@ -65,35 +65,37 @@ module.exports = new Promise(function(resolve, reject) {
         }
         
         
-        models.collections.organisations.destroy({}).exec(function(error){
-            if (error) {
-                reject(error);
-            }
-            
-            models.collections.organisations.create(dummyModel.organisation, function(error){
-                if (error) reject(error);
-            });
-        });
-        
-        models.collections.members.destroy({}).exec(function(error){
-            if (error) {
-                reject(error);
-            }
-            
-            models.collections.members.create(dummyModel.member, function(error){
-                if (error) reject(error);
-            });
-        });
-        
-        models.collections.organisation_members.destroy({}).exec(function(error){
-            if (error) {
-                console.log(error);
-            }
-            
-            models.collections.organisation_members.create(dummyModel.organisationMember, function(error){
-                if (error) reject(error);
-            });
-        });
+        //
+        //
+        // models.collections.organisations.destroy({}).exec(function(error){
+        //     if (error) {
+        //         reject(error);
+        //     }
+        //
+        //     models.collections.organisations.create(dummyModel.organisation, function(error){
+        //         if (error) reject(error);
+        //     });
+        // });
+        //
+        // models.collections.members.destroy({}).exec(function(error){
+        //     if (error) {
+        //         reject(error);
+        //     }
+        //
+        //     models.collections.members.create(dummyModel.member, function(error){
+        //         if (error) reject(error);
+        //     });
+        // });
+        //
+        // models.collections.organisation_members.destroy({}).exec(function(error){
+        //     if (error) {
+        //         console.log(error);
+        //     }
+        //
+        //     models.collections.organisation_members.create(dummyModel.organisationMember, function(error){
+        //         if (error) reject(error);
+        //     });
+        // });
         
         resolve({
             orm: orm,
@@ -101,9 +103,4 @@ module.exports = new Promise(function(resolve, reject) {
             connections: models.connections
         });
     });
-    
-    
-    
-    // console.log('connecting to db ... ');
-    // resolve();
 });
