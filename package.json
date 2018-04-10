@@ -1,31 +1,53 @@
 {
-  "name": "sms-relay-server",
-  "version": "1.0.0",
-  "description": "The API behind the sms relay platform, responsible for handling the apps data and sending push notifications to donors.",
-  "main": "server.js",
-  "apidoc": {
-    "title": "Relay Server API",
-    "url": "192.168.40.43:3000/",
-    "sampleUrl": "/"
-  },
+  "name": "iris-api",
+  "version": "0.1.0",
+  "description": "Project setup by robb-j/ts-node-base",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node web/server.js",
-    "nodemon": "node nodemon"
-  },
-  "dependencies": {
-    "apidoc": "^0.17.5",
-    "body-parser": "^1.16.1",
-    "express": "^4.13.3",
-    "express-validator": "^3.1.2",
-    "firebase-admin": "^4.1.0",
-    "lodash": "^4.17.4",
-    "nodemon": "^1.11.0",
-    "require-directory": "^2.1.1",
-    "sails-mysql": "^0.11.5",
-    "twilio": "^2.11.1",
-    "waterline": "^0.11.8"
+    "build": "tsc",
+    "coverage": "jest --coverage",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node -r dotenv/config' src/index.ts",
+    "lint": "npx tslint -p .",
+    "make:image": "node tools/buildAndPush.js",
+    "preversion": "npm run lint -s && npm test -s",
+    "mongo:once": "docker run -it --rm -p 27017:27017 mongo",
+    "start": "node dist",
+    "test": "jest"
   },
   "author": "robb-j",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "api-formatter": "^0.3.0",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.1",
+    "@types/express-jwt": "0.0.40",
+    "@types/jest": "^22.2.2",
+    "@types/jsonwebtoken": "^7.2.6",
+    "jest": "^22.4.3",
+    "ts-jest": "^22.4.2",
+    "ts-node": "^5.0.1",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.8.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
 }

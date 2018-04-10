@@ -1,30 +1,18 @@
-FROM node:7.3-alpine
-
-
-#RUN apk add -q --no-cache \
-#    ssmtp \
-#    nano
-
-
-# Can use this to instal packages to a folder and delete it after (eg after build)
-# apk --no-cache add  --virtual .build-deps A B C && apk del .build-deps
-
-
-RUN mkdir -p /app
+FROM node:9-alpine as base
 WORKDIR /app
+COPY ["package.json", "package-lock.json", "tsconfig.json", "/app/"]
 
+# A builder image to compile the typescript and install modules
+FROM base as builder
+RUN npm install -s --production \
+  && mkdir -p /app/node_modules \
+  && cp -R node_modules node_modules_prod \
+  && npm install -s > /dev/null
+COPY src /app/src
+RUN npm run build -s
 
-COPY package.json /app/
-RUN npm install --silent
-
-
-EXPOSE 8080
-
-
-COPY web /app/web
-
-
-RUN node node_modules/.bin/apidoc -i web/ -o api/ --silent
-
-
-CMD [ "node_modules/.bin/nodemon", "web/server.js" ]
+# From the base, copy the dist and node modules out
+FROM base as dist
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules_prod /app/node_modules
+CMD [ "npm", "start", "-s" ]
