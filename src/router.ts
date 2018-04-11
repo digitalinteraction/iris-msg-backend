@@ -11,6 +11,9 @@ export function applyMiddleware (app: Application) {
 
 export function applyRoutes (app: Application) {
   
+  // Reusable middleware
+  let optionalJwt = middleware.jwt({ credentialsRequired: false })
+  
   // Multi-purpose routers
   let authed = Router()
   authed.use(middleware.jwt)
@@ -19,7 +22,12 @@ export function applyRoutes (app: Application) {
   app.get('/', routes.general.hello)
   
   // Auth
-  app.get('/user/me', middleware.jwt({ credentialsRequired: false }), routes.auth.me)
+  app.get('/users/me', optionalJwt, routes.auth.me)
+  app.post('/users/login-request', optionalJwt, routes.auth.loginRequest)
+  app.post('/users/login-check', optionalJwt, routes.auth.loginCheck)
+  app.post('/users/verify-request', optionalJwt, routes.auth.verifyRequest)
+  app.post('/users/verify-check', optionalJwt, routes.auth.verifyCheck)
+  app.post('/users/update-fcm', optionalJwt, routes.auth.updateFcm)
   
   // Org Management
   
