@@ -1,9 +1,0 @@
-Organisation:
-  a:
-    name: 'Org A'
-    description: 'Lorem ipsum sil dor emit ...'
-    locale: 'en-GB'
-  b:
-    name: 'Org B'
-    description: 'Lorem ipsum sil dor emit ...'
-    locale: 'en-GB'

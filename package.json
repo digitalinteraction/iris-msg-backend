@@ -12,9 +12,9 @@
     "preversion": "npm run lint -s && npm test -s",
     "mongo:once": "docker run -it --rm -p 27017:27017 mongo",
     "start": "node dist",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
+    "test:watch": "jest --runInBand --watch"
   },
   "author": "robb-j",
   "license": "ISC",
@@ -55,9 +55,9 @@
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "verbose": false,
-    "testEnvironment": "./tools/MongooseEnvironment",
-    "globalSetup": "./tools/globalTestSetup",
-    "globalTeardown": "./tools/globalTestTeardown",
+    "testEnvironment": "./tools/MongooseEnvironment.js",
+    "globalSetup": "./tools/globalTestSetup.js",
+    "globalTeardown": "./tools/globalTestTeardown.js",
     "moduleFileExtensions": [
       "ts",
       "tsx",

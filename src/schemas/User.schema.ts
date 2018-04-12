@@ -6,15 +6,15 @@ const schemaOptions = {
 
 export interface IUser extends Document {
   phoneNumber: String
-  fcmToken: String
-  verifiedOn: Date
+  fcmToken?: String
+  verifiedOn?: Date
 }
 
 export const UserSchema = new Schema({
   phoneNumber: {
     type: String,
     index: true,
-    unique: true
+    unique: false
   },
   fcmToken: {
     type: String

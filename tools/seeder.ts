@@ -1,49 +1,49 @@
-import * as mongoose from 'mongoose'
+import { Model, Document } from 'mongoose'
 import { resolve } from 'path'
 import { safeLoad } from 'js-yaml'
 import { readFile } from 'fs-extra'
 
-export async function applySeed (seedName: String) {
+export type Seed = {
+  [modelName: string]: {
+    [id: string]: Document
+  }
+}
+
+export type ModelMap = {
+  [modelName: string]: Model<Document>
+}
+
+export async function applySeed (seedName: String, models: ModelMap) {
   let path = resolve(__dirname, `../seeds/${seedName}.yml`)
   let seed = safeLoad(String(await readFile(path)))
   
   if (!seed) throw new Error('Invalid Seed')
   
   let output: any = {}
-  
-  // await Promise.all(Object.entries(seed).map(async ([modelName, seedData]) => ))
-  
-  console.log('A')
-  console.log(Object.entries(seed))
-  
-  let promises = Object.entries(seed).map(async (entry) => {
-    const [modelName, data] = entry
-    output[modelName] = await processSeed(modelName, data)
-  })
-  
-  console.log(promises)
-  
-  await Promise.all(promises)
-  
-  console.log(output)
+  await Promise.all(Object.entries(seed).map(async ([modelName, data]) => {
+    if (!models[modelName]) {
+      throw new Error(`Invalid model in seed '${modelName}'`)
+    } else {
+      output[modelName] = await seedModel(models[modelName], data)
+    }
+  }))
   
   return output
 }
 
-export async function processSeed (modelName: string, data: any): Promise<any> {
-  let Model = mongoose.model(modelName)
-  
-  if (!Model) throw new Error(`Invalid model in seed '${modelName}'`)
-  
+function clearModels (models: ModelMap) {
+  return Promise.all(Object.values(models).map(m =>
+    m.remove({})
+  ))
+}
+
+async function seedModel (Model: Model<Document>, data: any): Promise<any> {
   let names = Object.keys(data)
   let documents = Object.values(data)
   
   let models = await Model.insertMany(documents)
   
-  console.log(models)
-  
   let keyedModels: any = {}
-  
   models.forEach((model, index) => {
     keyedModels[names[index]] = model
   })

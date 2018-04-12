@@ -1,6 +1,6 @@
-import { applyRoutes } from '../router'
-import supertest = require('supertest')
-import express = require('express')
+import { applyMiddleware, applyRoutes } from '../router'
+import * as supertest from 'supertest'
+import * as express from 'express'
 
 const expectedRoutes = [
   { method: 'get', url: '/users/me' },
@@ -18,23 +18,22 @@ const expectedRoutes = [
   // { method: 'get', url: '/organisations/1/subscribers' }
 ]
 
-describe('Router', () => {
+describe('Routing', () => {
   
-  describe('#applyRoutes', () => {
-    let app: express.Application
-    let agent: supertest.SuperTest<supertest.Test>
-    beforeEach(async () => {
-      app = express()
-      applyRoutes(app)
-      agent = supertest.agent(app)
-    })
-    
-    expectedRoutes.forEach(({ method = 'get', url }) => {
-      describe(`${method.toUpperCase()}: ${url}`, () => {
-        it('should pass', async () => {
-          let { statusCode } = await (agent as any)[method](url)
-          expect(statusCode).not.toBe(404)
-        })
+  let app: express.Express
+  let agent: supertest.SuperTest<supertest.Test>
+  beforeEach(async () => {
+    app = express()
+    applyMiddleware(app)
+    applyRoutes(app)
+    agent = supertest.agent(app)
+  })
+  
+  expectedRoutes.forEach(({ method = 'get', url }) => {
+    describe(`${method.toUpperCase()}: ${url}`, () => {
+      it('should exist', async () => {
+        let { statusCode } = await (agent as any)[method](url)
+        expect(statusCode).not.toBe(404)
       })
     })
   })

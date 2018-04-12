@@ -1,13 +1,4 @@
-import { Model } from 'mongoose'
 import * as models from '../models'
-import { applySeed } from '../../tools/seeder'
-
-import { IUser } from '../schemas/User.schema'
-
-beforeAll(async () => {
-  let data = await applySeed('test')
-  console.log(data)
-})
 
 describe('Models', () => {
   describe('User', () => {

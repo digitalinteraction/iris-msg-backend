@@ -9,3 +9,14 @@ export const User = model<IUser>('User', UserSchema)
 export const Organisation = model<IOrganisation>('Organisation', OrganisationSchema)
 export const Message = model<IMessage>('Message', MessageSchema)
 export const AuthCode = model<IAuthCode>('AuthCode', AuthCodeSchema)
+
+// export default makeModels()
+//
+// export function makeModels () {
+//   return {
+//     User: model<IUser>('User', UserSchema),
+//     Organisation: model<IOrganisation>('Organisation', OrganisationSchema),
+//     Message: model<IMessage>('Message', MessageSchema),
+//     AuthCode: model<IAuthCode>('AuthCode', AuthCodeSchema)
+//   }
+// }
