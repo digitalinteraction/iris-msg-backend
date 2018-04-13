@@ -14,7 +14,7 @@ export const UserSchema = new Schema({
   phoneNumber: {
     type: String,
     index: true,
-    unique: false
+    unique: true
   },
   fcmToken: {
     type: String

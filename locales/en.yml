@@ -1,0 +1,14 @@
+# The meanings of api errors returned
+
+api:
+  general:
+    unknown: Something went wrong
+  
+  login:
+    verifyRequest:
+      badNumber: No number provided or it was invalid
+      badLocale: No locale provided or it was invalid
+
+sms:
+  login:
+    verifyRequest: Your Iris Msg verification code is {0}

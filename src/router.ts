@@ -1,12 +1,12 @@
 import { Application, Request, Response, NextFunction, Router } from 'express'
-import * as bodyParser from 'body-parser'
+import bodyParser = require('body-parser')
 import { UnauthorizedError } from 'express-jwt'
 import * as routes from './routes'
 import * as middleware from './middleware'
 
 export function applyMiddleware (app: Application) {
-  app.use(middleware.api())
   app.use(bodyParser.json())
+  app.use(middleware.api())
 }
 
 export function applyRoutes (app: Application) {
@@ -38,13 +38,20 @@ export function applyRoutes (app: Application) {
 
 export function applyErrorHandler (app: Application) {
   
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     
-    if (err instanceof UnauthorizedError) {
-      res.api.sendFail('auth failed', 401)
-      return
+    if (error instanceof Set) {
+      return res.api.sendFail(Array.from(error))
     }
-    
-    res.api.sendFail(err.message, 400)
+    if (Array.isArray(error) || typeof error === 'string') {
+      return res.api.sendFail(error)
+    }
+    if (error instanceof UnauthorizedError) {
+      return res.api.sendFail('auth failed', 401)
+    }
+    if (error instanceof Error) {
+      return res.api.sendFail(error.message, 400)
+    }
+    return res.api.sendFail('api.general.unknown')
   })
 }
