@@ -5,7 +5,7 @@ const schemaOptions = {
 }
 
 export type IAuthCodeClass = Model<IAuthCode> & {
-  forUser (userId: Types.ObjectId): IAuthCode
+  forUser (userId: Types.ObjectId, type: AuthCodeType): Promise<IAuthCode>
 }
 
 export interface IAuthCode extends Document {
@@ -13,6 +13,14 @@ export interface IAuthCode extends Document {
   expiresOn?: Date
   usedOn?: Date
   usedBy?: Schema.Types.ObjectId
+  
+  formatted: String
+}
+
+export enum AuthCodeType {
+  Verify = 'verify',
+  Login = 'login',
+  Web = 'web'
 }
 
 export const AuthCodeSchema = new Schema({
@@ -25,6 +33,9 @@ export const AuthCodeSchema = new Schema({
   usedOn: {
     type: Date
   },
+  type: {
+    type: Object.values(AuthCodeType)
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -33,13 +44,23 @@ export const AuthCodeSchema = new Schema({
 
 let ModelType = typeof Model
 
-AuthCodeSchema.static('forUser', function (this: typeof Model, userId: Types.ObjectId) {
+AuthCodeSchema.static('forUser', function (
+  this: typeof Model, userId: Types.ObjectId, type: AuthCodeType) {
   let model: IAuthCode = new this({
     user: userId,
     code: makeCode(),
-    expiresOn: makeExpiry()
+    expiresOn: makeExpiry(),
+    type
   })
   return model.save()
+})
+
+AuthCodeSchema.virtual('formatted').get(function (this: IAuthCode) {
+  let formatted = this.code.toString()
+  while (formatted.length < 6) {
+    formatted = '0' + formatted
+  }
+  return formatted.slice(0, 3) + '-' + formatted.slice(3, 6)
 })
 
 export function makeCode (): number {

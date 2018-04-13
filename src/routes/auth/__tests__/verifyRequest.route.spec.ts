@@ -1,14 +1,11 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
 import verifyRequest from '../verifyRequest.route'
-import * as express from 'express'
-import * as supertest from 'supertest'
-import { Mongoose } from 'mongoose'
 import * as models from '../../../models'
-import * as twilio from 'twilio'
+import twilio = require('twilio')
 
 jest.mock('twilio')
 
-let db: Mongoose
+let db: any
 let seed: Seed
 let agent: Agent
 let sentMessages: any[]
