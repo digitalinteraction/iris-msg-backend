@@ -5,7 +5,7 @@ import { readFile } from 'fs-extra'
 
 export type Seed = {
   [modelName: string]: {
-    [id: string]: Document
+    [id: string]: any
   }
 }
 

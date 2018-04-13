@@ -15,7 +15,7 @@ let sentMessages: any[]
 
 beforeEach(async () => {
   db = await openDb()
-  seed = await applySeed('test/verify-request', models)
+  seed = await applySeed('test/auth/verify-request', models)
   agent = mockRoute(verifyRequest)
   sentMessages = (twilio as any)().__resetMessages()
 })

@@ -1,4 +1,4 @@
-import { applyMiddleware, applyRoutes } from '../router'
+import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb } from '../../tools/testHarness'
 import { Mongoose } from 'mongoose'
 import * as supertest from 'supertest'
@@ -30,6 +30,7 @@ describe('Routing', () => {
     app = express()
     applyMiddleware(app)
     applyRoutes(app)
+    applyErrorHandler(app)
     agent = supertest.agent(app)
   })
   

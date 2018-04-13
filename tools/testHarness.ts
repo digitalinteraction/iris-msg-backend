@@ -1,10 +1,12 @@
 import { Mongoose, connect } from 'mongoose'
-import * as supertest from 'supertest'
-import * as express from 'express'
-import * as bodyParser from 'body-parser'
+import supertest = require('supertest')
+import express = require('express')
+import bodyParser = require('body-parser')
+import expressJwt = require('express-jwt')
 import { api } from '../src/middleware'
 import { ModelMap } from './seeder'
 import { applyMiddleware } from '../src/router'
+import { sign } from 'jsonwebtoken'
 
 export { applySeed, Seed, ModelMap } from './seeder'
 
@@ -12,10 +14,22 @@ export type Route = (req: express.Request, res: express.Response, next: express.
 
 export type Agent = supertest.SuperTest<supertest.Test>
 
-export function mockRoute (route: Route): Agent {
+export interface MockRouteOptions {
+  path?: string
+  jwt?: boolean
+}
+
+export function mockRoute (route: Route, options: MockRouteOptions = {}): Agent {
   let app = express()
   applyMiddleware(app)
-  app.use(route)
+  
+  if (options.jwt !== undefined) {
+    app.use(expressJwt({
+      secret: process.env.JWT_SECRET,
+      credentialsRequired: options.jwt
+    }))
+  }
+  app.use(options.path || '', route)
   return supertest.agent(app)
 }
 
@@ -29,4 +43,9 @@ export async function closeDb (db: Mongoose): Promise<void> {
     return collection.remove({})
   }))
   await db.connection.close()
+}
+
+export function jwtHeader (userId: any) {
+  let token = sign({ usr: userId }, process.env.JWT_SECRET)
+  return { Authorization: `Bearer ${token}` }
 }

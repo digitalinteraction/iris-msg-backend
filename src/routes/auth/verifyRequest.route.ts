@@ -4,7 +4,7 @@ import { makeTwilioClient } from '../../services'
 import phone = require('phone')
 
 function makeError (name: string) {
-  return `api.login.verify-request.${name}`
+  return `api.login.verifyRequest.${name}`
 }
 
 function formatCode (code: Number) {

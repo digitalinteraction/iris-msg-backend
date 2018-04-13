@@ -8,6 +8,9 @@ api:
     verifyRequest:
       badNumber: No number provided or it was invalid
       badLocale: No locale provided or it was invalid
+    
+    verifyCheck:
+      badCode: No code was provided
 
 sms:
   login:
