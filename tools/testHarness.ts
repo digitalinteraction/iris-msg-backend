@@ -10,9 +10,9 @@ import { sign } from 'jsonwebtoken'
 
 export { applySeed, Seed, ModelMap } from './seeder'
 
-export type Route = (req: express.Request, res: express.Response, next: express.NextFunction) => void
+export type ExpressRoute = (req: express.Request, res: express.Response, next: express.NextFunction) => void
 
-export type Route2 = (ctx: RouteContext) => Promise<void>
+export type Route = (ctx: RouteContext) => Promise<void>
 
 export type Agent = supertest.SuperTest<supertest.Test>
 
@@ -21,7 +21,7 @@ export interface MockRouteOptions {
   jwt?: boolean
 }
 
-export function mockExpressRoute (route: Route, options: MockRouteOptions = {}): Agent {
+export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions = {}): Agent {
   let app = express()
   applyMiddleware(app)
   
@@ -36,7 +36,7 @@ export function mockExpressRoute (route: Route, options: MockRouteOptions = {}):
   return supertest.agent(app)
 }
 
-export function mockRoute (route: Route2, models: any, options: MockRouteOptions = {}): Agent {
+export function mockRoute (route: Route, models: any, options: MockRouteOptions = {}): Agent {
   return mockExpressRoute(async (req, res, next) => {
     try {
       await route({
@@ -57,7 +57,8 @@ export async function closeDb (db: Mongoose): Promise<void> {
   await Promise.all(collections.map(collection => {
     return collection.remove({})
   }))
-  await db.connection.close()
+  // await db.connection.close()
+  await db.disconnect()
 }
 
 export function jwtHeader (userId: any) {
