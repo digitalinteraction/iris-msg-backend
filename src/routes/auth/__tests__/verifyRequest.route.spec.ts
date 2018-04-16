@@ -12,8 +12,8 @@ let sentMessages: any[]
 
 beforeEach(async () => {
   db = await openDb()
-  seed = await applySeed('test/auth/verify-request', models)
-  agent = mockRoute(verifyRequest)
+  seed = await applySeed('test/auth', models)
+  agent = mockRoute(verifyRequest, models)
   sentMessages = (twilio as any)().__resetMessages()
 })
 
@@ -51,7 +51,7 @@ describe('auth.verify.request', () => {
     expect(sentMessages[0].body).toMatch(/\d{3}-\d{3}/)
   })
   it('should do nothing if the user exists', async () => {
-    await agent.post('/')
+    let res = await agent.post('/')
       .send({ phoneNumber: '07880123001', locale: 'GB' })
     let users = await models.User.find()
     let codes = await models.AuthCode.find()

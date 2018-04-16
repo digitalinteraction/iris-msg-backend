@@ -1,8 +1,24 @@
 import { Application, Request, Response, NextFunction, Router } from 'express'
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
+import { RouteContext } from './types'
+import { Api } from 'api-formatter'
 import * as routes from './routes'
+import * as models from './models'
 import * as middleware from './middleware'
+
+type CustomRoute = (ctx: RouteContext) => Promise<void>
+type ExpressRoute = (req: Request, res: Response, next: NextFunction) => void
+
+export function makeRoute (route: CustomRoute): ExpressRoute {
+  return async (req, res, next) => {
+    try {
+      await route({ models, req, res, next, api: req.api })
+    } catch (error) {
+      next(error)
+    }
+  }
+}
 
 export function applyMiddleware (app: Application) {
   app.use(bodyParser.json())
@@ -10,6 +26,8 @@ export function applyMiddleware (app: Application) {
 }
 
 export function applyRoutes (app: Application) {
+  
+  const r = makeRoute
   
   // Reusable middleware
   let requiredJwt = middleware.jwt()
@@ -19,12 +37,12 @@ export function applyRoutes (app: Application) {
   app.get('/', routes.general.hello)
   
   // Auth
-  app.get('/users/me', optionalJwt, routes.auth.me)
-  app.post('/users/login-request', optionalJwt, routes.auth.loginRequest)
-  app.post('/users/login-check', optionalJwt, routes.auth.loginCheck)
-  app.post('/users/verify-request', optionalJwt, routes.auth.verifyRequest)
-  app.post('/users/verify-check', optionalJwt, routes.auth.verifyCheck)
-  app.post('/users/update-fcm', requiredJwt, routes.auth.updateFcm)
+  app.get('/users/me', optionalJwt, r(routes.auth.me))
+  app.post('/users/login-request', optionalJwt, r(routes.auth.loginRequest))
+  app.post('/users/login-check', optionalJwt, r(routes.auth.loginCheck))
+  app.post('/users/verify-request', optionalJwt, r(routes.auth.verifyRequest))
+  app.post('/users/verify-check', optionalJwt, r(routes.auth.verifyCheck))
+  app.post('/users/update-fcm', requiredJwt, r(routes.auth.updateFcm))
   
   // Org Management
   

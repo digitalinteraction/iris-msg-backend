@@ -9,5 +9,3 @@ export const User = model<IUser>('User', UserSchema)
 export const Organisation = model<IOrganisation>('Organisation', OrganisationSchema)
 export const Message = model<IMessage>('Message', MessageSchema)
 export const AuthCode = model<IAuthCode, IAuthCodeClass>('AuthCode', AuthCodeSchema)
-
-export { AuthCodeType } from './schemas/AuthCode.schema'

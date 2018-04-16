@@ -1,4 +1,5 @@
-import { Model, Schema, Document, Types } from 'mongoose'
+import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
+import { AuthCodeType } from '../types'
 
 const schemaOptions = {
   timestamps: true
@@ -6,6 +7,7 @@ const schemaOptions = {
 
 export type IAuthCodeClass = Model<IAuthCode> & {
   forUser (userId: Types.ObjectId, type: AuthCodeType): Promise<IAuthCode>
+  fromCode (code: any, type: AuthCodeType): DocumentQuery<IAuthCode | null, IAuthCode>
 }
 
 export interface IAuthCode extends Document {
@@ -15,12 +17,6 @@ export interface IAuthCode extends Document {
   usedBy?: Schema.Types.ObjectId
   
   formatted: String
-}
-
-export enum AuthCodeType {
-  Verify = 'verify',
-  Login = 'login',
-  Web = 'web'
 }
 
 export const AuthCodeSchema = new Schema({
@@ -42,8 +38,6 @@ export const AuthCodeSchema = new Schema({
   }
 }, schemaOptions)
 
-let ModelType = typeof Model
-
 AuthCodeSchema.static('forUser', function (
   this: typeof Model, userId: Types.ObjectId, type: AuthCodeType) {
   let model: IAuthCode = new this({
@@ -53,6 +47,16 @@ AuthCodeSchema.static('forUser', function (
     type
   })
   return model.save()
+})
+
+AuthCodeSchema.static('fromCode', function
+  (this: typeof Model, rawCode: any, type: AuthCodeType) {
+  let code = parseInt(rawCode, 10)
+  if (Number.isNaN(code)) return null
+  return this.findOne({
+    code,
+    type,
+    expiresOn: { $gte: new Date() } })
 })
 
 AuthCodeSchema.virtual('formatted').get(function (this: IAuthCode) {

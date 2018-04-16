@@ -39,11 +39,9 @@ describe('Routing', () => {
   })
   
   expectedRoutes.forEach(({ method = 'get', url }) => {
-    describe(`${method.toUpperCase()}: ${url}`, () => {
-      it('should exist', async () => {
-        let { statusCode } = await (agent as any)[method](url)
-        expect(statusCode).not.toBe(404)
-      })
+    it(`${method.toUpperCase()}: ${url}`, async () => {
+      let { status } = await (agent as any)[method](url)
+      expect(status).not.toBe(404)
     })
   })
   

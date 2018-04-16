@@ -1,15 +1,21 @@
-import { Request, Response, NextFunction } from 'express'
-import { User } from '../../models'
+import { RouteContext } from '../../types'
 
-export default async function updateFcm (req: Request, res: Response, next: NextFunction) {
+function makeError (name: string) {
+  return `api.login.updateFcm.${name}`
+}
+
+export default async ({ req, res, next, api, models }: RouteContext) => {
+  const { User } = models
   
-  if (req.user && req.user.usr) {
-    let user = await User.findById(req.user.usr)
-    if (user) {
-      user.fcmToken = req.body.newToken || null
-      await user.save()
-    }
-  }
+  if (!req.user) throw makeError('badAuth')
   
-  res.api.sendData('ok')
+  let user = await User.findById(req.user.usr)
+    .where('verifiedOn', { $ne: null })
+  
+  if (!user) throw makeError('badAuth')
+  
+  user.fcmToken = req.body.newToken || null
+  await user.save()
+  
+  return api.sendData('ok')
 }

@@ -3,14 +3,16 @@ import supertest = require('supertest')
 import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
-import { api } from '../src/middleware'
+import { RouteContext } from '../src/types'
 import { ModelMap } from './seeder'
-import { applyMiddleware } from '../src/router'
+import { applyMiddleware, applyErrorHandler } from '../src/router'
 import { sign } from 'jsonwebtoken'
 
 export { applySeed, Seed, ModelMap } from './seeder'
 
 export type Route = (req: express.Request, res: express.Response, next: express.NextFunction) => void
+
+export type Route2 = (ctx: RouteContext) => Promise<void>
 
 export type Agent = supertest.SuperTest<supertest.Test>
 
@@ -19,7 +21,7 @@ export interface MockRouteOptions {
   jwt?: boolean
 }
 
-export function mockRoute (route: Route, options: MockRouteOptions = {}): Agent {
+export function mockExpressRoute (route: Route, options: MockRouteOptions = {}): Agent {
   let app = express()
   applyMiddleware(app)
   
@@ -30,7 +32,20 @@ export function mockRoute (route: Route, options: MockRouteOptions = {}): Agent 
     }))
   }
   app.use(options.path || '', route)
+  applyErrorHandler(app)
   return supertest.agent(app)
+}
+
+export function mockRoute (route: Route2, models: any, options: MockRouteOptions = {}): Agent {
+  return mockExpressRoute(async (req, res, next) => {
+    try {
+      await route({
+        req, res, next, models, api: req.api
+      })
+    } catch (err) {
+      next(err)
+    }
+  }, options)
 }
 
 export function openDb (): Promise<Mongoose> {

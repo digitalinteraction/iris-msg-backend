@@ -11,6 +11,16 @@ api:
     
     verifyCheck:
       badCode: No code was provided
+    
+    loginRequest:
+      badNumber: No number provided or it was invalid
+      badLocale: No locale provided or it was invalid
+    
+    loginCheck:
+      badCode: No code was provided
+    
+    updateFcm:
+      badAuth: User is not logged in or unverified
 
 sms:
   login:

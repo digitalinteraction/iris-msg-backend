@@ -1,10 +1,15 @@
-import { Request, Response, NextFunction } from 'express'
-import { User } from '../../models'
+import { RouteContext } from '../../types'
 
-export default async function me (req: Request, res: Response, next: NextFunction) {
-  res.api.sendData(
+export default async ({ req, api, models }: RouteContext) => {
+  
+  let query = {
+    _id: req.user && req.user.usr,
+    verifiedOn: { $ne: null }
+  }
+  
+  api.sendData(
     req.user
-      ? await User.findById(req.user.usr)
+      ? await models.User.findOne(query)
       : null
   )
 }
