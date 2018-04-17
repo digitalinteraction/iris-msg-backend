@@ -54,9 +54,7 @@ export function openDb (): Promise<Mongoose> {
 
 export async function closeDb (db: Mongoose): Promise<void> {
   let collections = Object.values(db.connection.collections)
-  await Promise.all(collections.map(collection => {
-    return collection.remove({})
-  }))
+  await Promise.all(collections.map(c => c.remove({})))
   // await db.connection.close()
   await db.disconnect()
 }

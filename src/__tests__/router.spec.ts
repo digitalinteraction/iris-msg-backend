@@ -1,6 +1,5 @@
 import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb } from '../../tools/testHarness'
-import { Mongoose } from 'mongoose'
 import * as supertest from 'supertest'
 import * as express from 'express'
 
@@ -24,8 +23,8 @@ describe('Routing', () => {
   
   let app: express.Express
   let agent: supertest.SuperTest<supertest.Test>
-  let db: Mongoose
-  beforeAll(async () => {
+  let db: any
+  beforeEach(async () => {
     db = await openDb()
     app = express()
     applyMiddleware(app)
@@ -34,14 +33,15 @@ describe('Routing', () => {
     agent = supertest.agent(app)
   })
   
-  afterAll(async () => {
-    closeDb(db)
+  afterEach(async () => {
+    await closeDb(db)
   })
   
   expectedRoutes.forEach(({ method = 'get', url }) => {
     it(`${method.toUpperCase()}: ${url}`, async () => {
       let { status } = await (agent as any)[method](url)
       expect(status).not.toBe(404)
+      expect(status).not.toBe(500)
     })
   })
   
