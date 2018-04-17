@@ -2,7 +2,7 @@ import { RouteContext, AuthCodeType } from '../../types'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
-  return `api.login.login-check.${name}`
+  return `api.auth.login-check.${name}`
 }
 
 export default async ({ req, res, next, api, models }: RouteContext) => {

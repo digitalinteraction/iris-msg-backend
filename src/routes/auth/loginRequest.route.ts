@@ -4,7 +4,7 @@ import { makeTwilioClient } from '../../services'
 import phone = require('phone')
 
 function makeError (name: string) {
-  return `api.login.loginRequest.${name}`
+  return `api.auth.loginRequest.${name}`
 }
 
 export default async ({ req, res, next, api, models }: RouteContext) => {

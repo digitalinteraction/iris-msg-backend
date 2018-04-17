@@ -1,7 +1,7 @@
 import { RouteContext } from '../../types'
 
 function makeError (name: string) {
-  return `api.login.updateFcm.${name}`
+  return `api.auth.updateFcm.${name}`
 }
 
 export default async ({ req, res, next, api, models }: RouteContext) => {

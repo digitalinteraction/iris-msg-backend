@@ -16,3 +16,9 @@ export enum AuthCodeType {
   Login = 'login',
   Web = 'web'
 }
+
+export enum MemberRole {
+  Coordinator = 'coordinator',
+  Donor = 'donor',
+  Subscriber = 'subscriber'
+}

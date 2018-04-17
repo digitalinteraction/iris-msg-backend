@@ -1,13 +1,8 @@
 import { Schema, Types } from 'mongoose'
+import { MemberRole } from '../types'
 
 const schemaOptions = {
   timestamps: true
-}
-
-export enum MemberRole {
-  Coordinator = 'coordinator',
-  Donor = 'donor',
-  Subscriber = 'subscriber'
 }
 
 export interface IMember extends Types.Subdocument {

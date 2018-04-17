@@ -4,7 +4,7 @@ api:
   general:
     unknown: Something went wrong
   
-  login:
+  auth:
     verifyRequest:
       badNumber: No number provided or it was invalid
       badLocale: No locale provided or it was invalid
@@ -21,6 +21,20 @@ api:
     
     updateFcm:
       badAuth: User is not logged in or unverified
+  
+  orgs:
+    create:
+      badName: No name provided or it was invalid
+      badInfo: No info provided or it was invalid
+      badAuth: User is not logged in or unverified
+    
+    index:
+      
+    show:
+      notFound: Couldn't find that org or no permission to view it
+    
+    destroy:
+      badAuth: The current user isn't a coordinator of that org
 
 sms:
   login:

@@ -1,4 +1,4 @@
-import { Schema, Document, Types } from 'mongoose'
+import { Schema, Document, Types, DocumentQuery, Model } from 'mongoose'
 import { MemberSchema, IMember } from './Member.schema'
 
 const schemaOptions = {
@@ -10,13 +10,18 @@ export interface IOrganisation extends Document {
   description: String
   locale: String
   members: Types.DocumentArray<IMember>
+  deletedOn: Date | null
+}
+
+export type IOrganisationClass = Model<IOrganisation> & {
+  findForUser (userId: any): DocumentQuery<IOrganisation[], IOrganisation>
 }
 
 export const OrganisationSchema = new Schema({
   name: {
     type: String
   },
-  description: {
+  info: {
     type: String
   },
   locale: {
@@ -24,5 +29,21 @@ export const OrganisationSchema = new Schema({
   },
   members: {
     type: [ MemberSchema ]
+  },
+  deletedOn: {
+    type: Date
   }
 }, schemaOptions)
+
+OrganisationSchema.static('findForUser', function (this: typeof Model, userId: any) {
+  return this.find({
+    deletedOn: null,
+    members: {
+      $elemMatch: {
+        user: userId,
+        confirmedOn: { $ne: null },
+        deletedOn: null
+      }
+    }
+  })
+})
