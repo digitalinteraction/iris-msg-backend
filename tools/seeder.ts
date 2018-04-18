@@ -31,12 +31,6 @@ export async function applySeed (seedName: String, models: ModelMap) {
   return output
 }
 
-function clearModels (models: ModelMap) {
-  return Promise.all(Object.values(models).map(m =>
-    m.remove({})
-  ))
-}
-
 async function seedModel (Model: Model<Document>, data: any): Promise<any> {
   let names = Object.keys(data)
   let documents = Object.values(data)

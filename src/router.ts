@@ -45,6 +45,10 @@ export function applyRoutes (app: Application) {
   app.post('/users/update-fcm', requiredJwt, r(routes.auth.updateFcm))
   
   // Org Management
+  app.get('/organisations', requiredJwt, r(routes.orgs.index))
+  app.get('/organisations/:id', requiredJwt, r(routes.orgs.show))
+  app.post('/organisations', requiredJwt, r(routes.orgs.create))
+  app.delete('/organisations/:id', requiredJwt, r(routes.orgs.destroy))
   
   // Org Members
   
