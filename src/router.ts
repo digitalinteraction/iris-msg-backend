@@ -51,6 +51,7 @@ export function applyRoutes (app: Application) {
   app.delete('/organisations/:id', requiredJwt, r(routes.orgs.destroy))
   
   // Org Members
+  app.post('/organisations/:id/members', requiredJwt, r(routes.orgs.members.invite))
   
   // Messaging
 }

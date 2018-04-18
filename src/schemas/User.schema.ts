@@ -21,10 +21,12 @@ export const UserSchema = new Schema({
     unique: true
   },
   fcmToken: {
-    type: String
+    type: String,
+    default: null
   },
   verifiedOn: {
-    type: Date
+    type: Date,
+    default: null
   }
 }, schemaOptions)
 

@@ -1,31 +1,69 @@
-import { RouteContext, MemberRole } from '../../../types'
+import { RouteContext, MemberRole, AllMemberRoles } from '../../../types'
+import { makeTwilioClient, makeApiUrl } from '../../../services'
+import { sign } from 'jsonwebtoken'
+import phone = require('phone')
 
 function makeError (name: string) {
   return `api.orgs.members.invite.${name}`
 }
 
 export default async ({ req, api, next, models }: RouteContext) => {
+  let { phoneNumber, locale, role } = req.body
   
-  // Get the organisation making sure you are a coordanator
-  let user = await models.User.findWithJwt(req.user)
+  // Fail if 'phoneNumber', 'locale' or 'role' are not set
+  let errors = new Set<String>()
+  if (!phoneNumber) errors.add(makeError('badNumber'))
+  if (!locale) errors.add(makeError('badLocale'))
+  if (!role) errors.add(makeError('badRole'))
+  if (!AllMemberRoles.includes(role)) errors.add(makeError('badRole'))
+  if (errors.size > 0) throw errors
   
-  if (!user) throw makeError('badAuth')
+  // Fail if the formatted phoneNumber is invalid
+  phoneNumber = phone(phoneNumber, locale)[0]
+  if (!phoneNumber) throw makeError('badNumber')
   
+  // Ensure the User exists & is verified
+  let currentUser = await models.User.findWithJwt(req.user)
+  if (!currentUser) throw makeError('badAuth')
+  
+  // Ensure the Organisation exists & is coordinated by the user
   let org = await models.Organisation.findByIdForCoordinator(
-    req.params.id, user.id
+    req.params.id, currentUser.id
   )
-  
   if (!org) throw makeError('notFound')
   
-  // Format the phone number
+  // Find a user with the phone number
+  let newMember = await models.User.findOne({ phoneNumber })
   
-  // Find the User
+  // Create the member if they don't exist
+  if (!newMember) {
+    newMember = await models.User.create({
+      phoneNumber, verifiedOn: new Date()
+    })
+  }
   
-  // If no
+  // Add the member
+  let member = org.members.create({
+    user: newMember.id,
+    confirmedOn: role === MemberRole.Donor
+      ? null
+      : new Date(),
+    role: role
+  })
   
-  // Add a membership them
+  // Save the Organisation
+  org.members.push(member)
+  await org.save()
   
-  // If a donor, add them unconfirmed
+  // Generate unsubscribe token
+  let unsubToken = makeApiUrl(`u/${member.id}`)
   
-  api.sendData('ok')
+  // Send the member an sms
+  await makeTwilioClient().messages.create({
+    to: phoneNumber,
+    from: process.env.TWILIO_NUMBER,
+    body: `You have been subscribed to ${org.name} on Iris Msg, you can unsubscribe at ${unsubToken}`
+  })
+  
+  api.sendData(member)
 }

@@ -4,6 +4,8 @@ function makeError (name: string) {
   return `api.orgs.create.${name}`
 }
 
+// TODO: set locale from the request
+
 export default async ({ req, api, next, models }: RouteContext) => {
   
   // Check the user is verified

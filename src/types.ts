@@ -22,3 +22,5 @@ export enum MemberRole {
   Donor = 'donor',
   Subscriber = 'subscriber'
 }
+
+export const AllMemberRoles = Object.values(MemberRole)

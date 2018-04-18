@@ -6,19 +6,15 @@ api:
   
   auth:
     verifyRequest:
-      badNumber: No number provided or it was invalid
+      badNumber: No phoneNumber provided or it was invalid
       badLocale: No locale provided or it was invalid
-    
     verifyCheck:
       badCode: No code was provided
-    
     loginRequest:
-      badNumber: No number provided or it was invalid
+      badNumber: No phoneNumber provided or it was invalid
       badLocale: No locale provided or it was invalid
-    
     loginCheck:
       badCode: No code was provided
-    
     updateFcm:
       badAuth: User is not logged in or unverified
   
@@ -27,15 +23,24 @@ api:
       badName: No name provided or it was invalid
       badInfo: No info provided or it was invalid
       badAuth: User is not logged in or unverified
-    
     index:
-      
     show:
       notFound: Couldn't find that org or no permission to view it
-    
     destroy:
       badAuth: The current user isn't a coordinator of that org
+    members:
+      accept:
+      invite:
+        badNumber: No phoneNumber provided or it was invalid
+        badLocale: No locale provided or it was invalid
+        badRole: No role provided or it was invalid
+        badAuth: User is not logged in or unverified
+        notFound: Organisation was not found or user cannot access it
+      destroy:
+      unsubscribe:
 
 sms:
-  login:
-    verifyRequest: Your Iris Msg verification code is {0}
+  verifyRequest: Your Iris Msg verification code is {0}
+  loginRequest: Your Iris Msg verification code is {0}
+  newSubscriber: You have been subscribed to {{0}} on Iris Msg, you can unsubscribe at {{1}}
+  

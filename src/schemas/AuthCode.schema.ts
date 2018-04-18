@@ -1,4 +1,4 @@
-import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
+import { Model, Schema, Document, Types, DocumentQuery, Query } from 'mongoose'
 import { AuthCodeType } from '../types'
 
 const schemaOptions = {
@@ -21,20 +21,25 @@ export interface IAuthCode extends Document {
 
 export const AuthCodeSchema = new Schema({
   code: {
-    type: Number
+    type: Number,
+    required: true
   },
   expiresOn: {
-    type: Date
+    type: Date,
+    required: true
   },
   usedOn: {
-    type: Date
+    type: Date,
+    default: null
   },
   type: {
-    type: Object.values(AuthCodeType)
+    type: Object.values(AuthCodeType),
+    required: true
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }
 }, schemaOptions)
 
@@ -52,10 +57,9 @@ AuthCodeSchema.static('forUser', function (
 AuthCodeSchema.static('fromCode', function
   (this: typeof Model, rawCode: any, type: AuthCodeType) {
   let code = parseInt(rawCode, 10)
-  if (Number.isNaN(code)) return null
   return this.findOne({
-    code,
     type,
+    code: Number.isNaN(code) ? -1 : code,
     expiresOn: { $gte: new Date() } })
 })
 

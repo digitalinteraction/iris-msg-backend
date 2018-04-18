@@ -24,10 +24,12 @@ export type IOrganisationClass = Model<IOrganisation> & {
 
 export const OrganisationSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   info: {
-    type: String
+    type: String,
+    required: true
   },
   locale: {
     type: String
@@ -36,7 +38,8 @@ export const OrganisationSchema = new Schema({
     type: [ MemberSchema ]
   },
   deletedOn: {
-    type: Date
+    type: Date,
+    default: null
   }
 }, schemaOptions)
 

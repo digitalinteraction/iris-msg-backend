@@ -14,17 +14,20 @@ export interface IMessage extends Document {
 
 export const MessageSchema = new Schema({
   content: {
-    type: String
+    type: String,
+    required: true
   },
   attempts: {
     type: [MessageAttemptSchema]
   },
   organisation: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'Organisation'
   },
   author: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'User'
   }
 }, schemaOptions)

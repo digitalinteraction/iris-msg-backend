@@ -16,16 +16,20 @@ export const MemberSchema = new Schema({
   role: {
     type: String,
     enum: Object.values(MemberRole),
-    index: true
+    index: true,
+    required: true
   },
   confirmedOn: {
-    type: Date
+    type: Date,
+    default: null
   },
   deletedOn: {
-    type: Date
+    type: Date,
+    default: null
   },
   user: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'User'
   }
 }, schemaOptions)
