@@ -37,7 +37,7 @@ describe('orgs.show', () => {
     expect(res.status).toBe(200)
     expect(res.body.data).toHaveProperty('name', 'Existing A')
   })
-  it('should 404 for unverified users', async () => {
+  it('should fail for unverified users', async () => {
     await pushMember(seed.Organisation.a, {
       user: seed.User.unverified.id,
       role: MemberRole.Coordinator,
@@ -47,7 +47,7 @@ describe('orgs.show', () => {
     let res = await agent.get('/' + seed.Organisation.a.id)
       .set(jwtHeader(seed.User.unverified.id))
     
-    expect(res.status).toBe(404)
+    expect(res.status).toBe(400)
     expect(res.body.data).toBeNull()
   })
 })

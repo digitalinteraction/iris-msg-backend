@@ -9,8 +9,7 @@ export default async ({ req, res, next, api, models }: RouteContext) => {
   
   if (!req.user) throw makeError('badAuth')
   
-  let user = await User.findById(req.user.usr)
-    .where('verifiedOn', { $ne: null })
+  let user = await User.findWithJwt(req.user)
   
   if (!user) throw makeError('badAuth')
   

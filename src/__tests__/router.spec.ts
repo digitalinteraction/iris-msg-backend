@@ -59,8 +59,8 @@ describe('Routing', () => {
         req.set(jwtHeader(seed.User.verified.id))
       }
       let res = await req
-      expect(status).not.toBe(404)
-      expect(status).not.toBe(500)
+      expect(res.status).not.toBe(404)
+      expect(res.status).not.toBe(500)
     })
   })
   

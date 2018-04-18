@@ -13,18 +13,9 @@ export default async ({ req, api, next, models }: RouteContext) => {
   if (!user) throw makeError('badAuth')
   
   // Find the organisation where the user is an active coordinator
-  let org = await models.Organisation.findOne({
-    _id: req.params.id,
-    deletedOn: null,
-    members: {
-      $elemMatch: {
-        user: user.id,
-        confirmedOn: { $ne: null },
-        deletedOn: null,
-        role: MemberRole.Coordinator
-      }
-    }
-  })
+  let org = await models.Organisation.findByIdForCoordinator(
+    req.params.id, user.id
+  )
   
   // Fail if the organisation wasn't found
   if (!org) throw makeError('badAuth')
