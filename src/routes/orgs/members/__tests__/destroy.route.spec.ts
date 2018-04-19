@@ -10,7 +10,7 @@ let agent: tst.Agent
 beforeEach(async () => {
   db = await tst.openDb()
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(destroy, models, { jwt: true })
+  agent = tst.mockRoute(destroy, models, { jwt: true, path: '/:org_id/:mem_id' })
 })
 
 afterEach(async () => {

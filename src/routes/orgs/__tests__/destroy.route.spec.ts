@@ -16,7 +16,7 @@ async function pushMember (org: any, args: any) {
 beforeEach(async () => {
   db = await openDb()
   seed = await applySeed('test/orgs', models)
-  agent = mockRoute(destroy, models, { jwt: true, path: '/:id' })
+  agent = mockRoute(destroy, models, { jwt: true, path: '/:org_id' })
 })
 
 afterEach(async () => {

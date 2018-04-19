@@ -46,12 +46,12 @@ export function applyRoutes (app: Application) {
   
   // Org Management
   app.get('/organisations', requiredJwt, r(routes.orgs.index))
-  app.get('/organisations/:id', requiredJwt, r(routes.orgs.show))
+  app.get('/organisations/:org_id', requiredJwt, r(routes.orgs.show))
   app.post('/organisations', requiredJwt, r(routes.orgs.create))
-  app.delete('/organisations/:id', requiredJwt, r(routes.orgs.destroy))
+  app.delete('/organisations/:org_id', requiredJwt, r(routes.orgs.destroy))
   
   // Org Members
-  app.post('/organisations/:id/members', requiredJwt, r(routes.orgs.members.invite))
+  app.post('/organisations/:org_id/members', requiredJwt, r(routes.orgs.members.invite))
   
   // Messaging
 }

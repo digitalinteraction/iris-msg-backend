@@ -28,9 +28,12 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // Ensure the Organisation exists & is coordinated by the user
   let org = await models.Organisation.findByIdForCoordinator(
-    req.params.id, currentUser.id
+    req.params.org_id, currentUser.id
   )
   if (!org) throw makeError('notFound')
+  
+  // TODO: Should check if they are already a member in hat role
+  //       + if deactivated/
   
   // Find a user with the phone number
   let newMember = await models.User.findOne({ phoneNumber })
@@ -43,6 +46,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   }
   
   // Add the member
+  // Confirm the record if they arent a donor
   let member = org.members.create({
     user: newMember.id,
     confirmedOn: role === MemberRole.Donor

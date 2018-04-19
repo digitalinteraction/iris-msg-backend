@@ -17,6 +17,8 @@ export enum AuthCodeType {
   Web = 'web'
 }
 
+export const AllAuthCodeTypes = Object.values(AuthCodeType)
+
 export enum MemberRole {
   Coordinator = 'coordinator',
   Donor = 'donor',

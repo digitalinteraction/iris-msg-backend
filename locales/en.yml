@@ -37,6 +37,8 @@ api:
         badAuth: User is not logged in or unverified
         notFound: Organisation was not found or user cannot access it
       destroy:
+        badAuth: User is not logged in or unverified
+        notFound: Organisation was not found or user cannot access it / not a member
       unsubscribe:
 
 sms:

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Project setup by robb-j/ts-node-base",
   "main": "index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "coverage": "jest --coverage",

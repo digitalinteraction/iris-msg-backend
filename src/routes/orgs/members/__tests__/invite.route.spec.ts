@@ -14,7 +14,7 @@ let sentMessages: any[]
 beforeEach(async () => {
   db = await tst.openDb()
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(invite, models, { jwt: true, path: '/:id' })
+  agent = tst.mockRoute(invite, models, { jwt: true, path: '/:org_id' })
   sentMessages = (twilio as any)().__resetMessages()
   
   seed.Organisation.a.members.push({
@@ -93,4 +93,28 @@ describe('orgs.invite', () => {
     
     expect(sentMessages).toHaveLength(1)
   })
+  // it('should reactivate an deleted member', async () => {
+  //   seed.Organisation.a.members.push({
+  //     role: MemberRole.Donor,
+  //     confirmedOn: new Date(),
+  //     deletedOn: new Date(),
+  //     user: seed.User.verified.id
+  //   })
+  //   await seed.Organisation.a.save()
+  //
+  //   await agent.post('/' + seed.Organisation.a.id)
+  //     .set(tst.jwtHeader(seed.User.current.id))
+  //     .send({
+  //       phoneNumber: '07880123002',
+  //       locale: 'GB',
+  //       role: MemberRole.Donor
+  //     })
+  //
+  //   let org = await models.Organisation.findById(seed.Organisation.a.id)
+  //   expect(org!.members[1]).toEqual({
+  //     user: seed.User.verified.id,
+  //     role: MemberRole.Donor,
+  //     deletedOn: expect.any(Date)
+  //   })
+  // })
 })

@@ -46,7 +46,8 @@ describe('auth.login.check', () => {
       code: 654321,
       expiresOn: new Date(Date.UTC(1000, 0)),
       usedOn: null,
-      user: seed.User.verified.id
+      user: seed.User.verified.id,
+      type: AuthCodeType.Login
     })
     let res = await agent.post('/').send({ code: 654321 })
     expect(res.status).toBe(400)

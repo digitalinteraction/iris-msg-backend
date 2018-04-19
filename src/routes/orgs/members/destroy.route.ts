@@ -6,5 +6,22 @@ function makeError (name: string) {
 
 export default async ({ req, api, next, models }: RouteContext) => {
   
+  // let user = await models.User.findWithJwt(req.user)
+  //
+  // if (!user) throw makeError('badAuth')
+  //
+  // let org = await models.Organisation.findByIdForCoordinator(
+  //   req.params.org_id, user.id
+  // )
+  //
+  // if (!org) throw makeError('notFound')
+  //
+  // let member = org.members.id(req.params.mem_id)
+  //
+  // if (!member) throw makeError('notFound')
+  //
+  // member.deletedOn = null
+  // await org.save()
+  
   api.sendData('ok')
 }

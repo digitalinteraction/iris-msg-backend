@@ -7,8 +7,8 @@ const schemaOptions = {
 
 export interface IMember extends Types.Subdocument {
   role: MemberRole
-  confirmedOn?: Date
-  deletedOn?: Date
+  confirmedOn: Date | null
+  deletedOn: Date | null
   user: Schema.Types.ObjectId
 }
 

@@ -21,9 +21,9 @@ export const AuthCode = model<IAuthCode, IAuthCodeClass>(
   'AuthCode', AuthCodeSchema
 )
 
-// namespace models {
-//   export type User = IUserClass
-//   export type Organisation = Model<IOrganisation>
-//   export type Message = Model<IMessage>
-//   export type AuthCode = IAuthCodeClass
+// export namespace Model {
+//   export interface User extends IUserClass {}
+//   export interface Organisation extends Model<IOrganisation> {}
+//   export interface Message extends Model<IMessage> {}
+//   export interface AuthCode extends IAuthCodeClass {}
 // }

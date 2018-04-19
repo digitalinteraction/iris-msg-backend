@@ -14,7 +14,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // Find the organisation where the user is an active coordinator
   let org = await models.Organisation.findByIdForCoordinator(
-    req.params.id, user.id
+    req.params.org_id, user.id
   )
   
   // Fail if the organisation wasn't found

@@ -12,7 +12,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   if (!user) throw makeError('notFound')
   
   let [ org ] = await models.Organisation.findForUser(user.id)
-    .where('_id', req.params.id)
+    .where('_id', req.params.org_id)
     .limit(1)
   
   if (!org) throw makeError('notFound')

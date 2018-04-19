@@ -1,5 +1,5 @@
 import { Model, Schema, Document, Types, DocumentQuery, Query } from 'mongoose'
-import { AuthCodeType } from '../types'
+import { AuthCodeType, AllAuthCodeTypes } from '../types'
 
 const schemaOptions = {
   timestamps: true
@@ -33,7 +33,8 @@ export const AuthCodeSchema = new Schema({
     default: null
   },
   type: {
-    type: Object.values(AuthCodeType),
+    type: String,
+    enum: AllAuthCodeTypes,
     required: true
   },
   user: {
@@ -60,7 +61,8 @@ AuthCodeSchema.static('fromCode', function
   return this.findOne({
     type,
     code: Number.isNaN(code) ? -1 : code,
-    expiresOn: { $gte: new Date() } })
+    expiresOn: { $gte: new Date() }
+  })
 })
 
 AuthCodeSchema.virtual('formatted').get(function (this: IAuthCode) {
