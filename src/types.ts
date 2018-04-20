@@ -1,10 +1,10 @@
-import * as models from './models'
+import { IModelSet } from './models'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
 import { Model } from 'mongoose'
 
 export interface RouteContext {
-  models: typeof models
+  models: IModelSet
   api: Api
   req: Request
   res: Response

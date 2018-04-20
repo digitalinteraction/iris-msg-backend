@@ -1,15 +1,16 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
 import loginCheck from '../loginCheck.route'
-import * as models from '../../../models'
+import { IModelSet } from '../../../models'
 import { AuthCodeType } from '../../../types'
 import { verify } from 'jsonwebtoken'
 
 let db: any
+let models: IModelSet
 let seed: Seed
 let agent: Agent
 
 beforeEach(async () => {
-  db = await openDb()
+  ({ db, models } = await openDb())
   seed = await applySeed('test/auth', models)
   agent = mockRoute(loginCheck, models)
   

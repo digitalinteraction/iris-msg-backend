@@ -1,14 +1,15 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
 import create from '../create.route'
-import * as models from '../../../models'
+import { IModelSet } from '../../../models'
 import { MemberRole } from '../../../types'
 
 let db: any
+let models: IModelSet
 let seed: Seed
 let agent: Agent
 
 beforeEach(async () => {
-  db = await openDb()
+  ({ db, models } = await openDb())
   seed = await applySeed('test/orgs', models)
   agent = mockRoute(create, models, { jwt: true })
 })

@@ -1,10 +1,11 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
 import index from '../index.route'
-import * as models from '../../../models'
+import { IModelSet } from '../../../models'
 import { MemberRole } from '../../../types'
 import { Model } from 'mongoose'
 
 let db: any
+let models: IModelSet
 let seed: Seed
 let agent: Agent
 
@@ -14,7 +15,7 @@ async function pushMember (org: any, args: any) {
 }
 
 beforeEach(async () => {
-  db = await openDb()
+  ({ db, models } = await openDb())
   seed = await applySeed('test/orgs', models)
   agent = mockRoute(index, models, { jwt: true })
 })

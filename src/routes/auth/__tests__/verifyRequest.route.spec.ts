@@ -1,17 +1,18 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
 import verifyRequest from '../verifyRequest.route'
-import * as models from '../../../models'
+import { IModelSet } from '../../../models'
 import twilio = require('twilio')
 
 jest.mock('twilio')
 
 let db: any
+let models: IModelSet
 let seed: Seed
 let agent: Agent
 let sentMessages: any[]
 
 beforeEach(async () => {
-  db = await openDb()
+  ({ db, models } = await openDb())
   seed = await applySeed('test/auth', models)
   agent = mockRoute(verifyRequest, models)
   sentMessages = (twilio as any)().__resetMessages()

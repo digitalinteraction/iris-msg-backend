@@ -4,6 +4,7 @@ import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
 import { RouteContext } from '../src/types'
+import { IModelSet, makeModels } from '../src/models'
 import { ModelMap } from './seeder'
 import { applyMiddleware, applyErrorHandler } from '../src/router'
 import { sign } from 'jsonwebtoken'
@@ -15,6 +16,11 @@ export type ExpressRoute = (req: express.Request, res: express.Response, next: e
 export type Route = (ctx: RouteContext) => Promise<void>
 
 export type Agent = supertest.SuperTest<supertest.Test>
+
+export interface TestDatabase {
+  db: Mongoose,
+  models: IModelSet
+}
 
 export interface MockRouteOptions {
   path?: string
@@ -48,14 +54,19 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   }, options)
 }
 
-export function openDb (): Promise<Mongoose> {
+export function old_openDb (): Promise<Mongoose> {
   return connect(process.env.MONGO_URI)
+}
+
+export async function openDb (): Promise<TestDatabase> {
+  let models = makeModels()
+  let db = await connect(process.env.MONGO_URI)
+  return { db, models }
 }
 
 export async function closeDb (db: Mongoose): Promise<void> {
   let collections = Object.values(db.connection.collections)
   await Promise.all(collections.map(c => c.remove({})))
-  // await db.connection.close()
   await db.disconnect()
 }
 

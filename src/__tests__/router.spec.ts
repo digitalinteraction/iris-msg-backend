@@ -1,6 +1,6 @@
 import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
-import * as models from '../models'
+import { IModelSet } from '../models'
 import * as supertest from 'supertest'
 import * as express from 'express'
 
@@ -32,11 +32,12 @@ describe('Routing', () => {
   let app: express.Express
   let agent: supertest.SuperTest<supertest.Test>
   let db: any
+  let models: IModelSet
   let seed: any
   let replacements: any
   
   beforeEach(async () => {
-    db = await openDb()
+    ({ db, models } = await openDb())
     app = express()
     seed = await applySeed('test/router', models)
     applyMiddleware(app)

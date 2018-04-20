@@ -1,18 +1,19 @@
 import * as tst from '../../../../../tools/testHarness'
 import invite from '../invite.route'
-import * as models from '../../../../models'
+import { IModelSet } from '../../../../models'
 import { MemberRole } from '../../../../types'
 import twilio = require('twilio')
 
 jest.mock('twilio')
 
 let db: any
+let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
 let sentMessages: any[]
 
 beforeEach(async () => {
-  db = await tst.openDb()
+  ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
   agent = tst.mockRoute(invite, models, { jwt: true, path: '/:org_id' })
   sentMessages = (twilio as any)().__resetMessages()
@@ -29,7 +30,7 @@ afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe('orgs.invite', () => {
+describe.only('orgs.invite', () => {
   it('should add a verified subscriber', async () => {
     let res = await agent.post('/' + seed.Organisation.a.id)
       .set(tst.jwtHeader(seed.User.current.id))

@@ -2,6 +2,7 @@ import { Model, Document } from 'mongoose'
 import { resolve } from 'path'
 import { safeLoad } from 'js-yaml'
 import { readFile } from 'fs-extra'
+import { IModelSet } from '../src/models'
 
 export type Seed = {
   [modelName: string]: {
@@ -13,7 +14,7 @@ export type ModelMap = {
   [modelName: string]: Model<Document>
 }
 
-export async function applySeed (seedName: String, models: ModelMap) {
+export async function applySeed (seedName: String, models: IModelSet) {
   let path = resolve(__dirname, `../seeds/${seedName}.yml`)
   let seed = safeLoad(String(await readFile(path)))
   
@@ -21,10 +22,10 @@ export async function applySeed (seedName: String, models: ModelMap) {
   
   let output: any = {}
   await Promise.all(Object.entries(seed).map(async ([modelName, data]) => {
-    if (!models[modelName]) {
+    if (!(models as any)[modelName]) {
       throw new Error(`Invalid model in seed '${modelName}'`)
     } else {
-      output[modelName] = await seedModel(models[modelName], data)
+      output[modelName] = await seedModel((models as any)[modelName], data)
     }
   }))
   

@@ -1,5 +1,6 @@
 import { RouteContext, MemberRole, AllMemberRoles } from '../../../types'
 import { makeTwilioClient, makeApiUrl } from '../../../services'
+import { IModelSet, IUser } from '../../../models'
 import { sign } from 'jsonwebtoken'
 import phone = require('phone')
 
@@ -35,8 +36,13 @@ export default async ({ req, api, next, models }: RouteContext) => {
   // TODO: Should check if they are already a member in hat role
   //       + if deactivated/
   
+  let newMember: IUser | null = null
+  
+  // TODO: See if the user is already a member on the org
+  // -> Might need a join on Organisation.members.user ?
+  
   // Find a user with the phone number
-  let newMember = await models.User.findOne({ phoneNumber })
+  newMember = await models.User.findOne({ phoneNumber })
   
   // Create the member if they don't exist
   if (!newMember) {

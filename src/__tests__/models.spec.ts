@@ -1,24 +1,18 @@
-import * as models from '../models'
+import { IModelSet, makeModels } from '../models'
 
-describe('Models', () => {
-  describe('User', () => {
-    it('should exist', async () => {
-      expect(models.User).toBeDefined()
-    })
+describe('#makeModels', () => {
+  let models = makeModels()
+  
+  it('should have the User Model', async () => {
+    expect(models.User).toBeDefined()
   })
-  describe('Organisation', () => {
-    it('should exist', async () => {
-      expect(models.Organisation).toBeDefined()
-    })
+  it('should have the Organisation Model', async () => {
+    expect(models.Organisation).toBeDefined()
   })
-  describe('Message', () => {
-    it('should exist', async () => {
-      expect(models.Message).toBeDefined()
-    })
+  it('should have the Message Model', async () => {
+    expect(models.Message).toBeDefined()
   })
-  describe('AuthCode', () => {
-    it('should exist', async () => {
-      expect(models.AuthCode).toBeDefined()
-    })
+  it('should have the AuthCode Model', async () => {
+    expect(models.AuthCode).toBeDefined()
   })
 })

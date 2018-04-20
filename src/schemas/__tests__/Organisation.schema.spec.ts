@@ -1,9 +1,10 @@
 import { applySeed, Seed, openDb, closeDb } from '../../../tools/testHarness'
-import * as models from '../../models'
+import { IModelSet } from '../../models'
 import { MemberRole } from '../../types'
 import { Model } from 'mongoose'
 
 let db: any
+let models: IModelSet
 let seed: Seed
 
 function makeOrg (member: any, extraArgs: any = {}) {
@@ -16,7 +17,7 @@ function makeOrg (member: any, extraArgs: any = {}) {
 }
 
 beforeEach(async () => {
-  db = await openDb()
+  ({ db, models } = await openDb())
   seed = await applySeed('test/orgs', models)
 })
 
