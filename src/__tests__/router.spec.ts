@@ -3,6 +3,7 @@ import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
 import { IModelSet } from '../models'
 import * as supertest from 'supertest'
 import * as express from 'express'
+import * as expressJwt from 'express-jwt'
 
 const expectedRoutes = [
   { method: 'get', url: '/users/me' },
@@ -64,5 +65,49 @@ describe('Routing', () => {
       expect(res.status).not.toBe(500)
     })
   })
+})
+
+describe('#applyErrorHandler', () => {
+  let app: express.Express
+  let agent: supertest.SuperTest<supertest.Test>
+  let failer: () => void
   
+  beforeEach(async () => {
+    app = express()
+    applyMiddleware(app)
+    app.get('/', (req, res, next) => {
+      next(failer())
+    })
+    applyErrorHandler(app)
+    agent = supertest.agent(app)
+  })
+  
+  it('should convert a Set to messages', async () => {
+    failer = () => new Set([ 'a', 'b', 'c' ])
+    let res = await agent.get('/')
+    expect(res.body.meta.messages).toEqual([ 'a', 'b', 'c' ])
+  })
+  it('should convert a String to messages', async () => {
+    failer = () => 'error'
+    let res = await agent.get('/')
+    expect(res.body.meta.messages).toEqual([ 'error' ])
+  })
+  it('should convert a JWTUnauthorizedError to messages', async () => {
+    failer = () => new expressJwt.UnauthorizedError(
+      'revoked_token', { message: 'error' }
+    )
+    let res = await agent.get('/')
+    expect(res.status).toBe(401)
+    expect(res.body.meta.messages).toEqual([ 'jwt.revoked_token' ])
+  })
+  it('should convert an Error to messages', async () => {
+    failer = () => new Error('error')
+    let res = await agent.get('/')
+    expect(res.body.meta.messages).toEqual([ 'error' ])
+  })
+  it('should default to an unknown error', async () => {
+    failer = () => 7
+    let res = await agent.get('/')
+    expect(res.body.meta.messages).toEqual([ 'api.general.unknown' ])
+  })
 })

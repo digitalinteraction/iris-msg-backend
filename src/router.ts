@@ -4,13 +4,13 @@ import expressJwt = require('express-jwt')
 import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
-import * as models from './models'
+import { IModelSet, makeModels } from './models'
 import * as middleware from './middleware'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
 type ExpressRoute = (req: Request, res: Response, next: NextFunction) => void
 
-export function makeRoute (route: CustomRoute): ExpressRoute {
+export function makeRoute (route: CustomRoute, models: IModelSet): ExpressRoute {
   return async (req, res, next) => {
     try {
       await route({ models, req, res, next, api: req.api })
@@ -27,7 +27,8 @@ export function applyMiddleware (app: Application) {
 
 export function applyRoutes (app: Application) {
   
-  const r = makeRoute
+  let models = makeModels()
+  const r = (route: CustomRoute) => makeRoute(route, models)
   
   // Reusable middleware
   let requiredJwt = middleware.jwt()
@@ -59,7 +60,6 @@ export function applyRoutes (app: Application) {
 export function applyErrorHandler (app: Application) {
   
   app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    
     if (error instanceof Set) {
       return res.api.sendFail(Array.from(error))
     }
@@ -67,7 +67,7 @@ export function applyErrorHandler (app: Application) {
       return res.api.sendFail(error)
     }
     if (error instanceof expressJwt.UnauthorizedError) {
-      return res.api.sendFail('auth failed', 401)
+      return res.api.sendFail(`jwt.${error.code}`, 401)
     }
     if (error instanceof Error) {
       return res.api.sendFail(error.message, 400)

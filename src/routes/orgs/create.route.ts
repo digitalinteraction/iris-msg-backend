@@ -13,7 +13,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // Check name & info are set
   let errors = new Set<string>()
-  if (!user) errors.add(makeError('badAuth'))
+  if (!user) errors.add('api.general.badAuth')
   if (!req.body.name) errors.add(makeError('badName'))
   if (!req.body.info) errors.add(makeError('badInfo'))
   if (errors.size > 0) throw errors

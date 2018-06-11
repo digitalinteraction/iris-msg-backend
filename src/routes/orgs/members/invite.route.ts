@@ -25,7 +25,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // Ensure the User exists & is verified
   let currentUser = await models.User.findWithJwt(req.user)
-  if (!currentUser) throw makeError('badAuth')
+  if (!currentUser) throw new Error('api.general.badAuth')
   
   // Ensure the Organisation exists & is coordinated by the user
   let org = await models.Organisation.findByIdForCoordinator(

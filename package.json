@@ -20,7 +20,7 @@
   "author": "robb-j",
   "license": "ISC",
   "dependencies": {
-    "api-formatter": "^0.3.0",
+    "api-formatter": "^0.3.1",
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
@@ -30,7 +30,7 @@
     "mongoose": "^5.0.14",
     "phone": "^2.0.0-rc.1",
     "supertest": "^3.0.0",
-    "twilio": "^3.14.0"
+    "twilio": "^3.17.2"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
@@ -50,7 +50,7 @@
     "jest-environment-node": "^22.4.3",
     "js-yaml": "^3.11.0",
     "mongodb-memory-server": "^1.7.3",
-    "ts-jest": "^22.4.3",
+    "ts-jest": "^22.4.6",
     "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
     "tslint-config-standard": "^7.0.0",

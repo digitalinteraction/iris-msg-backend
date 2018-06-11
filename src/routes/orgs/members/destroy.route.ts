@@ -8,7 +8,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // let user = await models.User.findWithJwt(req.user)
   //
-  // if (!user) throw makeError('badAuth')
+  // if (!user) new Error('api.general.badAuth')
   //
   // let org = await models.Organisation.findByIdForCoordinator(
   //   req.params.org_id, user.id

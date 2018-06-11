@@ -10,7 +10,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   let user = await models.User.findWithJwt(req.user)
   
   // Fail if the user doesn't exist or isn't verified
-  if (!user) throw makeError('badAuth')
+  if (!user) throw new Error('api.general.badAuth')
   
   // Find the organisation where the user is an active coordinator
   let org = await models.Organisation.findByIdForCoordinator(
@@ -18,7 +18,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   )
   
   // Fail if the organisation wasn't found
-  if (!org) throw makeError('badAuth')
+  if (!org) throw new Error('api.general.badAuth')
   
   // Set the organisation to be deleted
   org.deletedOn = new Date()

@@ -7,7 +7,15 @@ import { AuthCodeSchema, IAuthCode, IAuthCodeClass } from './schemas/AuthCode.sc
 import { IMember } from './schemas/Member.schema'
 
 export {
-  IUserClass, IOrganisationClass, IAuthCodeClass, IMessageClass, IMember
+  IUser,
+  IUserClass,
+  IOrganisation,
+  IOrganisationClass,
+  IAuthCode,
+  IAuthCodeClass,
+  IMessage,
+  IMessageClass,
+  IMember
 }
 
 export interface IModelSet {

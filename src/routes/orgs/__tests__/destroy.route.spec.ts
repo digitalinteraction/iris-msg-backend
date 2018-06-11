@@ -51,6 +51,6 @@ describe('orgs.destroy', () => {
       .set(jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.orgs.destroy.badAuth')
+    expect(res.body.meta.messages).toContain('api.general.badAuth')
   })
 })
