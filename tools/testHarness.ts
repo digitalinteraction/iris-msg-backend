@@ -45,8 +45,10 @@ export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions
 export function mockRoute (route: Route, models: any, options: MockRouteOptions = {}): Agent {
   return mockExpressRoute(async (req, res, next) => {
     try {
+      let api = (req as any).api
+      let authJwt = req.user
       await route({
-        req, res, next, models, api: req.api
+        req, res, next, models, api, authJwt
       })
     } catch (err) {
       next(err)

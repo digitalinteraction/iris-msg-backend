@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express'
+import { RouteContext } from '../../types'
 
-export default function hello (req: Request, res: Response, next: NextFunction) {
-  res.api.sendData('Hello, World!')
+export default async ({ api }: RouteContext) => {
+  api.sendData('Hello, World!')
 }

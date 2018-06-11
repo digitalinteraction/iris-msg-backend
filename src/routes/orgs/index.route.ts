@@ -4,10 +4,10 @@ function makeError (name: string) {
   return `api.orgs.index.${name}`
 }
 
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
-  let user = await models.User.findWithJwt(req.user)
+  let user = await models.User.findWithJwt(authJwt)
   
   if (!user) return api.sendData([])
   

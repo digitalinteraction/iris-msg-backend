@@ -1,3 +1,1 @@
-import hello from './hello.route'
-
-export { hello }
+export { default as hello } from './hello.route'

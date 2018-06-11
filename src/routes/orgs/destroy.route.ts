@@ -4,10 +4,10 @@ function makeError (name: string) {
   return `api.orgs.destroy.${name}`
 }
 
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
-  let user = await models.User.findWithJwt(req.user)
+  let user = await models.User.findWithJwt(authJwt)
   
   // Fail if the user doesn't exist or isn't verified
   if (!user) throw new Error('api.general.badAuth')

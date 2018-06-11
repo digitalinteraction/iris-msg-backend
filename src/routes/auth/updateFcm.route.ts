@@ -6,12 +6,10 @@ import { RouteContext } from '../../types'
 
 const authError = 'api.general.badAuth'
 
-export default async ({ req, res, next, api, models }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   const { User } = models
   
-  if (!req.user) throw new Error('api.general.badAuth')
-  
-  let user = await User.findWithJwt(req.user)
+  let user = await User.findWithJwt(authJwt)
   
   if (!user) throw new Error('api.general.badAuth')
   

@@ -6,10 +6,10 @@ function makeError (name: string) {
 
 // TODO: set locale from the request
 
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
-  let user = await models.User.findWithJwt(req.user)
+  let user = await models.User.findWithJwt(authJwt)
   
   // Check name & info are set
   let errors = new Set<string>()

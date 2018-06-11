@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express'
 import { AuthCodeType, RouteContext } from '../../types'
 import { makeTwilioClient } from '../../services'
 import phone = require('phone')

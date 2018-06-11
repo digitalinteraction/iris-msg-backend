@@ -1,10 +1,6 @@
-import me from './me.route'
-import loginRequest from './loginRequest.route'
-import loginCheck from './loginCheck.route'
-import verifyRequest from './verifyRequest.route'
-import verifyCheck from './verifyCheck.route'
-import updateFcm from './updateFcm.route'
-
-export {
-  me, loginRequest, loginCheck, verifyRequest, verifyCheck, updateFcm
-}
+export { default as me } from './me.route'
+export { default as loginRequest } from './loginRequest.route'
+export { default as loginCheck } from './loginCheck.route'
+export { default as verifyRequest } from './verifyRequest.route'
+export { default as verifyCheck } from './verifyCheck.route'
+export { default as updateFcm } from './updateFcm.route'

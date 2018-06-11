@@ -8,13 +8,19 @@ export interface RouteContext {
   api: Api
   req: Request
   res: Response
-  next: NextFunction
+  next: NextFunction,
+  authJwt?: AuthJwt
 }
 
 export enum AuthCodeType {
   Verify = 'verify',
   Login = 'login',
   Web = 'web'
+}
+
+export interface AuthJwt {
+  usr: String,
+  num: String
 }
 
 export const AllAuthCodeTypes = Object.values(AuthCodeType)

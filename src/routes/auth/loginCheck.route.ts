@@ -5,7 +5,7 @@ function makeError (name: string) {
   return `api.auth.login-check.${name}`
 }
 
-export default async ({ req, res, next, api, models }: RouteContext) => {
+export default async ({ req, api, models }: RouteContext) => {
   
   let auth = await models.AuthCode.fromCode(req.body.code, AuthCodeType.Login)
     .populate('user')

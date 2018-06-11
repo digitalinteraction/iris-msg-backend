@@ -1,4 +1,4 @@
-import { IModelSet, makeModels } from '../models'
+import { makeModels } from '../models'
 
 describe('#makeModels', () => {
   let models = makeModels()

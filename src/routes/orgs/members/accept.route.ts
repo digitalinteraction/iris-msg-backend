@@ -5,6 +5,5 @@ function makeError (name: string) {
 }
 
 export default async ({ req, api, next, models }: RouteContext) => {
-  
   api.sendData('ok')
 }

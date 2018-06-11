@@ -4,9 +4,9 @@ function makeError (name: string) {
   return `api.orgs.members.destroy.${name}`
 }
 
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
-  // let user = await models.User.findWithJwt(req.user)
+  // let user = await models.User.findWithJwt(authJwt)
   //
   // if (!user) new Error('api.general.badAuth')
   //

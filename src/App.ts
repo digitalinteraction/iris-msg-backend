@@ -1,6 +1,5 @@
 import * as express from 'express'
 import * as mongoose from 'mongoose'
-import * as models from './models'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 
 export default class App {
