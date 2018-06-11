@@ -31,7 +31,8 @@ describe('Organisation', () => {
       await makeOrg({
         user: seed.User.verified.id,
         role: MemberRole.Coordinator,
-        confirmedOn: new Date()
+        confirmedOn: new Date(),
+        deletedOn: null
       })
       
       let orgs = await models.Organisation.findForUser(seed.User.verified.id)
@@ -47,26 +48,33 @@ describe('Organisation', () => {
       let orgs = await models.Organisation.findForUser(seed.User.verified.id)
       expect(orgs).toHaveLength(0)
     })
-    it('should ignore unconfirmed members', async () => {
-      await makeOrg({
-        user: seed.User.verified.id,
-        role: MemberRole.Coordinator,
-        confirmedOn: null
-      })
-      
-      let orgs = await models.Organisation.findForUser(seed.User.verified.id)
-      expect(orgs).toHaveLength(0)
-    })
-    it('should ignore deleted members', async () => {
-      await makeOrg({
+  })
+  describe('.findByIdForCoordinator', () => {
+    it('should find an org when the user is a coordinator', async () => {
+      let org = await makeOrg({
         user: seed.User.verified.id,
         role: MemberRole.Coordinator,
         confirmedOn: new Date(),
-        deletedOn: new Date()
+        deletedOn: null
       })
       
-      let orgs = await models.Organisation.findForUser(seed.User.verified.id)
-      expect(orgs).toHaveLength(0)
+      let matched = await models.Organisation.findByIdForCoordinator(
+        org.id, seed.User.verified.id
+      )
+      expect(matched).toBeDefined()
+    })
+    it('should ignore deleted organisations', async () => {
+      let org = await makeOrg({
+        user: seed.User.verified.id,
+        role: MemberRole.Coordinator,
+        confirmedOn: new Date(),
+        deletedOn: null
+      }, { deletedOn: new Date() })
+      
+      let matched = await models.Organisation.findByIdForCoordinator(
+        org.id, seed.User.verified.id
+      )
+      expect(matched).toBeNull()
     })
   })
 })
