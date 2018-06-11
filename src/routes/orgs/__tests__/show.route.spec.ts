@@ -2,7 +2,6 @@ import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '.
 import show from '../show.route'
 import { IModelSet } from '../../../models'
 import { MemberRole } from '../../../types'
-import { Model } from 'mongoose'
 
 let db: any
 let models: IModelSet

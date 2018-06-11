@@ -1,9 +1,9 @@
 import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
 import { IModelSet } from '../models'
-import * as supertest from 'supertest'
-import * as express from 'express'
-import * as expressJwt from 'express-jwt'
+import supertest = require('supertest')
+import express = require('express')
+import expressJwt = require('express-jwt')
 
 const expectedRoutes = [
   { method: 'get', url: '/users/me' },

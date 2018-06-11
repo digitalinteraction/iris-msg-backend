@@ -12,9 +12,10 @@ export type IAuthCodeClass = Model<IAuthCode> & {
 
 export interface IAuthCode extends Document {
   code: Number
+  type: AuthCodeType,
   expiresOn?: Date
   usedOn?: Date
-  usedBy?: Schema.Types.ObjectId
+  user?: Schema.Types.ObjectId
   
   formatted: String
 }

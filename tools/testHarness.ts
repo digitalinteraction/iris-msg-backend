@@ -74,3 +74,7 @@ export function jwtHeader (userId: any) {
   let token = sign({ usr: userId }, process.env.JWT_SECRET)
   return { Authorization: `Bearer ${token}` }
 }
+
+export function inTheFuture () {
+  return new Date(32535129600000)
+}

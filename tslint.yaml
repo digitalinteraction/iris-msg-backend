@@ -3,9 +3,9 @@ extends: tslint-config-standard
 # rulesDirectory:
 #   - src
 
-linterOptions:
-  exclude:
-    - node_module/**/*.ts
+# linterOptions:
+#   exclude:
+#     - node_module/**/*.ts
 
 rules:
   no-trailing-whitespace:

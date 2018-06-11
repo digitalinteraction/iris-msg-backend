@@ -1,10 +1,9 @@
 import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
 import me from '../me.route'
 import { IModelSet } from '../../../models'
-import { Mongoose } from 'mongoose'
 
 describe('auth.me', () => {
-  let db: Mongoose
+  let db: any
   let models: IModelSet
   let seed: Seed
   let agent: Agent
