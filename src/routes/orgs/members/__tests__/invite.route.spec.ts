@@ -30,7 +30,7 @@ afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe.only('orgs.invite', () => {
+describe('orgs.invite', () => {
   it('should add a verified subscriber', async () => {
     let res = await agent.post('/' + seed.Organisation.a.id)
       .set(tst.jwtHeader(seed.User.current.id))
