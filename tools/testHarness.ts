@@ -56,10 +56,6 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   }, options)
 }
 
-export function old_openDb (): Promise<Mongoose> {
-  return connect(process.env.MONGO_URI)
-}
-
 export async function openDb (): Promise<TestDatabase> {
   let models = makeModels()
   let db = await connect(process.env.MONGO_URI)
@@ -68,7 +64,9 @@ export async function openDb (): Promise<TestDatabase> {
 
 export async function closeDb (db: Mongoose): Promise<void> {
   let collections = Object.values(db.connection.collections)
-  await Promise.all(collections.map(c => c.remove({})))
+  await Promise.all(collections.map(c =>
+    (c as any).remove({})
+  ))
   await db.disconnect()
 }
 
