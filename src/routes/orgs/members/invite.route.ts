@@ -8,7 +8,7 @@ function makeError (name: string) {
   return `api.orgs.members.invite.${name}`
 }
 
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   let { phoneNumber, locale, role } = req.body
   
   // Fail if 'phoneNumber', 'locale' or 'role' are not set
@@ -24,7 +24,7 @@ export default async ({ req, api, next, models }: RouteContext) => {
   if (!phoneNumber) throw makeError('badNumber')
   
   // Ensure the User exists & is verified
-  let currentUser = await models.User.findWithJwt(req.user)
+  let currentUser = await models.User.findWithJwt(authJwt)
   if (!currentUser) throw new Error('api.general.badAuth')
   
   // Ensure the Organisation exists & is coordinated by the user
