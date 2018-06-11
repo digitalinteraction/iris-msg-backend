@@ -12,10 +12,10 @@ export type IAuthCodeClass = Model<IAuthCode> & {
 
 export interface IAuthCode extends Document {
   code: Number
-  type: AuthCodeType,
-  expiresOn?: Date
-  usedOn?: Date
-  user?: Schema.Types.ObjectId
+  type: AuthCodeType
+  expiresOn: Date
+  usedOn: Date | null
+  user: Schema.Types.ObjectId | null
   
   formatted: String
 }
@@ -25,6 +25,11 @@ export const AuthCodeSchema = new Schema({
     type: Number,
     required: true
   },
+  type: {
+    type: String,
+    enum: AllAuthCodeTypes,
+    required: true
+  },
   expiresOn: {
     type: Date,
     required: true
@@ -32,11 +37,6 @@ export const AuthCodeSchema = new Schema({
   usedOn: {
     type: Date,
     default: null
-  },
-  type: {
-    type: String,
-    enum: AllAuthCodeTypes,
-    required: true
   },
   user: {
     type: Schema.Types.ObjectId,

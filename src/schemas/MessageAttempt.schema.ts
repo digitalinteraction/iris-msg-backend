@@ -21,7 +21,7 @@ export interface IMessageAttempt extends Types.Subdocument {
   state: AttemptState
   recipient: Schema.Types.ObjectId
   donor: Schema.Types.ObjectId
-  previousAttempt?: Schema.Types.ObjectId
+  previousAttempt: Schema.Types.ObjectId | null
 }
 
 export const MessageAttemptSchema = new Schema({

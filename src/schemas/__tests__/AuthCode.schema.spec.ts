@@ -1,13 +1,6 @@
-/*
- * To Test:
- *  - AuthCode.forUser
- *  - AuthCode.fromCode
- *  - AuthCode#formatted
- */
 import { applySeed, Seed, openDb, closeDb, inTheFuture } from '../../../tools/testHarness'
 import { IModelSet } from '../../models'
-import { MemberRole, AuthCodeType } from '../../types'
-import { Model } from 'mongoose'
+import { AuthCodeType } from '../../types'
 
 let db: any
 let models: IModelSet
@@ -58,9 +51,16 @@ describe('AuthCode', () => {
         type: AuthCodeType.Verify,
         user: seed.User.verified.id
       })
-      
       expect(code.formatted).toBe('123-456')
-      console.log(code.formatted)
+    })
+    it('should forward pad', async () => {
+      let code = await models.AuthCode.create({
+        code: 123,
+        expiresOn: inTheFuture(),
+        type: AuthCodeType.Verify,
+        user: seed.User.verified.id
+      })
+      expect(code.formatted).toBe('000-123')
     })
   })
 })
