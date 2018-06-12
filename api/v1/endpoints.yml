@@ -1,0 +1,67 @@
+auth:
+  name: Auth
+  base: /users
+  endpoints:
+  - get: /me me
+    info: Fetches the current authenticated user
+  
+  - post: /login-request loginRequest
+    info: Requests a login sms to be sent
+    body:
+      phoneNumber: string - The local phone number of the user
+      locale: string - The ISO_3166-2 country where the phone is
+  
+  - post: /login-check loginCheck
+    info: Checks a login sms code and logs in the user
+    body:
+      code: number - The sms code to check
+  
+  - post: /verify-request verifyRequest
+    info: Requests a verification sms to be sent
+    body:
+      phoneNumber: string - The local phone number of the new user
+      locale: string - The ISO_3166-2 country where the phone is
+  
+  - post: /verify-check verifyCheck
+    info: Checks a verification sms code and creates a new user
+    body:
+      code: number - The sms code to check
+  
+  - post: /update-fcm updateFcm
+    info: Updates the fcm token for the current user
+
+orgs:
+  name: Organisations
+  base: /organisations
+  endpoints:
+  - get: / index
+    info: Fetches organisations the current user is part of
+  
+  - get: /:org_id show
+    info: Fetches a specific organisation that the user is part of
+    params:
+      org_id: string - The id of the organisation ti fetch
+  
+  - post: / create
+    info: Creates a new organisation with the current user as a coordinator
+    body:
+      name: string - The name of the new organisation
+      info: string - A longer description of the new organisation
+  
+  - delete: /:org_id destroy
+    info: Deletes an organisation (using a soft delete)
+    params:
+      org_id: string - The id of the delete
+
+members:
+  name: Organisation Membership
+  base: /organisations/:org_id
+  endpoints:
+  - post: /members invite
+    info: Invites a member to an organisation
+    params:
+      org_id: string - The id of the organisation to fetch members for
+    body:
+      phoneNumber: string - The phone number of the person to invite
+      locale: string - The ISO_3166-2 country where the phone is
+      role: string - The role of the new user (coordinator|donor|subscriber)

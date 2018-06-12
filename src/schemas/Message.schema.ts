@@ -6,7 +6,7 @@ const schemaOptions = {
 }
 
 export interface IMessage extends Document {
-  content: String
+  content: string
   attempts: Types.DocumentArray<IMessageAttempt>
   organisation: Schema.Types.ObjectId
   author: Schema.Types.ObjectId

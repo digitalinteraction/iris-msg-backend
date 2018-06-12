@@ -7,11 +7,11 @@ import expressJwt = require('express-jwt')
 
 const expectedRoutes = [
   { method: 'get', url: '/users/me' },
-  { method: 'post', url: '/users/login-request' },
-  { method: 'post', url: '/users/login-check' },
-  { method: 'post', url: '/users/verify-request' },
-  { method: 'post', url: '/users/verify-check' },
-  { method: 'post', url: '/users/update-fcm' },
+  { method: 'post', url: '/users/login_request' },
+  { method: 'post', url: '/users/login_check' },
+  { method: 'post', url: '/users/verify_request' },
+  { method: 'post', url: '/users/verify_check' },
+  { method: 'post', url: '/users/update_fcm' },
   
   { method: 'get', url: '/organisations' },
   { method: 'get', url: '/organisations/{{org_id}}', auth: true },

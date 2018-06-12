@@ -7,9 +7,9 @@ const schemaOptions = {
 }
 
 export interface IOrganisation extends Document {
-  name: String
-  info: String
-  locale: String
+  name: string
+  info: string
+  locale: string
   members: Types.DocumentArray<IMember>
   deletedOn: Date | null
 }

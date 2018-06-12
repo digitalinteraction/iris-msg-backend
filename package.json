@@ -50,6 +50,7 @@
     "jest-environment-node": "^23.1.0",
     "js-yaml": "^3.12.0",
     "mongodb-memory-server": "^1.8.0",
+    "ocelot-docs": "^0.3.2",
     "supertest": "^3.1.0",
     "ts-jest": "^22.4.6",
     "ts-node": "^6.1.0",

@@ -2,7 +2,7 @@ User:
   verified:
     phoneNumber: '+447880123001'
     fcmToken: abcdefg-123456-abcdefg
-    verifiedOn: 2013-09-25 16:00:00
+    verifiedOn: 2013-09-25T16:00:00.1Z
   unverified:
     phoneNumber: '+447880123002'
     fcmToken: null

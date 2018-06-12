@@ -1,11 +1,27 @@
 import { RouteContext, MemberRole, AllMemberRoles } from '../../../types'
 import { makeTwilioClient, makeApiUrl } from '../../../services'
-import { IUser } from '../../../models'
+import { IUser, IOrganisation, IMember } from '../../../models'
 import { sign } from 'jsonwebtoken'
 import phone = require('phone')
 
 function makeError (name: string) {
   return `api.orgs.members.invite.${name}`
+}
+
+export function makeMessage (role: MemberRole, orgName: string, memberId: any): string {
+  const unsubLink = makeApiUrl(`unsub/${memberId}`)
+  
+  switch (role) {
+    case MemberRole.Subscriber:
+      return `You are now subscribed to ${orgName} on irismsg.io, you can unsubscribe at ${unsubLink}`
+      
+    case MemberRole.Donor:
+      const acceptLink = makeApiUrl(`accept/${memberId}`)
+      return `You have been invited to donate for ${orgName} on irismsg.io, ${acceptLink}`
+      
+    case MemberRole.Coordinator:
+      return `You have been added as a coordinator to ${orgName} on irismsg.io`
+  }
 }
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
@@ -33,20 +49,11 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   )
   if (!org) throw makeError('notFound')
   
-  // TODO: Should check if they are already a member in hat role
-  //       + if deactivated/
-  
-  let newMember: IUser | null = null
-  
-  // TODO: See if the user is already a member on the org
-  // -> Might need a join on Organisation.members.user ?
-  
-  // Find a user with the phone number
-  newMember = await models.User.findOne({ phoneNumber })
+  let newUser = await models.User.findOne({ phoneNumber })
   
   // Create the member if they don't exist
-  if (!newMember) {
-    newMember = await models.User.create({
+  if (!newUser) {
+    newUser = await models.User.create({
       phoneNumber, verifiedOn: new Date()
     })
   }
@@ -54,7 +61,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Add the member
   // Confirm the record if they arent a donor
   let member = org.members.create({
-    user: newMember.id,
+    user: newUser.id,
     confirmedOn: role === MemberRole.Donor
       ? null
       : new Date(),
@@ -65,14 +72,11 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   org.members.push(member)
   await org.save()
   
-  // Generate unsubscribe token
-  let unsubToken = makeApiUrl(`u/${member.id}`)
-  
   // Send the member an sms
   await makeTwilioClient().messages.create({
     to: phoneNumber,
     from: process.env.TWILIO_NUMBER,
-    body: `You have been subscribed to ${org.name} on Iris Msg, you can unsubscribe at ${unsubToken}`
+    body: makeMessage(role as MemberRole, org.name, member.id)
   })
   
   api.sendData(member)

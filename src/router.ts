@@ -41,11 +41,11 @@ export function applyRoutes (app: Application) {
   
   // Auth
   app.get('/users/me', optionalJwt, r(routes.auth.me))
-  app.post('/users/login-request', optionalJwt, r(routes.auth.loginRequest))
-  app.post('/users/login-check', optionalJwt, r(routes.auth.loginCheck))
-  app.post('/users/verify-request', optionalJwt, r(routes.auth.verifyRequest))
-  app.post('/users/verify-check', optionalJwt, r(routes.auth.verifyCheck))
-  app.post('/users/update-fcm', requiredJwt, r(routes.auth.updateFcm))
+  app.post('/users/login_request', optionalJwt, r(routes.auth.loginRequest))
+  app.post('/users/login_check', optionalJwt, r(routes.auth.loginCheck))
+  app.post('/users/verify_request', optionalJwt, r(routes.auth.verifyRequest))
+  app.post('/users/verify_check', optionalJwt, r(routes.auth.verifyCheck))
+  app.post('/users/update_fcm', requiredJwt, r(routes.auth.updateFcm))
   
   // Org Management
   app.get('/organisations', requiredJwt, r(routes.orgs.index))
@@ -55,6 +55,8 @@ export function applyRoutes (app: Application) {
   
   // Org Members
   app.post('/organisations/:org_id/members', requiredJwt, r(routes.orgs.members.invite))
+  // app.get('/u/:token')
+  // app.get('/accept/:token')
   
   // Messaging
 }

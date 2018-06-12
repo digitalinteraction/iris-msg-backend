@@ -11,13 +11,13 @@ export type IAuthCodeClass = Model<IAuthCode> & {
 }
 
 export interface IAuthCode extends Document {
-  code: Number
+  code: number
   type: AuthCodeType
   expiresOn: Date
   usedOn: Date | null
   user: Schema.Types.ObjectId | null
   
-  formatted: String
+  formatted: string
 }
 
 export const AuthCodeSchema = new Schema({

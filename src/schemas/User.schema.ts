@@ -5,8 +5,8 @@ const schemaOptions = {
 }
 
 export interface IUser extends Document {
-  phoneNumber: String
-  fcmToken: String | null
+  phoneNumber: string
+  fcmToken: string | null
   verifiedOn: Date | null
 }
 
