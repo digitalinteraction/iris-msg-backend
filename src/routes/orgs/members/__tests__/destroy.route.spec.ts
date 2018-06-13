@@ -7,6 +7,7 @@ let db: any
 let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
+
 let org: IOrganisation
 let subscriber: IMember
 
@@ -21,12 +22,12 @@ beforeEach(async () => {
   let coordinator = org.members.create({
     role: MemberRole.Coordinator,
     confirmedOn: new Date(),
-    user: seed.User.current
+    user: seed.User.current.id
   })
   subscriber = org.members.create({
     role: MemberRole.Subscriber,
     confirmedOn: new Date(),
-    user: seed.User.verified
+    user: seed.User.verified.id
   })
   org.members.push(coordinator)
   org.members.push(subscriber)
@@ -38,7 +39,7 @@ afterEach(async () => {
 })
 
 describe('orgs.members.destroy', () => {
-  it('should succeed', async () => {
+  it('should succeed with a http/200', async () => {
     let res = await agent.delete(`/${org.id}/${subscriber.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(200)

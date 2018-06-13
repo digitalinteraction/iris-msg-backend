@@ -4,7 +4,7 @@ import { makeTwilioClient, makeApiUrl } from '../../../services'
 import phone = require('phone')
 
 function makeError (name: string) {
-  return `api.orgs.members.invite.${name}`
+  return `api.orgs.members.create.${name}`
 }
 
 export function makeMessage (role: MemberRole, orgName: string, memberId: any): string {

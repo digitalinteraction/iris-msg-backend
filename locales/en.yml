@@ -29,6 +29,7 @@ api:
       badAuth: The current user isn't a coordinator of that org
     members:
       accept:
+        notFound: Organisation was not found or user cannot access it
       invite:
         badNumber: No phoneNumber provided or it was invalid
         badLocale: No locale provided or it was invalid

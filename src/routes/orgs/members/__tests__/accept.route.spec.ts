@@ -1,16 +1,31 @@
 import * as tst from '../../../../../tools/testHarness'
 import accept from '../accept.route'
-import { IModelSet } from '../../../../models'
+import { IModelSet, IOrganisation, IMember } from '../../../../models'
+import { MemberRole } from '../../../../types'
 
 let db: any
 let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
 
+let org: IOrganisation
+let member: IMember
+
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(accept, models, { jwt: true })
+  agent = tst.mockRoute(accept, models, {
+    jwt: true, path: '/:org_id/:mem_id'
+  })
+  
+  org = seed.Organisation.a
+  member = org.members.create({
+    role: MemberRole.Subscriber,
+    confirmedOn: null,
+    user: seed.User.current.id
+  })
+  org.members.push(member)
+  await org.save()
 })
 
 afterEach(async () => {
@@ -18,8 +33,18 @@ afterEach(async () => {
 })
 
 describe('orgs.members.accept', () => {
-  // TODO: ...
-  it('should pass', async () => {
-    // ...
+  it('should succeed with a http/200', async () => {
+    let res = await agent.post(`/${org.id}/${member.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(200)
+  })
+  it('should mark the member as confirmed', async () => {
+    let res = await agent.post(`/${org.id}/${member.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    
+    let updatedOrg = await models.Organisation.findById(org.id)
+    let updatedMem = updatedOrg!.members.id(member.id)
+    
+    expect(updatedMem.confirmedOn).toBeInstanceOf(Date)
   })
 })
