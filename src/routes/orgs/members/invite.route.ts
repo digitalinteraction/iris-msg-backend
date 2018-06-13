@@ -9,13 +9,13 @@ function makeError (name: string) {
 }
 
 export function makeMessage (role: MemberRole, orgName: string, memberId: any): string {
-  const unsubLink = makeApiUrl(`unsub/${memberId}`)
-  
   switch (role) {
     case MemberRole.Subscriber:
+      const unsubLink = makeApiUrl(`unsub/${memberId}`)
       return `You are now subscribed to ${orgName} on irismsg.io, you can unsubscribe at ${unsubLink}`
       
     case MemberRole.Donor:
+      // TODO: Update to use a deep link ...
       const acceptLink = makeApiUrl(`accept/${memberId}`)
       return `You have been invited to donate for ${orgName} on irismsg.io, ${acceptLink}`
       
