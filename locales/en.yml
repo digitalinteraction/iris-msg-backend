@@ -17,13 +17,11 @@ api:
     loginCheck:
       badCode: No code was provided
     updateFcm:
-      badAuth: User is not logged in or unverified
   
   orgs:
     create:
       badName: No name provided or it was invalid
       badInfo: No info provided or it was invalid
-      badAuth: User is not logged in or unverified
     index:
     show:
       notFound: Couldn't find that org or no permission to view it
@@ -35,11 +33,11 @@ api:
         badNumber: No phoneNumber provided or it was invalid
         badLocale: No locale provided or it was invalid
         badRole: No role provided or it was invalid
-        badAuth: User is not logged in or unverified
         notFound: Organisation was not found or user cannot access it
       destroy:
-        badAuth: User is not logged in or unverified
         notFound: Organisation was not found or user cannot access it / not a member
+        notMember: That membership doesn't exist
+      deep_link:
       unsubscribe:
 
 sms:

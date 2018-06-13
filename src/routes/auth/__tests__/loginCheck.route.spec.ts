@@ -43,7 +43,7 @@ describe('auth.login.check', () => {
     expect(payload.usr).toBe(seed.User.verified.id)
   })
   it('should fail if the code has expired', async () => {
-    let oldCode = await models.AuthCode.create({
+    await models.AuthCode.create({
       code: 654321,
       expiresOn: new Date(Date.UTC(1000, 0)),
       usedOn: null,

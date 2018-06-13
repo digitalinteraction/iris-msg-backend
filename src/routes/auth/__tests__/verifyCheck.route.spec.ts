@@ -33,7 +33,7 @@ describe('auth.verify.check', () => {
     expect(res.status).toBe(200)
   })
   it('should verify the user', async () => {
-    let res = await agent.post('/').send({ code: 123456 })
+    await agent.post('/').send({ code: 123456 })
     let user: any = await models.User.findOne()
     expect(user.verifiedOn).toBeTruthy()
   })

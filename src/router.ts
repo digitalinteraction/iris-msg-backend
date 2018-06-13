@@ -1,7 +1,7 @@
-import { Application, Request, Response, NextFunction, Router } from 'express'
+import { Application, Request, Response, NextFunction } from 'express'
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
-import { RouteContext, AuthJwt } from './types'
+import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
 import { IModelSet, makeModels } from './models'
@@ -14,7 +14,7 @@ export function makeRoute (route: CustomRoute, models: IModelSet): ExpressRoute 
   return async (req, res, next) => {
     try {
       let api = (req as any).api as Api
-      let authJwt = req.user
+      let authJwt = (req as any).user
       await route({ models, req, res, next, api, authJwt })
     } catch (error) {
       next(error)

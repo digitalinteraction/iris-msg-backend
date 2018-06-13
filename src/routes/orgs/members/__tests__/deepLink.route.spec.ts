@@ -1,5 +1,5 @@
 import * as tst from '../../../../../tools/testHarness'
-import unsubscribe from '../unsubscribe.route'
+import deepLink from '../deepLink.route'
 import { IModelSet } from '../../../../models'
 import { MemberRole } from '../../../../types'
 
@@ -11,14 +11,14 @@ let agent: tst.Agent
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(unsubscribe, models, { jwt: true })
+  agent = tst.mockRoute(deepLink, models, { jwt: true })
 })
 
 afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe('orgs.members.unsubscribe', () => {
+describe('orgs.members.deepLink', () => {
   // TODO: ...
   it('should pass', async () => {
     // ...

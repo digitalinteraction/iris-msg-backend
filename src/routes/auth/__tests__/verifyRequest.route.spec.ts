@@ -1,4 +1,4 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
 import verifyRequest from '../verifyRequest.route'
 import { IModelSet } from '../../../models'
 import twilio = require('twilio')
@@ -7,13 +7,13 @@ jest.mock('twilio')
 
 let db: any
 let models: IModelSet
-let seed: Seed
+// let seed: Seed
 let agent: Agent
 let sentMessages: any[]
 
 beforeEach(async () => {
   ({ db, models } = await openDb())
-  seed = await applySeed('test/auth', models)
+  await applySeed('test/auth', models)
   agent = mockRoute(verifyRequest, models)
   sentMessages = (twilio as any)().__resetMessages()
 })
@@ -52,7 +52,7 @@ describe('auth.verify.request', () => {
     expect(sentMessages[0].body).toMatch(/\d{3}-\d{3}/)
   })
   it('should do nothing if the user exists', async () => {
-    let res = await agent.post('/')
+    await agent.post('/')
       .send({ phoneNumber: '07880123001', locale: 'GB' })
     let users = await models.User.find()
     let codes = await models.AuthCode.find()

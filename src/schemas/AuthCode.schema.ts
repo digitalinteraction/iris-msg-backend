@@ -1,4 +1,4 @@
-import { Model, Schema, Document, Types, DocumentQuery, Query } from 'mongoose'
+import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
 import { AuthCodeType, AllAuthCodeTypes } from '../types'
 
 const schemaOptions = {

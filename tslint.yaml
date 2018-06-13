@@ -13,3 +13,5 @@ rules:
     - ignore-blank-lines
   no-unused-variable:
     - true
+  await-promise:
+    - false

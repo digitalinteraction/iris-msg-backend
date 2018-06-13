@@ -1,8 +1,8 @@
-import { RouteContext, MemberRole } from '../../types'
+import { RouteContext } from '../../types'
 
-function makeError (name: string) {
-  return `api.orgs.destroy.${name}`
-}
+// function makeError (name: string) {
+//   return `api.orgs.destroy.${name}`
+// }
 
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   

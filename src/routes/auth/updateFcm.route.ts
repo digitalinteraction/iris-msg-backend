@@ -4,8 +4,6 @@ import { RouteContext } from '../../types'
 //   return `api.auth.updateFcm.${name}`
 // }
 
-const authError = 'api.general.badAuth'
-
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   const { User } = models
   

@@ -19,7 +19,7 @@ afterEach(async () => {
 
 describe('auth.update-fcm', () => {
   it('should update their fcm', async () => {
-    let res = await agent.post('/')
+    await agent.post('/')
       .set(jwtHeader(seed.User.verified.id))
       .send({ newToken: 'abcdefg-123456' })
     let user = await models.User.findById(seed.User.verified.id)

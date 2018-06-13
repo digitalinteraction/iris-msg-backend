@@ -1,6 +1,5 @@
-import { applySeed, Seed, openDb, closeDb, inTheFuture } from '../../../tools/testHarness'
+import { applySeed, Seed, openDb, closeDb } from '../../../tools/testHarness'
 import { IModelSet } from '../../models'
-import { AuthCodeType } from '../../types'
 
 let db: any
 let models: IModelSet

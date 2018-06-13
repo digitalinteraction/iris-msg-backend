@@ -1,4 +1,4 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
 import loginRequest from '../loginRequest.route'
 import { IModelSet } from '../../../models'
 import twilio = require('twilio')
@@ -7,7 +7,7 @@ jest.mock('twilio')
 
 let db: any
 let models: IModelSet
-let seed: Seed
+// let seed: Seed
 let agent: Agent
 let sentMessages: any[]
 

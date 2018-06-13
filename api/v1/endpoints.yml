@@ -53,8 +53,8 @@ orgs:
     params:
       org_id: string - The id of the delete
 
-members:
-  name: Organisation Membership
+orgs.members:
+  name: Membership
   base: /organisations/:org_id
   endpoints:
   - post: /members invite
@@ -65,3 +65,7 @@ members:
       phoneNumber: string - The phone number of the person to invite
       locale: string - The ISO_3166-2 country where the phone is
       role: string - The role of the new user (coordinator|donor|subscriber)
+  - post: ../members/:mem_id/accept accept
+    info: Accept a membership invitation
+    params:
+      mem_id: string - The id of the membership

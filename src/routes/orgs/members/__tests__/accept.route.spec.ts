@@ -1,7 +1,6 @@
 import * as tst from '../../../../../tools/testHarness'
 import accept from '../accept.route'
 import { IModelSet } from '../../../../models'
-import { MemberRole } from '../../../../types'
 
 let db: any
 let models: IModelSet
@@ -18,7 +17,7 @@ afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe('orgs.accept', () => {
+describe('orgs.members.accept', () => {
   // TODO: ...
   it('should pass', async () => {
     // ...

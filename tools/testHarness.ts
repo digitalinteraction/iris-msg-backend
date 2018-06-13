@@ -1,11 +1,9 @@
 import { Mongoose, connect } from 'mongoose'
 import supertest = require('supertest')
 import express = require('express')
-import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
 import { RouteContext } from '../src/types'
 import { IModelSet, makeModels } from '../src/models'
-import { ModelMap } from './seeder'
 import { applyMiddleware, applyErrorHandler } from '../src/router'
 import { sign } from 'jsonwebtoken'
 
