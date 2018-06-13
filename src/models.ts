@@ -1,4 +1,4 @@
-import { model, Model } from 'mongoose'
+import { model, Model, Connection } from 'mongoose'
 
 import { UserSchema, IUser, IUserClass } from './schemas/User.schema'
 import { OrganisationSchema, IOrganisation, IOrganisationClass } from './schemas/Organisation.schema'
@@ -26,6 +26,9 @@ export interface IModelSet {
 }
 
 export function makeModels (): IModelSet {
+// export function makeModels (connection?: Connection): IModelSet {
+//   let modelFunc = connection ? connection.model : model
+  
   return {
     User: model<IUser, IUserClass>('User', UserSchema),
     Organisation: model<IOrganisation, IOrganisationClass>('Organisation', OrganisationSchema),

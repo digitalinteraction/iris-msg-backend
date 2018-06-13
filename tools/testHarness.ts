@@ -1,4 +1,4 @@
-import { Mongoose, connect } from 'mongoose'
+import { Mongoose, connect, createConnection, Connection } from 'mongoose'
 import supertest = require('supertest')
 import express = require('express')
 import expressJwt = require('express-jwt')
@@ -16,7 +16,8 @@ export type Route = (ctx: RouteContext) => Promise<void>
 export type Agent = supertest.SuperTest<supertest.Test>
 
 export interface TestDatabase {
-  db: Mongoose,
+  // db: Mongoose,
+  db: any,
   models: IModelSet
 }
 
@@ -28,7 +29,7 @@ export interface MockRouteOptions {
 export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions = {}): Agent {
   let app = express()
   applyMiddleware(app)
-  
+
   if (options.jwt !== undefined) {
     app.use(expressJwt({
       secret: process.env.JWT_SECRET,
@@ -54,19 +55,45 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   }, options)
 }
 
+// function makeConnection (uri: string): Promise<Connection> {
+//   return new Promise((resolve, reject) => {
+//     createConnection(uri)
+//       .then(c => resolve(c))
+//       .catch(e => reject(e))
+//   })
+// }
+
 export async function openDb (): Promise<TestDatabase> {
   let models = makeModels()
   let db = await connect(process.env.MONGO_URI)
   return { db, models }
 }
 
+// export async function openDb (): Promise<TestDatabase> {
+//   return createConnection(process.env.MONGO_URI).then(async connection => {
+//     let models = makeModels()
+//     return { db: connection, models }
+//   })
+// }
+
 export async function closeDb (db: Mongoose): Promise<void> {
   let collections = Object.values(db.connection.collections)
-  await Promise.all(collections.map(c =>
-    (c as any).remove({})
-  ))
+  await Promise.all(collections.map(c => (c as any).remove({})))
   await db.disconnect()
+  clean(db, 'models')
+  clean(db, 'modelSchemas')
 }
+
+// export async function closeDb (db: Connection): Promise<void> {
+//   let collections = Object.values(db.collections)
+//   await Promise.all(collections.map(c =>
+//     (c as any).remove({})
+//   ))
+//   await db.close(true)
+//   // await db.disconnect()
+//   // clean(db, 'models')
+//   // clean(db, 'modelSchemas')
+// }
 
 export function jwtHeader (userId: any) {
   let token = sign({ usr: userId }, process.env.JWT_SECRET)
@@ -75,4 +102,10 @@ export function jwtHeader (userId: any) {
 
 export function inTheFuture () {
   return new Date(32535129600000)
+}
+
+function clean (object: any, path: string) {
+  for (let key in object[path]) {
+    delete object[path][key]
+  }
 }
