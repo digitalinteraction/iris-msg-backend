@@ -13,7 +13,7 @@ let sentMessages: any[]
 
 beforeEach(async () => {
   ({ db, models } = await openDb())
-  seed = await applySeed('test/auth', models)
+  await applySeed('test/auth', models)
   agent = mockRoute(loginRequest, models)
   sentMessages = (twilio as any)().__resetMessages()
 })

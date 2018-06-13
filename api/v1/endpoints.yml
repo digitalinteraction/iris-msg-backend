@@ -57,15 +57,33 @@ orgs.members:
   name: Membership
   base: /organisations/:org_id
   endpoints:
-  - post: /members invite
+  - post: /members create
     info: Invites a member to an organisation
     params:
-      org_id: string - The id of the organisation to fetch members for
+      org_id: string - The id of the organisation to be added to
     body:
       phoneNumber: string - The phone number of the person to invite
       locale: string - The ISO_3166-2 country where the phone is
       role: string - The role of the new user (coordinator|donor|subscriber)
-  - post: ../members/:mem_id/accept accept
-    info: Accept a membership invitation
+  
+  - delete: /members/:mem_id destroy
+    info: Remove a member from an organisation (uses a soft delete)
     params:
-      mem_id: string - The id of the membership
+      org_id: string - The id of the organisation to be removed from
+      mem_id: string - The id of the membership to be removed
+  
+  - post: /members/:mem_id accept
+    info: Accept an invitation to join an organisation
+    params:
+      org_id: string - The id of the organisation to join
+      mem_id: string - The id of the membership being accepted
+  
+  - get: ../../unsub/:mem_id unsubscribe
+    info: Unsubscribes a member from an organisation (uses a soft delete)
+    params:
+      mem_id: string - The id of the member to be unsubscribe
+  
+  - get: ../../invite/:mem_id deep_link
+    info: Gets a deeplink redirection to accept an invite in the app
+    params:
+      mem_id: string - The id of the membership to link to

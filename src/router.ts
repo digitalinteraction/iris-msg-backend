@@ -37,7 +37,7 @@ export function applyRoutes (app: Application) {
   let optionalJwt = middleware.jwt({ credentialsRequired: false })
   
   // General
-  app.get('/', routes.general.hello)
+  app.get('/', r(routes.general.hello))
   
   // Auth
   app.get('/users/me', optionalJwt, r(routes.auth.me))
@@ -55,8 +55,10 @@ export function applyRoutes (app: Application) {
   
   // Org Members
   app.post('/organisations/:org_id/members', requiredJwt, r(routes.orgs.members.invite))
-  // app.get('/u/:token')
-  // app.get('/accept/:token')
+  app.delete('/organisations/:org_id/members/:mem_id', requiredJwt, r(routes.orgs.members.destroy))
+  app.post('/organisations/:org_id/accept/:mem_id', r(routes.orgs.members.accept))
+  app.get('/unsub/:mem_id', r(routes.orgs.members.unsubscribe))
+  app.get('/invite/:mem_id', r(routes.orgs.members.deepLink))
   
   // Messaging
 }

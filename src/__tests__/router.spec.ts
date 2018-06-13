@@ -14,16 +14,22 @@ const expectedRoutes = [
   { method: 'post', url: '/users/update_fcm' },
   
   { method: 'get', url: '/organisations' },
-  { method: 'get', url: '/organisations/{{org_id}}', auth: true },
+  { method: 'get', url: '/organisations/:org_id', auth: true },
   { method: 'post', url: '/organisations' },
-  { method: 'del', url: '/organisations/{{org_id}}' }
+  { method: 'del', url: '/organisations/:org_id' },
+  
+  { method: 'post', url: '/organisations/:org_id/members' },
+  { method: 'del', url: '/organisations/:org_id/members/:mem_id' },
+  { method: 'post', url: '/organisations/:org_id/accept/:mem_id' },
+  { method: 'get', url: '/unsub/:mem_id' },
+  { method: 'get', url: '/invite/:mem_id' }
 ]
 
 type Replacements = { [id: string]: string }
 
 function processUrl (url: string, replacements: Replacements): string {
   for (let varName in replacements) {
-    url = url.replace(new RegExp(`{{${varName}}}`), replacements[varName])
+    url = url.replace(new RegExp(`:${varName}`), replacements[varName])
   }
   return url
 }
@@ -35,7 +41,7 @@ describe('Routing', () => {
   let db: any
   let models: IModelSet
   let seed: any
-  let replacements: any
+  let replacements: Replacements
   
   beforeEach(async () => {
     ({ db, models } = await openDb())
@@ -46,7 +52,8 @@ describe('Routing', () => {
     applyErrorHandler(app)
     agent = supertest.agent(app)
     replacements = {
-      org_id: seed.Organisation.a.id
+      org_id: seed.Organisation.a.id,
+      mem_id: 'a_dummy_id'
     }
   })
   
