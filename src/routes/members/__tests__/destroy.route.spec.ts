@@ -1,7 +1,7 @@
-import * as tst from '../../../../../tools/testHarness'
+import * as tst from '../../../../tools/testHarness'
 import destroy from '../destroy.route'
-import { IModelSet, IOrganisation, IMember } from '../../../../models'
-import { MemberRole } from '../../../../types'
+import { IModelSet, IOrganisation, IMember } from '../../../models'
+import { MemberRole } from '../../../types'
 
 let db: any
 let models: IModelSet

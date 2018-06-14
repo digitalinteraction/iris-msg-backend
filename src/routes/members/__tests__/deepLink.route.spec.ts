@@ -1,7 +1,7 @@
-import * as tst from '../../../../../tools/testHarness'
+import * as tst from '../../../../tools/testHarness'
 import deepLink from '../deepLink.route'
-import { IModelSet } from '../../../../models'
-import { MemberRole } from '../../../../types'
+import { IModelSet } from '../../../models'
+import { MemberRole } from '../../../types'
 
 let db: any
 let models: IModelSet

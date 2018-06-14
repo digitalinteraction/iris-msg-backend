@@ -53,11 +53,11 @@ export function applyRoutes (app: Application, models: IModelSet) {
   app.delete('/organisations/:org_id', requiredJwt, r(routes.orgs.destroy))
   
   // Org Members
-  app.post('/organisations/:org_id/members', requiredJwt, r(routes.orgs.members.invite))
-  app.delete('/organisations/:org_id/members/:mem_id', requiredJwt, r(routes.orgs.members.destroy))
-  app.post('/organisations/:org_id/accept/:mem_id', r(routes.orgs.members.accept))
-  app.get('/unsub/:mem_id', r(routes.orgs.members.unsubscribe))
-  app.get('/invite/:mem_id', r(routes.orgs.members.deepLink))
+  app.post('/organisations/:org_id/members', requiredJwt, r(routes.members.create))
+  app.delete('/organisations/:org_id/members/:mem_id', requiredJwt, r(routes.members.destroy))
+  app.post('/organisations/:org_id/accept/:mem_id', r(routes.members.accept))
+  app.get('/unsub/:mem_id', r(routes.members.unsubscribe))
+  app.get('/invite/:mem_id', r(routes.members.deepLink))
   
   // Messaging
 }

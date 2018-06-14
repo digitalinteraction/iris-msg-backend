@@ -1,7 +1,7 @@
-import * as tst from '../../../../../tools/testHarness'
-import invite, { makeMessage } from '../invite.route'
-import { IModelSet } from '../../../../models'
-import { MemberRole } from '../../../../types'
+import * as tst from '../../../../tools/testHarness'
+import create, { makeMessage } from '../create.route'
+import { IModelSet } from '../../../models'
+import { MemberRole } from '../../../types'
 import { Response } from 'superagent'
 import twilio = require('twilio')
 
@@ -16,7 +16,7 @@ let sentMessages: any[]
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(invite, models, { jwt: true, path: '/:org_id' })
+  agent = tst.mockRoute(create, models, { jwt: true, path: '/:org_id' })
   sentMessages = (twilio as any)().__resetMessages()
   
   seed.Organisation.a.members.push({

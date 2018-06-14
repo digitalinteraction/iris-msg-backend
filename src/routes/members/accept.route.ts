@@ -1,4 +1,4 @@
-import { RouteContext, AuthJwt } from '../../../types'
+import { RouteContext, AuthJwt } from '../../types'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {

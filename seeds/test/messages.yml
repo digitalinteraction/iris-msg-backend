@@ -1,0 +1,40 @@
+User:
+  current:
+    phoneNumber: '+447880123001'
+    fcmToken: abcdefg-123456-abcdefg
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  donorA:
+    phoneNumber: '+447880123002'
+    fcmToken: abcdefg-123456-abcdefg
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  donorB:
+    phoneNumber: '+447880123002'
+    fcmToken: abcdefg-123456-abcdefg
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  donorC:
+    phoneNumber: '+447880123002'
+    fcmToken: abcdefg-123456-abcdefg
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  unverifiedA:
+    phoneNumber: '+447880123003'
+    fcmToken: null
+    verifiedOn: null
+  
+
+Organisation:
+  a:
+    name: Existing A
+    info: An organisation that already exists in the database
+  b:
+    name: Existing B
+    info: Another organisation that already exists in the database
+  c:
+    name: Existing C
+    info: Yet another organisation that already exists in the database
+  d:
+    name: Existing D
+    info: Just another organisation that already exists in the database

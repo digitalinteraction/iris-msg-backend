@@ -1,7 +1,7 @@
-import * as tst from '../../../../../tools/testHarness'
+import * as tst from '../../../../tools/testHarness'
 import accept from '../accept.route'
-import { IModelSet, IOrganisation, IMember } from '../../../../models'
-import { MemberRole } from '../../../../types'
+import { IModelSet, IOrganisation, IMember } from '../../../models'
+import { MemberRole } from '../../../types'
 import { verify } from 'jsonwebtoken'
 
 let db: any
