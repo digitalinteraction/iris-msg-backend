@@ -1,10 +1,10 @@
-import { RouteContext } from '../../types'
+import { RouteContext } from '@/src/types'
 
 // function makeError (name: string) {
 //   return `api.orgs.index.${name}`
 // }
 
-export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
   let user = await models.User.findWithJwt(authJwt)

@@ -1,4 +1,4 @@
-import { RouteContext } from '../../types'
+import { RouteContext } from '@/src/types'
 
 function makeError (name: string) {
   return `api.orgs.show.${name}`

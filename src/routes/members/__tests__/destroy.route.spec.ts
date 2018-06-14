@@ -1,7 +1,7 @@
-import * as tst from '../../../../tools/testHarness'
+import * as tst from '@/tools/testHarness'
 import destroy from '../destroy.route'
-import { IModelSet, IOrganisation, IMember } from '../../../models'
-import { MemberRole } from '../../../types'
+import { IModelSet, IOrganisation, IMember } from '@/src/models'
+import { MemberRole } from '@/src/types'
 
 let db: any
 let models: IModelSet
@@ -44,6 +44,7 @@ describe('orgs.members.destroy', () => {
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(200)
   })
+  
   it('should mark the member as deleted', async () => {
     await agent.delete(`/${org.id}/${subscriber.id}`)
       .set(tst.jwtHeader(seed.User.current.id))

@@ -1,12 +1,12 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
+import * as tst from '../../../../tools/testHarness'
 import index from '../index.route'
 import { IModelSet } from '../../../models'
 import { MemberRole } from '../../../types'
 
 let db: any
 let models: IModelSet
-let seed: Seed
-let agent: Agent
+let seed: tst.Seed
+let agent: tst.Agent
 
 async function pushMember (org: any, args: any) {
   org.members.push(args)
@@ -14,13 +14,13 @@ async function pushMember (org: any, args: any) {
 }
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
-  seed = await applySeed('test/orgs', models)
-  agent = mockRoute(index, models, { jwt: true })
+  ({ db, models } = await tst.openDb())
+  seed = await tst.applySeed('test/orgs', models)
+  agent = tst.mockRoute(index, models, { jwt: true })
 })
 
 afterEach(async () => {
-  await closeDb(db)
+  await tst.closeDb(db)
 })
 
 describe('orgs.index', () => {
@@ -32,11 +32,12 @@ describe('orgs.index', () => {
     })
     
     let res = await agent.get('/')
-      .set(jwtHeader(seed.User.verified.id))
+      .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(200)
     expect(res.body.data).toHaveLength(1)
   })
+  
   it('should return nothing for unverified users', async () => {
     await pushMember(seed.Organisation.a, {
       user: seed.User.unverified.id,
@@ -45,7 +46,7 @@ describe('orgs.index', () => {
     })
     
     let res = await agent.get('/')
-      .set(jwtHeader(seed.User.unverified.id))
+      .set(tst.jwtHeader(seed.User.unverified.id))
     
     expect(res.status).toBe(200)
     expect(res.body.data).toEqual([])

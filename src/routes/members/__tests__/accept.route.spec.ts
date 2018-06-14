@@ -1,7 +1,7 @@
-import * as tst from '../../../../tools/testHarness'
+import * as tst from '@/tools/testHarness'
 import accept from '../accept.route'
-import { IModelSet, IOrganisation, IMember } from '../../../models'
-import { MemberRole } from '../../../types'
+import { IModelSet, IOrganisation, IMember } from '@/src/models'
+import { MemberRole } from '@/src/types'
 import { verify } from 'jsonwebtoken'
 
 let db: any
@@ -37,8 +37,10 @@ describe('orgs.members.accept', () => {
   it('should succeed with a http/200', async () => {
     let res = await agent.post(`/${org.id}/${member.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
+    
     expect(res.status).toBe(200)
   })
+  
   it('should mark the member as confirmed', async () => {
     await agent.post(`/${org.id}/${member.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
@@ -48,6 +50,7 @@ describe('orgs.members.accept', () => {
     
     expect(updatedMem.confirmedOn).toBeInstanceOf(Date)
   })
+  
   it('should return a UserAuth', async () => {
     let res = await agent.post(`/${org.id}/${member.id}`)
       .set(tst.jwtHeader(seed.User.current.id))

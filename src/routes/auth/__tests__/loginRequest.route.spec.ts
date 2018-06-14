@@ -1,6 +1,6 @@
-import { applySeed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, mockRoute, Agent, openDb, closeDb } from '@/tools/testHarness'
 import loginRequest from '../loginRequest.route'
-import { IModelSet } from '../../../models'
+import { IModelSet } from '@/src/models'
 import twilio = require('twilio')
 
 jest.mock('twilio')
@@ -29,11 +29,13 @@ describe('auth.login.request', () => {
     let code = await models.AuthCode.findOne()
     expect(code).toBeTruthy()
   })
+  
   it('should send an sms', async () => {
     await agent.post('/')
       .send({ phoneNumber: '07880123001', locale: 'GB' })
     expect(sentMessages).toHaveLength(1)
   })
+  
   it('should format the code', async () => {
     await agent.post('/')
       .send({ phoneNumber: '07880123001', locale: 'GB' })

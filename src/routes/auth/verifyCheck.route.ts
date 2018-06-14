@@ -1,4 +1,4 @@
-import { RouteContext, AuthCodeType } from '../../types'
+import { RouteContext, AuthCodeType } from '@/src/types'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {

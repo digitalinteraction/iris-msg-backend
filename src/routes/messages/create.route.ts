@@ -1,10 +1,9 @@
 import { RouteContext } from '@/src/types'
 
-function makeError (name: string) {
-  return `api.orgs.members.deep_link.${name}`
-}
+// function makeError (name: string) {
+//   return `api.messages.create.${name}`
+// }
 
 export default async ({ req, api, next, models }: RouteContext) => {
-  // TODO: ...
   api.sendData('ok')
 }

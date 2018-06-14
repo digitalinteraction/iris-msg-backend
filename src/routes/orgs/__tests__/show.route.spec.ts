@@ -1,12 +1,12 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
+import * as tst from '../../../../tools/testHarness'
 import show from '../show.route'
 import { IModelSet } from '../../../models'
 import { MemberRole } from '../../../types'
 
 let db: any
 let models: IModelSet
-let seed: Seed
-let agent: Agent
+let seed: tst.Seed
+let agent: tst.Agent
 
 async function pushMember (org: any, args: any) {
   org.members.push(args)
@@ -14,13 +14,13 @@ async function pushMember (org: any, args: any) {
 }
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
-  seed = await applySeed('test/orgs', models)
-  agent = mockRoute(show, models, { jwt: true, path: '/:org_id' })
+  ({ db, models } = await tst.openDb())
+  seed = await tst.applySeed('test/orgs', models)
+  agent = tst.mockRoute(show, models, { jwt: true, path: '/:org_id' })
 })
 
 afterEach(async () => {
-  await closeDb(db)
+  await tst.closeDb(db)
 })
 
 describe('orgs.show', () => {
@@ -32,11 +32,12 @@ describe('orgs.show', () => {
     })
     
     let res = await agent.get('/' + seed.Organisation.a.id)
-      .set(jwtHeader(seed.User.verified.id))
+      .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(200)
     expect(res.body.data).toHaveProperty('name', 'Existing A')
   })
+  
   it('should fail for unverified users', async () => {
     await pushMember(seed.Organisation.a, {
       user: seed.User.unverified.id,
@@ -45,7 +46,7 @@ describe('orgs.show', () => {
     })
     
     let res = await agent.get('/' + seed.Organisation.a.id)
-      .set(jwtHeader(seed.User.unverified.id))
+      .set(tst.jwtHeader(seed.User.unverified.id))
     
     expect(res.status).toBe(400)
     expect(res.body.data).toBeNull()

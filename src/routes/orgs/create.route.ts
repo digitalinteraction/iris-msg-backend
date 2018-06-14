@@ -1,4 +1,4 @@
-import { RouteContext, MemberRole } from '../../types'
+import { RouteContext, MemberRole } from '@/src/types'
 
 function makeError (name: string) {
   return `api.orgs.create.${name}`

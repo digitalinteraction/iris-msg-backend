@@ -1,7 +1,7 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '@/tools/testHarness'
 import verifyCheck from '../verifyCheck.route'
-import { IModelSet } from '../../../models'
-import { AuthCodeType } from '../../../types'
+import { IModelSet } from '@/src/models'
+import { AuthCodeType } from '@/src/types'
 import { verify } from 'jsonwebtoken'
 
 let db: any

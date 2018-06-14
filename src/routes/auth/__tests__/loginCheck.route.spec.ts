@@ -1,7 +1,7 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '@/tools/testHarness'
 import loginCheck from '../loginCheck.route'
-import { IModelSet } from '../../../models'
-import { AuthCodeType } from '../../../types'
+import { IModelSet } from '@/src/models'
+import { AuthCodeType } from '@/src/types'
 import { verify } from 'jsonwebtoken'
 
 let db: any
@@ -32,16 +32,19 @@ describe('auth.login.check', () => {
     let res = await agent.post('/').send({ code: 123456 })
     expect(res.status).toBe(200)
   })
+  
   it('should return the user', async () => {
     let res = await agent.post('/').send({ code: 123456 })
     let user = res.body.data.user
     expect(user._id).toEqual(seed.User.verified.id)
   })
+  
   it('should return a jwt', async () => {
     let res = await agent.post('/').send({ code: 123456 })
     let payload = verify(res.body.data.token, process.env.JWT_SECRET) as any
     expect(payload.usr).toBe(seed.User.verified.id)
   })
+  
   it('should fail if the code has expired', async () => {
     await models.AuthCode.create({
       code: 654321,

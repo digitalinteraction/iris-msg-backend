@@ -1,5 +1,5 @@
-import { RouteContext, MemberRole, AllMemberRoles } from '../../types'
-import { makeTwilioClient, makeApiUrl } from '../../services'
+import { RouteContext, MemberRole, AllMemberRoles } from '@/src/types'
+import { makeTwilioClient, makeApiUrl } from '@/src/services'
 import phone = require('phone')
 
 function makeError (name: string) {

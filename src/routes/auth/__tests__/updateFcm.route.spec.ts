@@ -1,6 +1,6 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
+import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '@/tools/testHarness'
 import updateFcm from '../updateFcm.route'
-import { IModelSet } from '../../../models'
+import { IModelSet } from '@/src/models'
 
 let db: any
 let seed: Seed
@@ -25,6 +25,7 @@ describe('auth.update-fcm', () => {
     let user = await models.User.findById(seed.User.verified.id)
     expect(user).toHaveProperty('fcmToken', 'abcdefg-123456')
   })
+  
   it('should fail if the user is not verified', async () => {
     let res = await agent.post('/')
       .set(jwtHeader(seed.User.unverified.id))

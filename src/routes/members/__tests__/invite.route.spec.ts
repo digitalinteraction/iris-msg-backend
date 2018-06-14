@@ -1,7 +1,7 @@
-import * as tst from '../../../../tools/testHarness'
+import * as tst from '@/tools/testHarness'
 import create, { makeMessage } from '../create.route'
-import { IModelSet } from '../../../models'
-import { MemberRole } from '../../../types'
+import { IModelSet } from '@/src/models'
+import { MemberRole } from '@/src/types'
 import { Response } from 'superagent'
 import twilio = require('twilio')
 
@@ -62,6 +62,7 @@ describe('orgs.members.invite', () => {
       role: MemberRole.Subscriber
     })
   })
+  
   it('should add an unverified subscriber', async () => {
     let res = await inviteMember('07880123002', MemberRole.Donor)
     
@@ -74,6 +75,7 @@ describe('orgs.members.invite', () => {
       role: MemberRole.Donor
     })
   })
+  
   it('should create a verified user if not found', async () => {
     await inviteMember('07880123004', MemberRole.Subscriber)
     
@@ -84,17 +86,19 @@ describe('orgs.members.invite', () => {
     expect(user).toBeTruthy()
     expect(user!.verifiedOn).toEqual(expect.any(Date))
   })
+  
   it('should send the user a sms', async () => {
     await inviteMember('07880123002', MemberRole.Subscriber)
-    
     expect(sentMessages).toHaveLength(1)
   })
+  
   describe('#makeMessage', () => {
     it('should add an unsub link for subscribers', async () => {
       let memberId = 'fake-id'
       let message = makeMessage(MemberRole.Subscriber, 'Fake Org', memberId)
       expect(message).toContain('http://localhost:3000/unsub/fake-id')
     })
+    
     it('should add a accept link for donors', async () => {
       let memberId = 'fake-id'
       let message = makeMessage(MemberRole.Donor, 'Fake Org', memberId)

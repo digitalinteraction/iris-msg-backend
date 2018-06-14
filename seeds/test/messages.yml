@@ -10,19 +10,34 @@ User:
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorB:
-    phoneNumber: '+447880123002'
+    phoneNumber: '+447880123003'
     fcmToken: abcdefg-123456-abcdefg
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorC:
-    phoneNumber: '+447880123002'
+    phoneNumber: '+447880123004'
     fcmToken: abcdefg-123456-abcdefg
     verifiedOn: 2013-09-25T16:00:00.1Z
   
-  unverifiedA:
-    phoneNumber: '+447880123003'
+  subA:
+    phoneNumber: '+447880123005'
     fcmToken: null
-    verifiedOn: null
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  subB:
+    phoneNumber: '+447880123006'
+    fcmToken: null
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  subC:
+    phoneNumber: '+447880123007'
+    fcmToken: null
+    verifiedOn: 2013-09-25T16:00:00.1Z
+  
+  subD:
+    phoneNumber: '+447880123008'
+    fcmToken: null
+    verifiedOn: 2013-09-25T16:00:00.1Z
   
 
 Organisation:

@@ -1,5 +1,5 @@
-import { AuthCodeType, RouteContext } from '../../types'
-import { makeTwilioClient } from '../../services'
+import { AuthCodeType, RouteContext } from '@/src/types'
+import { makeTwilioClient } from '@/src/services'
 import phone = require('phone')
 
 function makeError (name: string) {

@@ -1,12 +1,12 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '../../../../tools/testHarness'
+import * as tst from '@/tools/testHarness'
 import destroy from '../destroy.route'
-import { IModelSet } from '../../../models'
-import { MemberRole } from '../../../types'
+import { IModelSet } from '@/src/models'
+import { MemberRole } from '@/src/types'
 
 let db: any
 let models: IModelSet
-let seed: Seed
-let agent: Agent
+let seed: tst.Seed
+let agent: tst.Agent
 
 async function pushMember (org: any, args: any) {
   org.members.push(args)
@@ -14,13 +14,13 @@ async function pushMember (org: any, args: any) {
 }
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
-  seed = await applySeed('test/orgs', models)
-  agent = mockRoute(destroy, models, { jwt: true, path: '/:org_id' })
+  ({ db, models } = await tst.openDb())
+  seed = await tst.applySeed('test/orgs', models)
+  agent = tst.mockRoute(destroy, models, { jwt: true, path: '/:org_id' })
 })
 
 afterEach(async () => {
-  await closeDb(db)
+  await tst.closeDb(db)
 })
 
 describe('orgs.destroy', () => {
@@ -32,12 +32,13 @@ describe('orgs.destroy', () => {
     })
     
     let res = await agent.del('/' + seed.Organisation.a.id)
-      .set(jwtHeader(seed.User.verified.id))
+      .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(200)
     let org = await models.Organisation.findById(seed.Organisation.a.id)
     expect(org).toHaveProperty('deletedOn', expect.any(Date))
   })
+  
   it('should fail if not an active coordinator', async () => {
     await pushMember(seed.Organisation.a, {
       user: seed.User.verified.id,
@@ -47,7 +48,7 @@ describe('orgs.destroy', () => {
     })
     
     let res = await agent.del('/' + seed.Organisation.a.id)
-      .set(jwtHeader(seed.User.verified.id))
+      .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(400)
     expect(res.body.meta.messages).toContain('api.general.badAuth')

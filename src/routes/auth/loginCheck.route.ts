@@ -1,6 +1,6 @@
-import { RouteContext, AuthCodeType, AuthJwt } from '../../types'
+import { RouteContext, AuthCodeType, AuthJwt } from '@/src/types'
+import { IUser } from '@/src/models'
 import { sign } from 'jsonwebtoken'
-import { IUser } from '../../models'
 
 function makeError (name: string) {
   return `api.auth.login-check.${name}`

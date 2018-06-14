@@ -1,6 +1,6 @@
-import { applySeed, mockRoute, Agent, openDb, closeDb } from '../../../../tools/testHarness'
+import { applySeed, mockRoute, Agent, openDb, closeDb } from '@/tools/testHarness'
 import verifyRequest from '../verifyRequest.route'
-import { IModelSet } from '../../../models'
+import { IModelSet } from '@/src/models'
 import twilio = require('twilio')
 
 jest.mock('twilio')
