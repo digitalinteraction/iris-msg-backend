@@ -6,6 +6,7 @@ const schemaOptions = {
 
 export interface IUser extends Document {
   phoneNumber: string
+  locale: string
   fcmToken: string | null
   verifiedOn: Date | null
 }
@@ -19,6 +20,10 @@ export const UserSchema = new Schema({
     type: String,
     index: true,
     unique: true
+  },
+  locale: {
+    type: String,
+    default: 'GB'
   },
   fcmToken: {
     type: String,

@@ -44,16 +44,32 @@ describe('orgs.create', () => {
     expect(org).toHaveProperty('info', 'Some info')
   })
   
-  it('should add the user as a member', async () => {
+  it('should add the user as a coordinator', async () => {
     await agent.post('/')
       .set(tst.jwtHeader(seed.User.verified.id))
       .send({ name: 'New Org', info: 'Some info' })
     let org = await models.Organisation.findOne({ name: 'New Org' })
+    
     expect(org).toBeTruthy()
-    expect(org!.members).toHaveLength(1)
-    expect(org!.members[0].user).toEqual(seed.User.verified._id)
-    expect(org!.members[0].role).toBe(MemberRole.Coordinator)
-    expect(org!.members[0].confirmedOn).toBeTruthy()
+    
+    let member = org!.members[0]
+    expect(member.user).toEqual(seed.User.verified._id)
+    expect(member.role).toBe(MemberRole.Coordinator)
+    expect(member.confirmedOn).toBeInstanceOf(Date)
+  })
+  
+  it('should add the user as a donor', async () => {
+    await agent.post('/')
+      .set(tst.jwtHeader(seed.User.verified.id))
+      .send({ name: 'New Org', info: 'Some info' })
+    let org = await models.Organisation.findOne({ name: 'New Org' })
+    
+    expect(org).toBeTruthy()
+    
+    let member = org!.members[1]
+    expect(member.user).toEqual(seed.User.verified._id)
+    expect(member.role).toBe(MemberRole.Donor)
+    expect(member.confirmedOn).toBeInstanceOf(Date)
   })
   
   it('should fail for unverified users', async () => {

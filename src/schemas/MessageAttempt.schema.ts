@@ -1,24 +1,12 @@
 import { Schema, Types } from 'mongoose'
+import { MessageAttemptState } from '@/src/types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export enum AttemptState {
-  Pending = 'PENDING',
-  Rejected = 'REJECTED',
-  Failed = 'FAILED',
-  Success = 'SUCCESS',
-  NoService = 'NO_SERVICE',
-  NoSmsData = 'NO_SMS_DATA',
-  RadioOff = 'RADIO_OFF',
-  Twilio = 'TWILIO',
-  NoSenders = 'NO_SENDERS',
-  NoResponse = 'NO_RESPONSE'
-}
-
 export interface IMessageAttempt extends Types.Subdocument {
-  state: AttemptState
+  state: MessageAttemptState
   recipient: Schema.Types.ObjectId
   donor: Schema.Types.ObjectId
   previousAttempt: Schema.Types.ObjectId | null
@@ -27,7 +15,7 @@ export interface IMessageAttempt extends Types.Subdocument {
 export const MessageAttemptSchema = new Schema({
   state: {
     type: String,
-    enum: Object.values(AttemptState),
+    enum: Object.values(MessageAttemptState),
     required: true
   },
   recipient: {

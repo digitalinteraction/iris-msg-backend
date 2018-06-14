@@ -20,6 +20,7 @@ export default async ({ req, res, next, api, models }: RouteContext) => {
   let user = await User.findOne({ phoneNumber })
   
   if (user) {
+    // TODO: could http/200 to prevent information leak?
     if (user.verifiedOn !== null) throw makeError('badNumber')
   } else {
     user = await User.create({

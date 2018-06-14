@@ -30,10 +30,11 @@ describe('auth.verify.request', () => {
     expect(users.length).toBe(3)
   })
   it('should format the phone number', async () => {
-    await agent.post('/')
-      .send({ phoneNumber: '07880123003', locale: 'GB' })
+    let res = await agent.post('/')
+      .send({ phoneNumber: '(817) 5698900', locale: 'US' })
     let user = (await models.User.find())[2]
-    expect(user.phoneNumber).toBe('+447880123003')
+    expect(user.phoneNumber).toBe('+18175698900')
+    expect(user.locale).toBe('US')
   })
   it('should create an authentication code', async () => {
     await agent.post('/')

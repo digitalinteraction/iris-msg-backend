@@ -9,7 +9,7 @@ function makeError (name: string) {
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
-  let user = await models.User.findWithJwt(authJwt)
+  let user = (await models.User.findWithJwt(authJwt))!
   
   // Check name & info are set
   let errors = new Set<string>()
@@ -26,7 +26,12 @@ export default async ({ req, api, next, models, authJwt }: RouteContext) => {
       {
         role: MemberRole.Coordinator,
         confirmedOn: new Date(),
-        user: user!.id
+        user: user.id
+      },
+      {
+        role: MemberRole.Donor,
+        confirmedOn: new Date(),
+        user: user.id
       }
     ]
   })

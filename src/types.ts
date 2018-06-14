@@ -31,3 +31,16 @@ export enum MemberRole {
 }
 
 export const AllMemberRoles = Object.values(MemberRole)
+
+export enum MessageAttemptState {
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  Failed = 'FAILED',
+  Success = 'SUCCESS',
+  NoService = 'NO_SERVICE',
+  NoSmsData = 'NO_SMS_DATA',
+  RadioOff = 'RADIO_OFF',
+  Twilio = 'TWILIO',
+  NoSenders = 'NO_SENDERS',
+  NoResponse = 'NO_RESPONSE'
+}

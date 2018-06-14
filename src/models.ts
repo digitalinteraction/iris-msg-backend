@@ -1,10 +1,12 @@
-import { Model, Connection } from 'mongoose'
+import { Model, Connection, Types } from 'mongoose'
 
 import { UserSchema, IUser, IUserClass } from './schemas/User.schema'
 import { OrganisationSchema, IOrganisation, IOrganisationClass } from './schemas/Organisation.schema'
 import { MessageSchema, IMessage, IMessageClass } from './schemas/Message.schema'
 import { AuthCodeSchema, IAuthCode, IAuthCodeClass } from './schemas/AuthCode.schema'
+
 import { IMember } from './schemas/Member.schema'
+import { IMessageAttempt } from './schemas/MessageAttempt.schema'
 
 export {
   IUser,
@@ -15,7 +17,16 @@ export {
   IAuthCodeClass,
   IMessage,
   IMessageClass,
-  IMember
+  IMember,
+  IMessageAttempt
+}
+
+export type IMemberWithUser = IMember & {
+  user: IUser
+}
+
+export type IOrganisationWithUsers = IOrganisation & {
+  members: Types.DocumentArray<IMemberWithUser>
 }
 
 export interface IModelSet {
