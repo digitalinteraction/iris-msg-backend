@@ -73,7 +73,7 @@ orgs.members:
       mem_id: string - The id of the membership to be removed
   
   - post: /accept/:mem_id accept
-    info: Accept an invitation to join an organisation
+    info: Accept an invitation to join an organisation and returns UserAuth
     params:
       org_id: string - The id of the organisation to join
       mem_id: string - The id of the membership being accepted

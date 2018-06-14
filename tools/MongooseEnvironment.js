@@ -6,7 +6,6 @@ module.exports = class MongooseEnvironment extends NodeEnvironment {
   async setup() {
     await super.setup()
     
-    // this.global.__MONGO_URI__ = await global.__MONGOD__.getConnectionString()
     this.global.__MONGO_URI__ = global.__MONGO_URI__
     
     this.global.process.env.MONGO_URI = this.global.__MONGO_URI__

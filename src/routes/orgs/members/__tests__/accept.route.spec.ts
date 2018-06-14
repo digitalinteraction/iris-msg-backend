@@ -2,6 +2,7 @@ import * as tst from '../../../../../tools/testHarness'
 import accept from '../accept.route'
 import { IModelSet, IOrganisation, IMember } from '../../../../models'
 import { MemberRole } from '../../../../types'
+import { verify } from 'jsonwebtoken'
 
 let db: any
 let models: IModelSet
@@ -46,5 +47,13 @@ describe('orgs.members.accept', () => {
     let updatedMem = updatedOrg!.members.id(member.id)
     
     expect(updatedMem.confirmedOn).toBeInstanceOf(Date)
+  })
+  it('should return a UserAuth', async () => {
+    let res = await agent.post(`/${org.id}/${member.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    
+    expect(res.body.data.token).toBeDefined()
+    let payload = verify(res.body.data.token, process.env.JWT_SECRET) as any
+    expect(payload.usr).toBe(seed.User.current.id)
   })
 })

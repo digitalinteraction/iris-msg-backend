@@ -16,7 +16,6 @@ export type Route = (ctx: RouteContext) => Promise<void>
 export type Agent = supertest.SuperTest<supertest.Test>
 
 export interface TestDatabase {
-  // db: Mongoose,
   db: any,
   models: IModelSet
 }

@@ -14,12 +14,14 @@ let member: IMember
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(unsubscribe, models, { jwt: true })
+  agent = tst.mockRoute(unsubscribe, models, {
+    jwt: true, path: '/:mem_id'
+  })
   
   org = seed.Organisation.a
   member = org.members.create({
     role: MemberRole.Subscriber,
-    confirmedOn: null,
+    confirmedOn: new Date(),
     user: seed.User.current.id
   })
   org.members.push(member)
@@ -32,8 +34,17 @@ afterEach(async () => {
 
 describe('orgs.members.unsubscribe', () => {
   it('should succeed with a http/200', async () => {
-    let res = await agent.post(`/${org.id}/${member.id}`)
+    let res = await agent.post(`/${member.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(200)
+  })
+  it('should unsubscribe the member', async () => {
+    await agent.post(`/${member.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    
+    let updatedOrg = await models.Organisation.findById(org.id)
+    let updatedMem = updatedOrg!.members.id(member.id)
+    
+    expect(updatedMem.deletedOn).toBeInstanceOf(Date)
   })
 })

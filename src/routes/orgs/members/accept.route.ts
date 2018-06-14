@@ -1,4 +1,5 @@
-import { RouteContext } from '../../../types'
+import { RouteContext, AuthJwt } from '../../../types'
+import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
   return `api.orgs.members.accept.${name}`
@@ -10,27 +11,33 @@ function makeError (name: string) {
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
-  // Find the current user
-  let user = await models.User.findWithJwt(authJwt)
-  if (!user) throw makeError('api.general.badAuth')
-  
-  // Find the organisation
+  // Find an organisation with that unconfirmed member
   let org = await models.Organisation.findOne({
     _id: req.params.org_id,
     deletedOn: null,
     members: {
       $elemMatch: {
         _id: req.params.mem_id,
-        user: user.id,
-        deletedOn: null
+        deletedOn: null,
+        confirmedOn: null
       }
     }
   })
   if (!org) throw makeError('notFound')
   
+  // Find the member and its user record
   let member = org.members.id(req.params.mem_id)
+  let user = await models.User.findById(member.user)
+  
+  if (!user) throw makeError('notFound')
+  
+  // Mark the meber as confirmed
   member.confirmedOn = new Date()
   await org.save()
   
-  api.sendData(member)
+  // Generate a user auth jwt
+  let payload: AuthJwt = { usr: user!.id, num: user!.phoneNumber }
+  let token = sign(payload, process.env.JWT_SECRET)
+  
+  api.sendData({ user, token })
 }
