@@ -1,4 +1,4 @@
-import { model, Model, Connection } from 'mongoose'
+import { Model, Connection } from 'mongoose'
 
 import { UserSchema, IUser, IUserClass } from './schemas/User.schema'
 import { OrganisationSchema, IOrganisation, IOrganisationClass } from './schemas/Organisation.schema'
@@ -25,15 +25,20 @@ export interface IModelSet {
   AuthCode: IAuthCodeClass
 }
 
-export function makeModels (): IModelSet {
-// export function makeModels (connection?: Connection): IModelSet {
-//   let modelFunc = connection ? connection.model : model
-  
+export function makeModels (connection: Connection): IModelSet {
   return {
-    User: model<IUser, IUserClass>('User', UserSchema),
-    Organisation: model<IOrganisation, IOrganisationClass>('Organisation', OrganisationSchema),
-    Message: model<IMessage>('Message', MessageSchema),
-    AuthCode: model<IAuthCode, IAuthCodeClass>('AuthCode', AuthCodeSchema)
+    User: connection.model<IUser, IUserClass>(
+      'User', UserSchema
+    ),
+    Organisation: connection.model<IOrganisation, IOrganisationClass>(
+      'Organisation', OrganisationSchema
+    ),
+    Message: connection.model<IMessage>(
+      'Message', MessageSchema
+    ),
+    AuthCode: connection.model<IAuthCode, IAuthCodeClass>(
+      'AuthCode', AuthCodeSchema
+    )
   }
 }
 

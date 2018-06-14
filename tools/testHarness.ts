@@ -1,4 +1,4 @@
-import { Mongoose, connect, createConnection, Connection } from 'mongoose'
+import { createConnection, Connection } from 'mongoose'
 import supertest = require('supertest')
 import express = require('express')
 import expressJwt = require('express-jwt')
@@ -55,45 +55,26 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   }, options)
 }
 
-// function makeConnection (uri: string): Promise<Connection> {
-//   return new Promise((resolve, reject) => {
-//     createConnection(uri)
-//       .then(c => resolve(c))
-//       .catch(e => reject(e))
-//   })
-// }
-
 export async function openDb (): Promise<TestDatabase> {
-  let models = makeModels()
-  let db = await connect(process.env.MONGO_URI)
-  return { db, models }
+  let connection = createConnection(process.env.MONGO_URI)
+  let models = makeModels(connection)
+  await new Promise(resolve => connection.on('connected', resolve))
+  return { db: connection, models }
 }
 
-// export async function openDb (): Promise<TestDatabase> {
-//   return createConnection(process.env.MONGO_URI).then(async connection => {
-//     let models = makeModels()
-//     return { db: connection, models }
-//   })
-// }
-
-export async function closeDb (db: Mongoose): Promise<void> {
-  let collections = Object.values(db.connection.collections)
-  await Promise.all(collections.map(c => (c as any).remove({})))
-  await db.disconnect()
-  clean(db, 'models')
-  clean(db, 'modelSchemas')
+export async function closeDb (db: Connection): Promise<void> {
+  try {
+    let collections = Object.values(db.collections)
+    await Promise.all(collections.map(c =>
+      (c as any).remove({})
+    ))
+    await db.close(true)
+    clean(db, 'models')
+    clean(db, 'modelSchemas')
+  } catch (err) {
+    console.log('#closeDb', err)
+  }
 }
-
-// export async function closeDb (db: Connection): Promise<void> {
-//   let collections = Object.values(db.collections)
-//   await Promise.all(collections.map(c =>
-//     (c as any).remove({})
-//   ))
-//   await db.close(true)
-//   // await db.disconnect()
-//   // clean(db, 'models')
-//   // clean(db, 'modelSchemas')
-// }
 
 export function jwtHeader (userId: any) {
   let token = sign({ usr: userId }, process.env.JWT_SECRET)

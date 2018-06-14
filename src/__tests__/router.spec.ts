@@ -48,7 +48,7 @@ describe('Routing', () => {
     app = express()
     seed = await applySeed('test/router', models)
     applyMiddleware(app)
-    applyRoutes(app)
+    applyRoutes(app, models)
     applyErrorHandler(app)
     agent = supertest.agent(app)
     replacements = {

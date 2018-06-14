@@ -39,7 +39,7 @@ describe('orgs.members.accept', () => {
     expect(res.status).toBe(200)
   })
   it('should mark the member as confirmed', async () => {
-    let res = await agent.post(`/${org.id}/${member.id}`)
+    await agent.post(`/${org.id}/${member.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     
     let updatedOrg = await models.Organisation.findById(org.id)

@@ -1,6 +1,7 @@
 import * as express from 'express'
 import * as mongoose from 'mongoose'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
+import { makeModels } from './models'
 
 export default class App {
   async run () {
@@ -18,7 +19,7 @@ export default class App {
   createExpressApp (): express.Application {
     let app = express()
     applyMiddleware(app)
-    applyRoutes(app)
+    applyRoutes(app, makeModels(mongoose.connection))
     applyErrorHandler(app)
     return app
   }

@@ -1,8 +1,6 @@
 const NodeEnvironment = require('jest-environment-node')
 const MongodbMemoryServer = require('mongodb-memory-server')
 
-const seperateMongoInstances = false
-
 module.exports = class MongooseEnvironment extends NodeEnvironment {
   
   async setup() {
@@ -21,11 +19,4 @@ module.exports = class MongooseEnvironment extends NodeEnvironment {
     
     await super.teardown()
   }
-}
-
-async function profile (name, block) {
-  let then = new Date().getTime()
-  await block()
-  let now = new Date().getTime()
-  console.log(`${name} took`, `${now - then}ms`)
 }

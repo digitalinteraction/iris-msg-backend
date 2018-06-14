@@ -4,7 +4,7 @@ import expressJwt = require('express-jwt')
 import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
-import { IModelSet, makeModels } from './models'
+import { IModelSet } from './models'
 import * as middleware from './middleware'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
@@ -27,9 +27,8 @@ export function applyMiddleware (app: Application) {
   app.use(middleware.api())
 }
 
-export function applyRoutes (app: Application) {
+export function applyRoutes (app: Application, models: IModelSet) {
   
-  let models = makeModels()
   const r = (route: CustomRoute) => makeRoute(route, models)
   
   // Reusable middleware

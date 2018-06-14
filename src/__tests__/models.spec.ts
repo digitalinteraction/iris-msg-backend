@@ -1,7 +1,17 @@
-import { makeModels } from '../models'
+import { Connection, createConnection } from 'mongoose'
+import { makeModels, IModelSet } from '../models'
 
 describe('#makeModels', () => {
-  let models = makeModels()
+  
+  let connection: Connection
+  let models: IModelSet
+  beforeAll(async () => {
+    connection = createConnection(process.env.MONGO_URI)
+    models = makeModels(connection)
+  })
+  afterAll(async () => {
+    await connection.close()
+  })
   
   it('should have the User Model', async () => {
     expect(models.User).toBeDefined()
