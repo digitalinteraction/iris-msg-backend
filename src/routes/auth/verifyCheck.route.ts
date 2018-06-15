@@ -1,4 +1,4 @@
-import { RouteContext, AuthCodeType } from '@/src/types'
+import { RouteContext, AuthCodeType, AuthJwt } from '@/src/types'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
@@ -15,7 +15,7 @@ export default async ({ req, res, next, api, models }: RouteContext) => {
   user.verifiedOn = new Date()
   await user.save()
   
-  let payload = { usr: user.id, num: user.phoneNumber }
+  let payload: AuthJwt = { usr: user.id }
   let token = sign(payload, process.env.JWT_SECRET)
   
   api.sendData({ user, token })

@@ -18,8 +18,7 @@ export enum AuthCodeType {
 }
 
 export interface AuthJwt {
-  usr: String,
-  num: String
+  usr: string
 }
 
 export const AllAuthCodeTypes = Object.values(AuthCodeType)

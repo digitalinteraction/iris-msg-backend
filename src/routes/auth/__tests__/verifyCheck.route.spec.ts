@@ -52,7 +52,6 @@ describe('auth.verify.check', () => {
     let res = await agent.post('/').send({ code: 123456 })
     let payload = verify(res.body.data.token, process.env.JWT_SECRET) as any
     expect(payload.usr).toBe(seed.User.unverified.id)
-    expect(payload.num).toBe(seed.User.unverified.phoneNumber)
   })
   it('should fail if the code has expired', async () => {
     await models.AuthCode.create({
