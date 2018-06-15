@@ -1,7 +1,8 @@
-import { RouteContext, MemberRole, MessageAttemptState } from '@/src/types'
+import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/types'
 import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
 import { ObjectId } from 'mongodb'
 import { MongooseDocument } from 'mongoose'
+import * as firebase from 'firebase-admin'
 
 function makeError (name: string) {
   return `api.messages.create.${name}`
@@ -68,7 +69,15 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Store the message
   await message.save()
   
-  // TODO: send out fcm's to each donor
+  // Send out fcm's to each donor
+  await Promise.all(donorList.map(donor => {
+    firebase.messaging().send({
+      data: {
+        type: FcmType.NewDonations
+      },
+      token: donor.user.fcmToken!
+    })
+  }))
   
   // let message
   api.sendData('ok')

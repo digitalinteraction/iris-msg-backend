@@ -43,3 +43,7 @@ export enum MessageAttemptState {
   NoSenders = 'NO_SENDERS',
   NoResponse = 'NO_RESPONSE'
 }
+
+export enum FcmType {
+  NewDonations = 'new_donations'
+}

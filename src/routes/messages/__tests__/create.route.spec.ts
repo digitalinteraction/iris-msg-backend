@@ -1,8 +1,11 @@
 import * as tst from '@/tools/testHarness'
 import create from '../create.route'
 import { IModelSet, IOrganisation } from '@/src/models'
-import { MemberRole } from '@/src/types'
+import { MemberRole, FcmType } from '@/src/types'
 import { Response } from 'supertest'
+import firebase = require('firebase-admin')
+
+jest.mock('firebase-admin')
 
 let db: any
 let models: IModelSet
@@ -10,6 +13,7 @@ let seed: tst.Seed
 let agent: tst.Agent
 
 let org: IOrganisation
+let sentFcm: any[]
 
 function sendMessage (content: string, orgId: any): Promise<Response> {
   return agent.post('/')
@@ -23,6 +27,7 @@ beforeEach(async () => {
   agent = tst.mockRoute(create, models, { jwt: true })
   
   org = seed.Organisation.a
+  sentFcm = (firebase as any).__resetMessages()
   
   tst.addMember(org, seed.User.current, MemberRole.Coordinator)
   
@@ -59,5 +64,17 @@ describe('messages.create', () => {
     
     let messages = await models.Message.find()
     expect(messages).toHaveLength(1)
+  })
+  it('should allocate message attempts to active donors', async () => {
+    // ...
+  })
+  it('should send an fcm to allocated donors', async () => {
+    await sendMessage('Hey', org.id)
+    
+    expect(sentFcm).toHaveLength(2)
+    expect(sentFcm[0]).toMatchObject({
+      token: 'abcdefg-123456-abcdefg',
+      data: { type: FcmType.NewDonations }
+    })
   })
 })
