@@ -37,18 +37,6 @@ async function inviteMember (phoneNumber: string, role: MemberRole): Promise<Res
     .send({ phoneNumber, role, locale: 'GB' })
 }
 
-// async function addMember (org: IOrganisation, user: IUser, role: MemberRole): Promise<IMember> {
-//   let member = org.members.create({
-//     role,
-//     confirmedOn: new Date(),
-//     deletedOn: null,
-//     user: user.id
-//   })
-//   org.members.push(member)
-//   await org.save()
-//   return member
-// }
-
 describe('orgs.members.invite', () => {
   it('should add a verified subscriber', async () => {
     let res = await inviteMember('07880123002', MemberRole.Subscriber)

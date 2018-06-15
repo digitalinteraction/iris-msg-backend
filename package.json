@@ -43,6 +43,7 @@
     "@types/mongodb": "^3.0.19",
     "@types/mongoose": "^5.0.15",
     "@types/phone": "^1.0.3",
+    "@types/superagent": "^3.8.0",
     "@types/supertest": "^2.0.4",
     "@types/twilio": "0.0.9",
     "jest": "^23.1.0",

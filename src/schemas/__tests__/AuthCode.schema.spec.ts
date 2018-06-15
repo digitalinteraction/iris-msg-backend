@@ -31,7 +31,7 @@ describe('AuthCode', () => {
     it('should find an AuthCode', async () => {
       await models.AuthCode.create({
         code: 123456,
-        expiresOn: inTheFuture(),
+        expiresOn: inTheFuture,
         type: AuthCodeType.Verify,
         user: seed.User.verified.id
       })
@@ -47,7 +47,7 @@ describe('AuthCode', () => {
     it('should format as abc-xyz', async () => {
       let code = await models.AuthCode.create({
         code: 123456,
-        expiresOn: inTheFuture(),
+        expiresOn: inTheFuture,
         type: AuthCodeType.Verify,
         user: seed.User.verified.id
       })
@@ -56,7 +56,7 @@ describe('AuthCode', () => {
     it('should forward pad', async () => {
       let code = await models.AuthCode.create({
         code: 123,
-        expiresOn: inTheFuture(),
+        expiresOn: inTheFuture,
         type: AuthCodeType.Verify,
         user: seed.User.verified.id
       })

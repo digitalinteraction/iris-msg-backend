@@ -25,7 +25,7 @@ export const MessageAttemptSchema = new Schema({
   },
   donor: {
     type: Schema.Types.ObjectId,
-    required: true,
+    default: null,
     ref: 'User'
   },
   previousAttempt: {

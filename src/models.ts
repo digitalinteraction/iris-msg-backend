@@ -21,13 +21,13 @@ export {
   IMessageAttempt
 }
 
-export type IMemberWithUser = IMember & {
+export type IMemberWithUser = {
   user: IUser
-}
+} & IMember
 
-export type IOrganisationWithUsers = IOrganisation & {
+export type IOrganisationWithUsers = {
   members: Types.DocumentArray<IMemberWithUser>
-}
+} & IOrganisation
 
 export interface IModelSet {
   User: IUserClass

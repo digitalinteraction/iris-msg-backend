@@ -19,18 +19,12 @@ beforeEach(async () => {
   })
   
   org = seed.Organisation.a
-  let coordinator = org.members.create({
-    role: MemberRole.Coordinator,
-    confirmedOn: new Date(),
-    user: seed.User.current.id
-  })
-  subscriber = org.members.create({
-    role: MemberRole.Subscriber,
-    confirmedOn: new Date(),
-    user: seed.User.verified.id
-  })
-  org.members.push(coordinator)
-  org.members.push(subscriber)
+  tst.addMember(
+    org, seed.User.current, MemberRole.Coordinator
+  )
+  subscriber = tst.addMember(
+    org, seed.User.verified, MemberRole.Subscriber
+  )
   await org.save()
 })
 

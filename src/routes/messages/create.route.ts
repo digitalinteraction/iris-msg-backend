@@ -21,10 +21,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   if (!user) throw new Error('api.general.badAuth')
   
   // Check the org is valid
-  let untypedOrg = await models.Organisation.findByIdForCoordinator(
-    orgId, user.id
-  ).populate('members.user')
-  let org: IOrganisationWithUsers = untypedOrg as any
+  let org: IOrganisationWithUsers = await models.Organisation.findByIdForCoordinator(orgId, user.id)
+    .populate('members.user') as any
   if (!org) throw makeError('notFound')
   
   // Cache now as a date
@@ -69,6 +67,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Store the message
   await message.save()
+  
+  // TODO: send out fcm's to each donor
   
   // let message
   api.sendData('ok')
