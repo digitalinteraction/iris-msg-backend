@@ -1,7 +1,9 @@
 node_modules
 dist
+docs
 coverage
 .cache
 .DS_Store
 .nyc_output
 *.env
+google-services.json

@@ -3,9 +3,8 @@ import { makeTwilioClient, makeApiUrl } from '@/src/services'
 import phone = require('phone')
 
 function makeError (name: string) {
-  return `api.orgs.members.create.${name}`
+  return `api.members.create.${name}`
 }
-
 export function makeMessage (role: MemberRole, orgName: string, memberId: any): string {
   switch (role) {
     case MemberRole.Subscriber:
@@ -22,6 +21,17 @@ export function makeMessage (role: MemberRole, orgName: string, memberId: any): 
   }
 }
 
+/* auth:
+ * - jwt
+ *
+ * url params:
+ * - org_id
+ *
+ * body params:
+ * - phoneNumber
+ * - locale
+ * - role
+ */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   let { phoneNumber, locale, role } = req.body
   

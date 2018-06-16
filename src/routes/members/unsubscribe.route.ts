@@ -1,11 +1,11 @@
-import { RouteContext } from '@/src/types'
+import { RouteContext, MemberRole } from '@/src/types'
 
 function makeError (name: string) {
-  return `api.orgs.members.unsubscribe.${name}`
+  return `api.members.unsubscribe.${name}`
 }
 
 /* url params:
- * - mem_id ~ The id of the member to unsubscribe
+ * - mem_id
  */
 export default async ({ req, res, next, models }: RouteContext) => {
   try {
@@ -15,6 +15,7 @@ export default async ({ req, res, next, models }: RouteContext) => {
       members: {
         $elemMatch: {
           _id: req.params.mem_id,
+          role: MemberRole.Subscriber,
           deletedOn: null,
           confirmedOn: { $ne: null }
         }

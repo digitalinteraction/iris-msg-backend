@@ -4,6 +4,12 @@ function makeError (name: string) {
   return `api.orgs.show.${name}`
 }
 
+/* auth:
+ * - jwt
+ *
+ * url params:
+ * - org_id
+ */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified

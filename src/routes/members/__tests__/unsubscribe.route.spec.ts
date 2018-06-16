@@ -19,11 +19,7 @@ beforeEach(async () => {
   })
   
   org = seed.Organisation.a
-  member = org.members.create({
-    role: MemberRole.Subscriber,
-    confirmedOn: new Date(),
-    user: seed.User.current.id
-  })
+  member = tst.addMember(org, seed.User.current, MemberRole.Subscriber)
   org.members.push(member)
   await org.save()
 })
@@ -47,5 +43,16 @@ describe('orgs.members.unsubscribe', () => {
     let updatedMem = updatedOrg!.members.id(member.id)
     
     expect(updatedMem.deletedOn).toBeInstanceOf(Date)
+  })
+  it('should only remove subscribers', async () => {
+    member = tst.addMember(
+      org, seed.User.current, MemberRole.Coordinator
+    )
+    await org.save()
+    
+    let res = await agent.post(`/${member.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    
+    expect(res.status).toBe(400)
   })
 })

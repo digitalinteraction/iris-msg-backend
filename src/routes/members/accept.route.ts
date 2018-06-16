@@ -2,18 +2,16 @@ import { RouteContext, AuthJwt } from '@/src/types'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
-  return `api.orgs.members.accept.${name}`
+  return `api.members.accept.${name}`
 }
 
 /* url params:
- * - org_id ~ the id of the organisation
  * - mem_id ~ The id of the member
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Find an organisation with that unconfirmed member
   let org = await models.Organisation.findOne({
-    _id: req.params.org_id,
     deletedOn: null,
     members: {
       $elemMatch: {

@@ -6,6 +6,7 @@ users:
     info: Fetches the current authenticated user
   
   - post: /login/request login_request
+    name: Request login
     info: |
       Requests a login sms to be sent and creates a new user if it doesn't exist
     body:
@@ -13,13 +14,17 @@ users:
       locale: string - The ISO_3166-2 country where the phone is
   
   - post: /login/check login_check
+    name: Check login
     info: |
       Checks a login sms code and logs in the user and optionally verifies the user
     body:
       code: number - The sms code to check
   
   - post: /update_fcm update_fcm
+    name: Set fcm token
     info: Updates the fcm token for the current user
+    body:
+      newToken: string - The updated fcm token
 
 orgs:
   name: Organisations
@@ -44,7 +49,7 @@ orgs:
     params:
       org_id: string - The id of the delete
 
-orgs.members:
+members:
   name: Membership
   base: /organisations/:org_id
   endpoints:
@@ -63,7 +68,7 @@ orgs.members:
       org_id: string - The id of the organisation to be removed from
       mem_id: string - The id of the membership to be removed
   
-  - post: /accept/:mem_id accept
+  - post: ../accept/:mem_id accept
     info: Accept an invitation to join an organisation and returns UserAuth
     params:
       org_id: string - The id of the organisation to join

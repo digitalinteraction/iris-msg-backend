@@ -4,6 +4,12 @@ import { RouteContext } from '@/src/types'
 //   return `api.orgs.destroy.${name}`
 // }
 
+/* auth:
+ * - jwt
+ *
+ * url params:
+ * - org_id
+ */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified

@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels } from './models'
+import { initializeFirebase } from './services'
 
 const RequiredVariables = [
   'MONGO_URI', 'JWT_SECRET', 'API_URL', 'WEB_URL'
@@ -20,6 +21,7 @@ export default class App {
     try {
       this.checkVariables()
       let app = this.createExpressApp()
+      await initializeFirebase()
       await this.connectToMongo()
       await new Promise(resolve => app.listen(3000, resolve))
       console.log('Server started on :3000')

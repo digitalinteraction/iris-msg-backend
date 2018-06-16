@@ -3,9 +3,13 @@ import { makeTwilioClient } from '@/src/services'
 import phone = require('phone')
 
 function makeError (name: string) {
-  return `api.auth.loginRequest.${name}`
+  return `api.auth.login_request.${name}`
 }
 
+/* body params:
+ * - phoneNumber ~ The phone number to login with e.g. 07880123456
+ * - locale ~ The 'ISO_3166-2' country code e.g. GB
+ */
 export default async ({ req, res, next, api, models }: RouteContext) => {
   const { User, AuthCode } = models
   

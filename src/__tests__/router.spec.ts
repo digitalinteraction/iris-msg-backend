@@ -18,7 +18,7 @@ const expectedRoutes = [
   
   { method: 'post', url: '/organisations/:org_id/members' },
   { method: 'del', url: '/organisations/:org_id/members/:mem_id' },
-  { method: 'post', url: '/organisations/:org_id/accept/:mem_id' },
+  { method: 'post', url: '/organisations/accept/:mem_id' },
   { method: 'get', url: '/unsub/:mem_id' },
   { method: 'get', url: '/invite/:mem_id' }
 ]

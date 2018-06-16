@@ -1,0 +1,22 @@
+{
+    "meta": {
+        "success": true,
+        "messages": [],
+        "status": 200,
+        "name": "iris-msg-api",
+        "version": "0.1.0"
+    },
+    "data": {
+        "user": {
+            "locale": "GB",
+            "fcmToken": "abcdef-123456",
+            "verifiedOn": "2018-06-16T16:53:55.798Z",
+            "_id": "5b25404dc8681c1947bd9402",
+            "phoneNumber": "+447880123456",
+            "createdAt": "2018-06-16T16:52:29.659Z",
+            "updatedAt": "2018-06-16T17:03:50.275Z",
+            "__v": 0
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOiI1YjI1NDA0ZGM4NjgxYzE5NDdiZDk0MDIiLCJpYXQiOjE1MjkxNzA2NjZ9.g_dCw3lJwVGw-rRGBWQTq5UzbeTaGFPVoap0FNwyDC4"
+    }
+}

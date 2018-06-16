@@ -6,6 +6,13 @@ function makeError (name: string) {
 
 // TODO: set locale from the request
 
+/* auth:
+ * - jwt
+ *
+ * body params:
+ * - name
+ * - info
+ */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   
   // Check the user is verified

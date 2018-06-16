@@ -6,17 +6,13 @@ api:
     badAuth: User is not logged in or unverified
   
   auth:
-    verifyRequest:
+    login_request:
       badNumber: No phoneNumber provided or it was invalid
       badLocale: No locale provided or it was invalid
-    verifyCheck:
+    login_check:
       badCode: No code was provided
-    loginRequest:
-      badNumber: No phoneNumber provided or it was invalid
-      badLocale: No locale provided or it was invalid
-    loginCheck:
-      badCode: No code was provided
-    updateFcm:
+    me:
+    update_fcm:
   
   orgs:
     create:
@@ -27,19 +23,28 @@ api:
       notFound: Couldn't find that org or no permission to view it
     destroy:
       badAuth: The current user isn't a coordinator of that org
-    members:
-      accept:
-        notFound: Organisation was not found or user cannot access it
-      invite:
-        badNumber: No phoneNumber provided or it was invalid
-        badLocale: No locale provided or it was invalid
-        badRole: No role provided or it was invalid
-        notFound: Organisation was not found or user cannot access it
-      destroy:
-        notFound: Organisation was not found or user cannot access it / not a member
-        notMember: That membership doesn't exist
-      deep_link:
-      unsubscribe:
+  
+  members:
+    accept:
+      notFound: Organisation was not found or user cannot access it
+    create:
+      badNumber: No phoneNumber provided or it was invalid
+      badLocale: No locale provided or it was invalid
+      badRole: No role provided or it was invalid
+      notFound: Organisation was not found or user cannot access it
+    deep_link:
+    destroy:
+      notFound: An Organisation was not found that the current user is a coordinator of and the target member exists exists on it
+    unsubscribe:
+      notFound: An Organisation was not found where that member exists on it
+  
+  messages:
+    create:
+      badContent: No content provided
+      badOrg: Organisation was not found or user cannot access it
+      badFirebase: Firebase isn't available
+    attempts_index:
+    attempts_update:
 
 sms:
   verifyRequest: Your Iris Msg verification code is {0}

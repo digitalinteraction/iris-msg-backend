@@ -3,9 +3,12 @@ import { IAuthCodeWithUser } from '@/src/models'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
-  return `api.auth.login-check.${name}`
+  return `api.auth.login_check.${name}`
 }
 
+/* body params:
+ * - code ~ The verification code
+ */
 export default async ({ req, api, models }: RouteContext) => {
   
   // Find a valid authcode with the passed code
@@ -18,7 +21,8 @@ export default async ({ req, api, models }: RouteContext) => {
   
   // Verify the user if not already
   if (auth.user.verifiedOn === null) {
-    await auth.user.update({ verifiedOn: new Date() })
+    auth.user.verifiedOn = new Date()
+    await auth.user.save()
   }
   
   // Generate an authentication

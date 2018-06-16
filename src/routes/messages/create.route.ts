@@ -2,19 +2,19 @@ import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/ty
 import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
 import { ObjectId } from 'mongodb'
 import { MongooseDocument } from 'mongoose'
-import * as firebase from 'firebase-admin'
+import { makeFirebaseMessenger, firebaseEnabled } from '../../services'
 
 function makeError (name: string) {
   return `api.messages.create.${name}`
 }
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
-  
   // Check the request body
   let { orgId, content } = req.body
   let errors = new Set<string>()
   if (!content) errors.add(makeError('badContent'))
-  if (!orgId) errors.add(makeError('badContent'))
+  if (!orgId) errors.add(makeError('badOrg'))
+  if (!firebaseEnabled()) errors.add('badFirebase')
   if (errors.size > 0) throw errors
   
   // Check the user is valid
@@ -24,7 +24,9 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Check the org is valid
   let org: IOrganisationWithUsers = await models.Organisation.findByIdForCoordinator(orgId, user.id)
     .populate('members.user') as any
-  if (!org) throw makeError('notFound')
+  
+  // Fail if the organisation wasn't found
+  if (!org) throw makeError('badOrg')
   
   // Cache now as a date
   let now = new Date()
@@ -70,8 +72,9 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   await message.save()
   
   // Send out fcm's to each donor
+  let messenger = makeFirebaseMessenger()
   await Promise.all(donorList.map(donor => {
-    firebase.messaging().send({
+    messenger.send({
       data: {
         type: FcmType.NewDonations
       },

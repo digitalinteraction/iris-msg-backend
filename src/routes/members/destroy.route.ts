@@ -1,12 +1,15 @@
 import { RouteContext } from '@/src/types'
 
 function makeError (name: string) {
-  return `api.orgs.members.destroy.${name}`
+  return `api.members.destroy.${name}`
 }
 
-/* url params
- * org_id: string ~ The id of the organisation
- * mem_id: string ~ The id of the member to remove
+/* auth:
+ * - jwt
+ *
+ * url params:
+ * - org_id
+ * - mem_id
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
@@ -22,7 +25,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Find the membership
   let member = org.members.id(req.params.mem_id)
-  if (!member) throw makeError('notMember')
+  if (!member) throw makeError('notFound')
   
   // Mark the membership as deleted
   member.deletedOn = new Date()

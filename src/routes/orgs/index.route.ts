@@ -4,6 +4,9 @@ import { RouteContext } from '@/src/types'
 //   return `api.orgs.index.${name}`
 // }
 
+/* auth:
+ * - jwt
+ */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Check the user is verified

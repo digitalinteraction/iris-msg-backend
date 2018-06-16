@@ -1,7 +1,7 @@
 import { RouteContext } from '@/src/types'
 
 function makeError (name: string) {
-  return `api.orgs.members.deep_link.${name}`
+  return `api.members.deep_link.${name}`
 }
 
 export default async ({ req, api, next, models }: RouteContext) => {
