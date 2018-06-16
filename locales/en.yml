@@ -32,6 +32,7 @@ api:
       badLocale: No locale provided or it was invalid
       badRole: No role provided or it was invalid
       notFound: Organisation was not found or user cannot access it
+      alreadyMember: That user is already a member in that role
     deep_link:
     destroy:
       notFound: An Organisation was not found that the current user is a coordinator of and the target member exists exists on it

@@ -60,10 +60,19 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   let newUser = await models.User.findOne({ phoneNumber })
   
   // Create the member if they don't exist
-  if (!newUser) {
+  if (newUser === null) {
     newUser = await models.User.create({
       phoneNumber, verifiedOn: new Date()
     })
+  } else {
+    // Check if they are already a member in that role
+    let existingMember = org.members.find(member =>
+      member.user.toString() === newUser!.id &&
+      member.role === role &&
+      member.deletedOn === null &&
+      member.confirmedOn !== null
+    )
+    if (existingMember) throw makeError('alreadyMember')
   }
   
   // Add the member
