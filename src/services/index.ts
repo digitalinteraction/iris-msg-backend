@@ -3,7 +3,7 @@ export {
   makeFirebaseMessenger,
   initializeFirebase,
   firebaseEnabled
-} from './fcm.service'
+} from './firebase.service'
 
 const cleanPathStart = (path: string) => path.replace(/^\//, '')
 const cleanPathEnd = (path: string) => path.replace(/\/$/, '')
