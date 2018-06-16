@@ -1,4 +1,4 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb } from '@/tools/testHarness'
+import * as tst from '@/tools/testHarness'
 import loginCheck from '../loginCheck.route'
 import { IModelSet } from '@/src/models'
 import { AuthCodeType } from '@/src/types'
@@ -6,13 +6,13 @@ import { verify } from 'jsonwebtoken'
 
 let db: any
 let models: IModelSet
-let seed: Seed
-let agent: Agent
+let seed: tst.Seed
+let agent: tst.Agent
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
-  seed = await applySeed('test/auth', models)
-  agent = mockRoute(loginCheck, models)
+  ({ db, models } = await tst.openDb())
+  seed = await tst.applySeed('test/auth', models)
+  agent = tst.mockRoute(loginCheck, models)
   
   await models.AuthCode.create({
     code: 123456,
@@ -24,11 +24,11 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await closeDb(db)
+  await tst.closeDb(db)
 })
 
 describe('auth.login.check', () => {
-  it('should return a 200', async () => {
+  it('should return an http/200', async () => {
     let res = await agent.post('/').send({ code: 123456 })
     expect(res.status).toBe(200)
   })
@@ -48,12 +48,24 @@ describe('auth.login.check', () => {
   it('should fail if the code has expired', async () => {
     await models.AuthCode.create({
       code: 654321,
-      expiresOn: new Date(Date.UTC(1000, 0)),
+      expiresOn: tst.inThePast,
       usedOn: null,
       user: seed.User.verified.id,
       type: AuthCodeType.Login
     })
     let res = await agent.post('/').send({ code: 654321 })
     expect(res.status).toBe(400)
+  })
+  
+  it('should verify a user if not already', async () => {
+    await models.AuthCode.create({
+      code: 654321,
+      expiresOn: tst.inTheFuture,
+      user: seed.User.unverified.id,
+      type: AuthCodeType.Login
+    })
+    await agent.post('/').send({ code: 654321 })
+    let user = await models.User.findById(seed.User.unverified.id)
+    expect(user!.verifiedOn).toBeInstanceOf(Date)
   })
 })

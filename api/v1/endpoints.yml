@@ -1,33 +1,24 @@
-auth:
+users:
   name: Auth
   base: /users
   endpoints:
   - get: /me me
     info: Fetches the current authenticated user
   
-  - post: /login-request loginRequest
-    info: Requests a login sms to be sent
+  - post: /login/request login_request
+    info: |
+      Requests a login sms to be sent and creates a new user if it doesn't exist
     body:
       phoneNumber: string - The local phone number of the user
       locale: string - The ISO_3166-2 country where the phone is
   
-  - post: /login-check loginCheck
-    info: Checks a login sms code and logs in the user
+  - post: /login/check login_check
+    info: |
+      Checks a login sms code and logs in the user and optionally verifies the user
     body:
       code: number - The sms code to check
   
-  - post: /verify-request verifyRequest
-    info: Requests a verification sms to be sent
-    body:
-      phoneNumber: string - The local phone number of the new user
-      locale: string - The ISO_3166-2 country where the phone is
-  
-  - post: /verify-check verifyCheck
-    info: Checks a verification sms code and creates a new user
-    body:
-      code: number - The sms code to check
-  
-  - post: /update-fcm updateFcm
+  - post: /update_fcm update_fcm
     info: Updates the fcm token for the current user
 
 orgs:

@@ -1,6 +1,4 @@
 export { default as me } from './me.route'
 export { default as loginRequest } from './loginRequest.route'
 export { default as loginCheck } from './loginCheck.route'
-export { default as verifyRequest } from './verifyRequest.route'
-export { default as verifyCheck } from './verifyCheck.route'
 export { default as updateFcm } from './updateFcm.route'

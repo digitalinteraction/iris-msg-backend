@@ -29,6 +29,10 @@ export type IOrganisationWithUsers = {
   members: Types.DocumentArray<IMemberWithUser>
 } & IOrganisation
 
+export type IAuthCodeWithUser = {
+  user: IUser
+} & IAuthCode
+
 export interface IModelSet {
   User: IUserClass
   Organisation: IOrganisationClass

@@ -1,4 +1,4 @@
-import { Application, Request, Response, NextFunction } from 'express'
+import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
 import { RouteContext } from './types'
@@ -8,7 +8,11 @@ import { IModelSet } from './models'
 import * as middleware from './middleware'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
-type ExpressRoute = (req: Request, res: Response, next: NextFunction) => void
+type ExpressRoute = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => void
 
 export function makeRoute (route: CustomRoute, models: IModelSet): ExpressRoute {
   return async (req, res, next) => {
@@ -22,12 +26,12 @@ export function makeRoute (route: CustomRoute, models: IModelSet): ExpressRoute 
   }
 }
 
-export function applyMiddleware (app: Application) {
+export function applyMiddleware (app: express.Application) {
   app.use(bodyParser.json())
   app.use(middleware.api())
 }
 
-export function applyRoutes (app: Application, models: IModelSet) {
+export function applyRoutes (app: express.Application, models: IModelSet) {
   
   const r = (route: CustomRoute) => makeRoute(route, models)
   
@@ -37,13 +41,12 @@ export function applyRoutes (app: Application, models: IModelSet) {
   
   // General
   app.get('/', r(routes.general.hello))
+  app.use('/docs', express.static('docs'))
   
   // Auth
   app.get('/users/me', optionalJwt, r(routes.auth.me))
-  app.post('/users/login_request', optionalJwt, r(routes.auth.loginRequest))
-  app.post('/users/login_check', optionalJwt, r(routes.auth.loginCheck))
-  app.post('/users/verify_request', optionalJwt, r(routes.auth.verifyRequest))
-  app.post('/users/verify_check', optionalJwt, r(routes.auth.verifyCheck))
+  app.post('/users/login/request', optionalJwt, r(routes.auth.loginRequest))
+  app.post('/users/login/check', optionalJwt, r(routes.auth.loginCheck))
   app.post('/users/update_fcm', requiredJwt, r(routes.auth.updateFcm))
   
   // Org Management
@@ -62,9 +65,9 @@ export function applyRoutes (app: Application, models: IModelSet) {
   // Messaging
 }
 
-export function applyErrorHandler (app: Application) {
+export function applyErrorHandler (app: express.Application) {
   
-  app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     let api = (req as any).api as Api
     
     if (error instanceof Set) {

@@ -41,4 +41,13 @@ describe('auth.login.request', () => {
       .send({ phoneNumber: '07880123001', locale: 'GB' })
     expect(sentMessages[0].body).toMatch(/\d{3}-\d{3}/)
   })
+  
+  it('should create an unverified user', async () => {
+    await agent.post('/')
+      .send({ phoneNumber: '07880123003', locale: 'GB' })
+    let user = await models.User.findOne({ phoneNumber: '+447880123003' })
+    expect(user).toBeInstanceOf(models.User)
+    expect(user!.verifiedOn).toBeNull()
+    expect(sentMessages).toHaveLength(1)
+  })
 })

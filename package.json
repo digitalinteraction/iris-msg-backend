@@ -6,13 +6,15 @@
   "types": "src/index.d.ts",
   "scripts": {
     "build": "tsc -p .",
+    "build:docs": "ocedocs",
     "coverage": "jest --coverage",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node -r dotenv/config' src/index.ts",
+    "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src",
+    "dev:watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev'",
     "lint": "npx tslint -p .",
     "make:image": "node tools/buildAndPush.js",
     "preversion": "npm run lint -s && npm test -s",
     "mongo:once": "docker run -it --rm -p 27017:27017 mongo",
-    "start": "node -r dotenv/config dist",
+    "start": "node -r tsconfig-paths/register -r dotenv/config dist",
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
     "test:watch": "jest --runInBand --watch"
@@ -50,15 +52,15 @@
     "jest": "^23.1.0",
     "jest-environment-node": "^23.1.0",
     "js-yaml": "^3.12.0",
-    "mongodb-memory-server": "^1.8.0",
+    "nodemon": "^1.17.5",
     "ocelot-docs": "^0.3.2",
     "supertest": "^3.1.0",
     "ts-jest": "^22.4.6",
     "ts-node": "^6.1.0",
+    "tsconfig-paths": "^3.4.0",
     "tslint": "^5.10.0",
     "tslint-config-standard": "^7.0.0",
-    "typescript": "^2.9.1",
-    "weak": "^1.0.1"
+    "typescript": "^2.9.1"
   },
   "jest": {
     "transform": {
@@ -84,5 +86,8 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
     }
+  },
+  "optionalDependencies": {
+    "mongodb-memory-server": "^1.8.0"
   }
 }
