@@ -23,7 +23,7 @@ export async function initializeFirebase () {
 
 // export function getGoogleConfig (): firebase.AppOptions | null {
 //   try {
-//     let config = require('../../google-services.json')
+//     let config = require('../../google-account.json')
 //     return config
 //   } catch (err) {
 //     return null
