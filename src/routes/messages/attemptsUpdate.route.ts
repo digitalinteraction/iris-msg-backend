@@ -2,7 +2,8 @@ import {
   RouteContext,
   AllMessageAttemptStates,
   MessageAttemptState,
-  MemberRole
+  MemberRole,
+  FcmType
 } from '@/src/types'
 
 import {
@@ -13,7 +14,7 @@ import {
   IModelSet
 } from '@/src/models'
 
-import { makeTwilioClient } from '@/src/services'
+import { makeFirebaseMessenger, sendTwilioMessage } from '@/src/services'
 import { shuffleArray } from '@/src/utils'
 import { Types } from 'mongoose'
 
@@ -31,9 +32,9 @@ const RetryStates = [
   MessageAttemptState.NoResponse
 ]
 
-interface IAttemptState {
+interface IAttemptUpdate {
   attempt: string,
-  state: MessageAttemptState
+  newState: MessageAttemptState
 }
 
 interface IMessageAndAttempt {
@@ -41,74 +42,118 @@ interface IMessageAndAttempt {
   attempt?: IMessageAttempt
 }
 
+interface ITwilioMessage {
+  user: Types.ObjectId
+  body: string
+}
+
 enum UpdateResult {
-  Twilio, Reallocated, Success, Failed
+  Twilio, Reallocated, Sent, Failed
 }
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
-  // let { attempts } = req.body.attempts
-  //
-  // let errors = new Set<string>()
-  // if (!attempts) errors.add(makeError('badAttempts'))
-  // if (!Array.isArray(attempts)) errors.add(makeError('badAttempts'))
-  // if (!authJwt) errors.add('api.general.badAuth')
-  //
-  // if (errors.size > 0) throw errors
-  //
-  // attempts.forEach((item: any) => {
-  //   let isValid = item.id &&
-  //     Types.ObjectId.isValid(item.id) &&
-  //     item.state &&
-  //     AllMessageAttemptStates.includes(item.state)
-  //
-  //   if (!isValid) {
-  //     errors.add(makeError('badAttempts'))
-  //   }
-  // })
-  //
-  // if (errors.size > 0) throw errors
-  //
-  // let attemptStates = attempts as IAttemptState[]
-  //
-  // // Fetch messages for the updates
-  // let messages = await models.Message.find({
-  //   attempts: {
-  //     $elemMatch: {
-  //       _id: attemptStates.map(s => s.attempt),
-  //       state: MessageAttemptState.Pending
-  //     }
-  //   }
-  // }).populate({
-  //   name: 'organisation',
-  //   match: {
-  //     deletedOn: null,
-  //     members: {
-  //       $elemMatch: {
-  //         role: MemberRole.Donor,
-  //         user: authJwt!.usr,
-  //         deletedOn: null,
-  //         confirmedOn: { $ne: null }
-  //       }
-  //     }
-  //   }
-  // })
-  //
-  // attemptStates.forEach(async state => {
-  //   let { message, attempt } = getMessageAndAttempt(state.attempt, messages)
-  //   if (!attempt) errors.add(makeError('badAttempts'))
-  //   if (!message || !message.organisation) errors.add(makeError('badAttempts'))
-  // })
-  //
-  // if (errors.size > 0) throw errors
-  //
-  // await Promise.all(attemptStates.map(async state => {
-  //   let { message, attempt } = getMessageAndAttempt(state.attempt, messages)
-  //   let organisation = message!.organisation as any
-  //
-  //   return updateAttempt(attempt!, state.state, message!, organisation)
-  // }))
+  let { updates: rawUpdates } = req.body
   
+  let errors = new Set<string>()
+  if (!rawUpdates) errors.add(makeError('badAttempts'))
+  if (!Array.isArray(rawUpdates)) errors.add(makeError('badAttempts'))
+  if (!authJwt) errors.add('api.general.badAuth')
+  
+  if (errors.size > 0) throw errors
+  
+  rawUpdates.forEach((item: any) => {
+    let isValid = item.attempt &&
+      Types.ObjectId.isValid(item.attempt) &&
+      item.newState &&
+      AllMessageAttemptStates.includes(item.newState)
+  
+    if (!isValid) {
+      errors.add(makeError('badAttempts'))
+    }
+  })
+  
+  if (errors.size > 0) throw errors
+  
+  let updates = rawUpdates as IAttemptUpdate[]
+  
+  // Fetch messages for the updates
+  let messages = await models.Message.find({
+    attempts: {
+      $elemMatch: {
+        _id: updates.map(s => s.attempt),
+        state: MessageAttemptState.Pending
+      }
+    }
+  }).populate({
+    path: 'organisation',
+    match: {
+      deletedOn: null,
+      members: {
+        $elemMatch: {
+          role: MemberRole.Donor,
+          user: authJwt!.usr,
+          deletedOn: null,
+          confirmedOn: { $ne: null }
+        }
+      }
+    }
+  })
+  
+  // Build up of sms & fcm to send
+  let smsToSend = new Array<IMessageAttempt>()
+  let fcmUpdates = new Set<string>()
+  
+  // Process each update
+  let promises = updates.map(async state => {
+    let { message, attempt } = getMessageAndAttempt(state.attempt, messages)
+    if (!attempt || !message || !message.organisation) return
+    
+    // Update the attempt
+    let result = processAttemptUpdate(
+      attempt!, state.newState, message, message.organisation as any
+    )
+    
+    // Store info depending on the result
+    switch (result) {
+      case UpdateResult.Twilio:
+        return smsToSend.push(attempt)
+      case UpdateResult.Reallocated:
+        return fcmUpdates.add(attempt.donor.toHexString())
+    }
+  })
+  
+  // Send fcms
+  let firebase = makeFirebaseMessenger()
+  let donors = await models.User.find({ _id: Array.from(fcmUpdates) })
+  await Promise.all(donors.map(user => {
+    if (!user.fcmToken) return Promise.resolve({})
+    return firebase.send({
+      notification: {
+        title: 'New donations',
+        body: 'You have new pending donations'
+      },
+      data: {
+        type: FcmType.NewDonations
+      },
+      token: user.fcmToken!
+    })
+  }))
+  
+  // Send twilios
+  await Promise.all(smsToSend.map(async attempt => {
+    let message: IMessage = attempt.ownerDocument() as any
+    
+    let recipient = await models.User.findById(attempt.recipient)
+    if (!recipient) return
+    
+    return sendTwilioMessage(recipient.phoneNumber, message.content)
+  }))
+  
+  // Save the messages
+  await Promise.all(messages.map(m => m.save()))
+  
+  // Send back a success
   api.sendData('ok')
 }
 
@@ -123,7 +168,7 @@ export function getMessageAndAttempt (
   return { message: undefined, attempt: undefined }
 }
 
-export function updateAttempt (
+export function processAttemptUpdate (
   attempt: IMessageAttempt,
   state: MessageAttemptState,
   message: IMessage,
@@ -134,16 +179,16 @@ export function updateAttempt (
   attempt.state = state
   
   // If not a retry state, stop here
-  if (!RetryStates.includes(state)) return UpdateResult.Success
+  if (!RetryStates.includes(state)) return UpdateResult.Sent
   
   // Get the donors that have already been used
   let usedDonors = message.attempts
     .filter(prevAttempt => prevAttempt.recipient.equals(attempt.recipient))
-    .map(prevAttempt => prevAttempt.donor)
+    .map(prevAttempt => prevAttempt.donor.toHexString())
   
   // Work out the donors we can use
   let potentialDonors = organisation.activeDonors
-    .filter(member => !usedDonors.includes(member.id))
+    .filter(member => !usedDonors.includes(member.user.toHexString()))
   
   // Randomly pick one of those donors
   let newDonor = shuffleArray(potentialDonors)[0]
@@ -159,7 +204,6 @@ export function updateAttempt (
     
     return UpdateResult.Reallocated
   } else if (process.env.TWILIO_FALLBACK) {
-    console.log('Twilio Fallback')
     
     // Add the twilio message
     message.attempts.push({

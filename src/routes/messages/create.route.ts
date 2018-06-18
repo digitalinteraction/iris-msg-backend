@@ -79,7 +79,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Send out fcm's to each donor
   let messenger = makeFirebaseMessenger()
   await Promise.all(donorList.map(donor => {
-    messenger.send({
+    return messenger.send({
       notification: {
         title: 'New donations',
         body: 'You have new pending donations'

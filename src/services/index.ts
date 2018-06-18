@@ -1,8 +1,9 @@
-export { makeTwilioClient } from './twilio.service'
+export { makeTwilioClient, sendTwilioMessage } from './twilio.service'
 export {
   makeFirebaseMessenger,
   initializeFirebase,
-  firebaseEnabled
+  firebaseEnabled,
+  sendFirebaseMessage
 } from './firebase.service'
 
 const cleanPathStart = (path: string) => path.replace(/^\//, '')

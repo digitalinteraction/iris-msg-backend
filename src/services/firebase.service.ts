@@ -1,4 +1,5 @@
 import * as firebase from 'firebase-admin'
+import { FcmType } from '@/src/types'
 
 export let firebaseApp: firebase.app.App | undefined = undefined
 
@@ -33,4 +34,9 @@ export function getGoogleConfig (): firebase.AppOptions | null {
 
 export function makeFirebaseMessenger (): firebase.messaging.Messaging {
   return firebase.messaging(firebaseApp)
+}
+
+interface INotification {
+  title: string,
+  body: string
 }

@@ -14,6 +14,8 @@ module.exports = class MongooseEnvironment extends NodeEnvironment {
     this.global.process.env.WEB_URL = 'http://localhost:8080'
     this.global.process.env.FIREBASE_DB = 'https://some-proj.firebaseio.com'
     this.global.process.env.FIREBASE_SANDBOX = 'true'
+    this.global.process.env.TWILIO_FALLBACK = 'true'
+    this.global.process.env.TWILIO_NUMBER = '+4401234567890'
   }
 
   async teardown() {

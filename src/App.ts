@@ -16,6 +16,7 @@ export default class App {
   async run () {
     try {
       this.checkEnvironment()
+      initializeFirebase()
       let app = this.createExpressApp()
       await this.connectToMongo()
       await new Promise(resolve => app.listen(3000, resolve))
@@ -35,8 +36,12 @@ export default class App {
     })
     
     // Work out if we can use firebase
-    if (!firebaseEnabled()) console.log('Firebase disabled')
-    else initializeFirebase()
+    if (!firebaseEnabled()) {
+      console.log(`Firebase isn't configured`)
+      console.log(`- Ensure 'FIREBASE_DB' is set`)
+      console.log(`- Ensure 'google-account.json' is mounted`)
+      process.exit(1)
+    }
   }
   
   createExpressApp (): express.Application {
