@@ -2,7 +2,7 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels } from './models'
-import { initializeFirebase } from './services'
+import { initializeFirebase, firebaseEnabled } from './services'
 
 const RequiredVariables = [
   'MONGO_URI', 'JWT_SECRET', 'API_URL', 'WEB_URL'
@@ -19,9 +19,8 @@ export default class App {
   
   async run () {
     try {
-      this.checkVariables()
+      this.checkEnvironment()
       let app = this.createExpressApp()
-      await initializeFirebase()
       await this.connectToMongo()
       await new Promise(resolve => app.listen(3000, resolve))
       console.log('Server started on :3000')
@@ -31,7 +30,7 @@ export default class App {
     }
   }
   
-  checkVariables () {
+  checkEnvironment () {
     // Ensure all required variables are set
     RequiredVariables.forEach(varName => {
       if (process.env[varName]) return
@@ -44,6 +43,10 @@ export default class App {
       (flag, name) => flag && process.env[name], true
     )
     if (!allowTwilio) console.log('Twilio disabled')
+    
+    // Work out if we can use firebase
+    if (!firebaseEnabled()) console.log('Firebase disabled')
+    else initializeFirebase()
   }
   
   createExpressApp (): express.Application {

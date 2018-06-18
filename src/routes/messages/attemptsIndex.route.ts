@@ -52,6 +52,9 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
         attempt.state === MessageAttemptState.Pending
       )
       .map(attempt => ({
+        id: attempt.id,
+        createdAt: (attempt as any).createdAt,
+        updatedAt: (attempt as any).updatedAt,
         recipient: attempt.recipient.id,
         phoneNumber: attempt.recipient.phoneNumber
       }))

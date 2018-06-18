@@ -12,7 +12,8 @@ module.exports = class MongooseEnvironment extends NodeEnvironment {
     this.global.process.env.JWT_SECRET = 'some_really_bad_secret'
     this.global.process.env.API_URL = 'http://localhost:3000'
     this.global.process.env.WEB_URL = 'http://localhost:8080'
-    this.global.process.env.FIREBASE_PROJ_ID = 'some_firebase_proj_id'
+    this.global.process.env.FIREBASE_DB = 'https://some-proj.firebaseio.com'
+    this.global.process.env.FIREBASE_SANDBOX = 'true'
   }
 
   async teardown() {

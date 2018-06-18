@@ -9,7 +9,7 @@
     "build:docs": "ocedocs",
     "coverage": "jest --coverage",
     "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src",
-    "dev:watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev'",
+    "dev:watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev -s'",
     "lint": "npx tslint -p .",
     "make:image": "node tools/buildAndPush.js",
     "preversion": "npm run lint -s && npm test -s",

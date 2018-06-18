@@ -75,6 +75,10 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   let messenger = makeFirebaseMessenger()
   await Promise.all(donorList.map(donor => {
     messenger.send({
+      notification: {
+        title: 'New donations',
+        body: 'You have new pending donations'
+      },
       data: {
         type: FcmType.NewDonations
       },
@@ -82,8 +86,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
     })
   }))
   
-  // let message
-  api.sendData('ok')
+  api.sendData(message)
 }
 
 type KeyedType<T> = { [id: string]: T }
@@ -102,15 +105,6 @@ function isActiveMember (member: IMember, user: IUser, since: Date): boolean {
     user.verifiedOn !== null &&
     user.verifiedOn <= since
 }
-
-// function activeMembers (members: IMember[], role: MemberRole): IMember[] {
-//   let now = new Date()
-//
-//   return members.filter(member => {
-//     let user: IUser = member.user as any
-//     return
-//   })
-// }
 
 /**
  * Allocates each item in setA an item from setB,

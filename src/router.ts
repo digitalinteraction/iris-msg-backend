@@ -63,6 +63,9 @@ export function applyRoutes (app: express.Application, models: IModelSet) {
   app.get('/invite/:mem_id', r(routes.members.deepLink))
   
   // Messaging
+  app.post('/messages', requiredJwt, r(routes.messages.create))
+  app.get('/messages/attempts', requiredJwt, r(routes.messages.attemptsIndex))
+  app.post('/messages/attempts', requiredJwt, r(routes.messages.attemptsUpdate))
 }
 
 export function applyErrorHandler (app: express.Application) {
