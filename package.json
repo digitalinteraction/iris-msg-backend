@@ -31,6 +31,7 @@
     "iso-3166-2": "^1.0.0",
     "jsonwebtoken": "^8.2.2",
     "mongoose": "^5.0.15",
+    "node-cron": "^1.2.1",
     "phone": "^2.0.0",
     "twilio": "^3.17.2"
   },
@@ -45,6 +46,7 @@
     "@types/jsonwebtoken": "^7.2.7",
     "@types/mongodb": "^3.0.19",
     "@types/mongoose": "^5.0.15",
+    "@types/node-cron": "^1.2.0",
     "@types/phone": "^1.0.3",
     "@types/superagent": "^3.8.0",
     "@types/supertest": "^2.0.4",

@@ -1,9 +1,24 @@
 import { Model, Connection, Types } from 'mongoose'
 
-import { UserSchema, IUser, IUserClass } from './schemas/User.schema'
-import { OrganisationSchema, IOrganisation, IOrganisationClass } from './schemas/Organisation.schema'
-import { MessageSchema, IMessage, IMessageClass } from './schemas/Message.schema'
-import { AuthCodeSchema, IAuthCode, IAuthCodeClass } from './schemas/AuthCode.schema'
+import {
+  UserSchema, IUser, IUserClass
+} from './schemas/User.schema'
+
+import {
+  OrganisationSchema, IOrganisation, IOrganisationClass
+} from './schemas/Organisation.schema'
+
+import {
+  MessageSchema, IMessage, IMessageClass
+} from './schemas/Message.schema'
+
+import {
+  AuthCodeSchema, IAuthCode, IAuthCodeClass
+} from './schemas/AuthCode.schema'
+
+import {
+  TwilioMessageSchema, ITwilioMessage, ITwilioMessageClass
+} from './schemas/TwilioMessage.schema'
 
 import { IMember } from './schemas/Member.schema'
 import { IMessageAttempt } from './schemas/MessageAttempt.schema'
@@ -18,7 +33,10 @@ export {
   IMessage,
   IMessageClass,
   IMember,
-  IMessageAttempt
+  IMessageAttempt,
+  TwilioMessageSchema,
+  ITwilioMessage,
+  ITwilioMessageClass
 }
 
 export type IMemberWithUser = {
@@ -36,8 +54,9 @@ export type IAuthCodeWithUser = {
 export interface IModelSet {
   User: IUserClass
   Organisation: IOrganisationClass
-  Message: Model<IMessage>
+  Message: IMessageClass
   AuthCode: IAuthCodeClass
+  TwilioMessage: ITwilioMessageClass
 }
 
 export function makeModels (connection: Connection): IModelSet {
@@ -53,6 +72,9 @@ export function makeModels (connection: Connection): IModelSet {
     ),
     AuthCode: connection.model<IAuthCode, IAuthCodeClass>(
       'AuthCode', AuthCodeSchema
+    ),
+    TwilioMessage: connection.model<ITwilioMessage, ITwilioMessageClass>(
+      'TwilioMessage', TwilioMessageSchema
     )
   }
 }

@@ -1,3 +1,0 @@
-// A task to regularly for check and reallocate donor's non-responses
-
-// ...

@@ -2,35 +2,23 @@ import {
   RouteContext,
   AllMessageAttemptStates,
   MessageAttemptState,
-  MemberRole,
-  FcmType
+  MemberRole
 } from '@/src/types'
 
 import {
   IMessageAttempt,
-  IMessage,
-  IOrganisation,
-  IMember,
-  IModelSet
+  IMessage
 } from '@/src/models'
 
-import { makeFirebaseMessenger, sendTwilioMessage } from '@/src/services'
-import { shuffleArray } from '@/src/utils'
+import {
+  ReallocationTask, RetryStates, ReallocResult
+} from '@/src/tasks'
+
 import { Types } from 'mongoose'
 
 function makeError (name: string) {
   return `api.messages.attempts_update.${name}`
 }
-
-const RetryStates = [
-  MessageAttemptState.Rejected,
-  MessageAttemptState.Failed,
-  MessageAttemptState.NoService,
-  MessageAttemptState.NoSmsData,
-  MessageAttemptState.RadioOff,
-  MessageAttemptState.NoSenders,
-  MessageAttemptState.NoResponse
-]
 
 interface IAttemptUpdate {
   attempt: string,
@@ -40,15 +28,6 @@ interface IAttemptUpdate {
 interface IMessageAndAttempt {
   message?: IMessage
   attempt?: IMessageAttempt
-}
-
-interface ITwilioMessage {
-  user: Types.ObjectId
-  body: string
-}
-
-enum UpdateResult {
-  Twilio, Reallocated, Sent, Failed
 }
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
@@ -75,6 +54,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   if (errors.size > 0) throw errors
   
+  let reallocator = new ReallocationTask()
   let updates = rawUpdates as IAttemptUpdate[]
   
   // Fetch messages for the updates
@@ -102,53 +82,37 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Build up of sms & fcm to send
   let smsToSend = new Array<IMessageAttempt>()
-  let fcmUpdates = new Set<string>()
+  let fcmToSend = new Set<string>()
   
   // Process each update
-  let promises = updates.map(async state => {
-    let { message, attempt } = getMessageAndAttempt(state.attempt, messages)
+  let promises = updates.map(async update => {
+    let { message, attempt } = getMessageAndAttempt(update.attempt, messages)
     if (!attempt || !message || !message.organisation) return
     
+    attempt.state = update.newState
+    
+    // If not a retry state, stop here
+    if (!RetryStates.includes(update.newState)) return
+    
     // Update the attempt
-    let result = processAttemptUpdate(
-      attempt!, state.newState, message, message.organisation as any
+    let result = reallocator.processAttempt(
+      attempt!, message, message.organisation as any
     )
     
     // Store info depending on the result
     switch (result) {
-      case UpdateResult.Twilio:
+      case ReallocResult.Twilio:
         return smsToSend.push(attempt)
-      case UpdateResult.Reallocated:
-        return fcmUpdates.add(attempt.donor.toHexString())
+      case ReallocResult.Reallocated:
+        return fcmToSend.add(attempt.donor.toHexString())
     }
   })
   
   // Send fcms
-  let firebase = makeFirebaseMessenger()
-  let donors = await models.User.find({ _id: Array.from(fcmUpdates) })
-  await Promise.all(donors.map(user => {
-    if (!user.fcmToken) return Promise.resolve({})
-    return firebase.send({
-      notification: {
-        title: 'New donations',
-        body: 'You have new pending donations'
-      },
-      data: {
-        type: FcmType.NewDonations
-      },
-      token: user.fcmToken!
-    })
-  }))
+  await reallocator.sendFcms(Array.from(fcmToSend), models)
   
   // Send twilios
-  await Promise.all(smsToSend.map(async attempt => {
-    let message: IMessage = attempt.ownerDocument() as any
-    
-    let recipient = await models.User.findById(attempt.recipient)
-    if (!recipient) return
-    
-    return sendTwilioMessage(recipient.phoneNumber, message.content)
-  }))
+  await reallocator.sendTwilios(smsToSend, models)
   
   // Save the messages
   await Promise.all(messages.map(m => m.save()))
@@ -166,55 +130,4 @@ export function getMessageAndAttempt (
     if (attempt) return { message, attempt }
   }
   return { message: undefined, attempt: undefined }
-}
-
-export function processAttemptUpdate (
-  attempt: IMessageAttempt,
-  state: MessageAttemptState,
-  message: IMessage,
-  organisation: IOrganisation
-): UpdateResult {
-  
-  // Update the state
-  attempt.state = state
-  
-  // If not a retry state, stop here
-  if (!RetryStates.includes(state)) return UpdateResult.Sent
-  
-  // Get the donors that have already been used
-  let usedDonors = message.attempts
-    .filter(prevAttempt => prevAttempt.recipient.equals(attempt.recipient))
-    .map(prevAttempt => prevAttempt.donor.toHexString())
-  
-  // Work out the donors we can use
-  let potentialDonors = organisation.activeDonors
-    .filter(member => !usedDonors.includes(member.user.toHexString()))
-  
-  // Randomly pick one of those donors
-  let newDonor = shuffleArray(potentialDonors)[0]
-  
-  // If we have a donor, allocate it to them
-  if (newDonor) {
-    message.attempts.push({
-      state: MessageAttemptState.Pending,
-      recipient: attempt.recipient,
-      donor: newDonor.id,
-      prevAttempt: attempt.id
-    })
-    
-    return UpdateResult.Reallocated
-  } else if (process.env.TWILIO_FALLBACK) {
-    
-    // Add the twilio message
-    message.attempts.push({
-      state: MessageAttemptState.Twilio,
-      recipient: attempt.recipient,
-      donor: null,
-      prevAttempt: attempt.id
-    })
-    
-    return UpdateResult.Twilio
-  } else {
-    return UpdateResult.Failed
-  }
 }

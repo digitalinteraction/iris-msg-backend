@@ -124,7 +124,6 @@ describe('messages.attempts_update', () => {
     expect(twilio.state).toBe(MessageAttemptState.Twilio)
     
     expect(sentSms).toHaveLength(1)
-    console.log(sentSms)
   })
   // it('should not realloc for unaccesible orgs', async () => {})
 })
