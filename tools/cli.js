@@ -5,6 +5,7 @@ require('dotenv').config()
 const cli = require('commander')
 const prompts = require('prompts')
 
+const jwt = require('jsonwebtoken')
 const firebase = require('firebase-admin')
 
 const MessageTypes = {
@@ -23,6 +24,13 @@ cli.command('fcm')
   .option('-t, --type <type>', 'The type of fcm')
   .option('--sandbox', 'Whether to sandbox or not')
   .action(fcmCommand)
+
+cli.command('jwt')
+  .description('Generate an fcm for a user')
+  .option('-u, --user <user>', 'The user to generate for')
+  .action(jwtCommand)
+
+// cli.command()
 
 // Process cli args or fallback to a help page
 cli.parse(process.argv)
@@ -68,6 +76,9 @@ async function fcmCommand (cmd, ...args) {
     ])
   }
   
+  // Stop if any variable isn't set
+  if (!notification.title || !notification.body || !type || !deviceToken) return
+  
   try {
     // Configure firebase
     const config = require('../google-account.json')
@@ -89,5 +100,34 @@ async function fcmCommand (cmd, ...args) {
     console.log(err.message)
   }
   
+  // Exit nicely
   process.exit(0)
 }
+
+async function jwtCommand (cmd, ...args) {
+  
+  // Ask for the user's id
+  let answer = await prompts([
+    { type: 'text', name: 'user', message: 'User id' }
+  ])
+  
+  // Stop if not set
+  if (!answer.user) return
+  
+  // Sign the jwt
+  let token = jwt.sign({ usr: answer.user }, process.env.JWT_SECRET)
+  
+  // Print the jwt
+  console.log('jwt', token)
+  
+  // Exit nicely
+  process.exit(0)
+}
+
+// async function seedCommand (cmd, ...args) {
+//
+//   let answers = await prompts([
+//
+//   ])
+//
+// }
