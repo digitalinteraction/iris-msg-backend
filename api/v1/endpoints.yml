@@ -83,3 +83,21 @@ members:
     info: Gets a deeplink redirection to accept an invite in the app
     params:
       mem_id: string - The id of the membership to link to
+
+messages:
+  name: Messages
+  base: /messages
+  endpoints:
+  - get: / create
+    info: Creates a message and sends out fcm `new_donations` messages to donors
+    body:
+      orgId: string - The id of the organisation to send to
+      content: string - The message to be sent
+  
+  - get: /attempts attempts_index
+    name: Pending Attempts
+    info: Gets the pending messages you have to send as a donor
+  
+  # - post: /attempts attempts_update
+  #   name: Update Attempts
+  #   info: Gets the pending messages you have to send as a donor

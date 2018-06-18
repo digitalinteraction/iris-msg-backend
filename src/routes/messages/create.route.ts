@@ -8,6 +8,10 @@ function makeError (name: string) {
   return `api.messages.create.${name}`
 }
 
+/* body params:
+ * - orgId
+ * - content
+ */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Check the request body
   let { orgId, content } = req.body
