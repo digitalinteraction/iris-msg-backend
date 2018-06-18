@@ -31,7 +31,6 @@ export default async ({ req, res, next, api, models }: RouteContext) => {
   }
   
   //
-  //
   
   let auth = await AuthCode.forUser(user.id, AuthCodeType.Login)
   

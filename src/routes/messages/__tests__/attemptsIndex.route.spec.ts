@@ -85,10 +85,16 @@ describe('messages.attempts_index', () => {
     expect(attempts).toBeInstanceOf(Array)
     expect(attempts).toHaveLength(2)
     expect(attempts).toContainEqual({
+      _id: expect.any(String),
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
       recipient: expect.anything(),
       phoneNumber: '+447880123010'
     })
     expect(attempts).toContainEqual({
+      _id: expect.any(String),
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
       recipient: expect.anything(),
       phoneNumber: '+447880123011'
     })

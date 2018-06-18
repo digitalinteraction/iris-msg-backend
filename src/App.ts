@@ -5,11 +5,7 @@ import { makeModels } from './models'
 import { initializeFirebase, firebaseEnabled } from './services'
 
 const RequiredVariables = [
-  'MONGO_URI', 'JWT_SECRET', 'API_URL', 'WEB_URL'
-]
-
-const TwilioVariables = [
-  'TWILIO_TOKEN', 'TWILIO_SID', 'TWILIO_NUMBER'
+  'MONGO_URI', 'JWT_SECRET', 'API_URL', 'WEB_URL', 'TWILIO_TOKEN', 'TWILIO_SID', 'TWILIO_NUMBER'
 ]
 
 export default class App {
@@ -37,12 +33,6 @@ export default class App {
       console.log(`Missing variable '${varName}'`)
       process.exit(1)
     })
-    
-    // Work out if all twilio variables are set
-    let allowTwilio = TwilioVariables.reduce(
-      (flag, name) => flag && process.env[name], true
-    )
-    if (!allowTwilio) console.log('Twilio disabled')
     
     // Work out if we can use firebase
     if (!firebaseEnabled()) console.log('Firebase disabled')

@@ -9,7 +9,7 @@ export interface IMember extends Types.Subdocument {
   role: MemberRole
   confirmedOn: Date | null
   deletedOn: Date | null
-  user: Schema.Types.ObjectId
+  user: Types.ObjectId
 }
 
 export const MemberSchema = new Schema({

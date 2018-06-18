@@ -21,15 +21,11 @@ export interface AuthJwt {
   usr: string
 }
 
-export const AllAuthCodeTypes = Object.values(AuthCodeType)
-
 export enum MemberRole {
   Coordinator = 'coordinator',
   Donor = 'donor',
   Subscriber = 'subscriber'
 }
-
-export const AllMemberRoles = Object.values(MemberRole)
 
 export enum MessageAttemptState {
   Pending = 'PENDING',
@@ -47,3 +43,8 @@ export enum MessageAttemptState {
 export enum FcmType {
   NewDonations = 'new_donations'
 }
+
+export const AllAuthCodeTypes = Object.values(AuthCodeType)
+export const AllMemberRoles = Object.values(MemberRole)
+export const AllMessageAttemptStates = Object.values(MessageAttemptState)
+export const AllFcmTypes = Object.values(FcmType)

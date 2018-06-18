@@ -12,6 +12,9 @@ export interface IOrganisation extends Document {
   locale: string
   members: Types.DocumentArray<IMember>
   deletedOn: Date | null
+  
+  activeSubscribers: IMember[]
+  activeDonors: IMember[]
 }
 
 export type IOrganisationClass = Model<IOrganisation> & {
@@ -76,3 +79,11 @@ OrganisationSchema.static(
     })
   }
 )
+
+OrganisationSchema.virtual('activeDonors').get(function (this: IOrganisation) {
+  return this.members.filter(member =>
+    member.role === MemberRole.Donor &&
+    member.deletedOn === null &&
+    member.confirmedOn !== null
+  )
+})

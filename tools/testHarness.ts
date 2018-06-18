@@ -73,7 +73,8 @@ export async function closeDb (db: Connection): Promise<void> {
   }
 }
 
-export function jwtHeader (userId: any) {
+export function jwtHeader (userOrUserId: any) {
+  let userId = userOrUserId.id || userOrUserId
   let token = sign({ usr: userId }, process.env.JWT_SECRET)
   return { Authorization: `Bearer ${token}` }
 }

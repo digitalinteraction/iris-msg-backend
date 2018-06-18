@@ -7,9 +7,9 @@ const schemaOptions = {
 
 export interface IMessageAttempt extends Types.Subdocument {
   state: MessageAttemptState
-  recipient: Schema.Types.ObjectId
-  donor: Schema.Types.ObjectId
-  previousAttempt: Schema.Types.ObjectId | null
+  recipient: Types.ObjectId
+  donor: Types.ObjectId
+  previousAttempt: Types.ObjectId | null
 }
 
 export const MessageAttemptSchema = new Schema({
