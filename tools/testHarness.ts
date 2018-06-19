@@ -7,7 +7,7 @@ import { IModelSet, makeModels, IOrganisation, IUser, IMember } from '../src/mod
 import { applyMiddleware, applyErrorHandler } from '@/src/router'
 import { sign } from 'jsonwebtoken'
 
-export { applySeed, Seed, ModelMap } from './seeder'
+export { applySeed, Seed } from './seeder'
 
 export type ExpressRoute = (req: express.Request, res: express.Response, next: express.NextFunction) => void
 export type Route = (ctx: RouteContext) => Promise<void>

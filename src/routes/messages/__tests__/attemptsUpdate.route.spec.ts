@@ -17,7 +17,6 @@ let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
 
-let org: IOrganisation
 let msg: IMessage
 
 let sentFcm: any[]
@@ -40,7 +39,7 @@ beforeEach(async () => {
   seed = await tst.applySeed('test/messages', models)
   agent = tst.mockRoute(attemptsUpdate, models, { jwt: true })
   
-  org = seed.Organisation.a
+  let org = seed.Organisation.a
   
   tst.addMember(org, seed.User.current, MemberRole.Coordinator)
   
@@ -63,7 +62,7 @@ beforeEach(async () => {
       {
         state: MessageAttemptState.Pending,
         recipient: seed.User.subA.id,
-        donor: seed.User.donorA
+        donor: seed.User.donorA.id
       }
     ]
   })

@@ -51,6 +51,10 @@ export type IAuthCodeWithUser = {
   user: IUser
 } & IAuthCode
 
+export type IMessageWithOrganisation = {
+  organisation: IOrganisation
+} & IMessage
+
 export interface IModelSet {
   User: IUserClass
   Organisation: IOrganisationClass

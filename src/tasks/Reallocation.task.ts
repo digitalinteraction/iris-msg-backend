@@ -11,7 +11,7 @@ export enum ReallocResult {
 }
 
 export interface ReallocationContext {
-  
+  models: IModelSet
 }
 
 export const RetryStates = [
@@ -28,29 +28,64 @@ export const RetryStates = [
 export class ReallocationTask extends Task<ReallocationContext> {
   interval = process.env.DONOR_TICK || null
   
-  async run (ctx: ReallocationContext) {
+  async run ({ models }: ReallocationContext) {
     
     // Find messages which are older than process.env.DONATION_MAX_AGE
+    let messages = await models.Message.find({
+      attempts: {
+        $elemMatch: { state: MessageAttemptState.Pending }
+      }
+    }).populate('organisation')
+    
+    let smsToSend = new Array<IMessageAttempt>()
+    let fcmToSend = new Set<string>()
     
     // Attempt to reallocate unsent attempts
+    messages.forEach(message => {
+      let org: IOrganisation = message.organisation as any
+      if (!org) return
+      
+      message.attempts.forEach(attempt => {
+        if (attempt.state !== MessageAttemptState.Pending) return
+        
+        attempt.state = MessageAttemptState.NoResponse
+        
+        let result = this.processAttempt(
+          attempt, message, org
+        )
+        
+        switch (result) {
+          case ReallocResult.Reallocated:
+            return fcmToSend.add(attempt.donor.toHexString())
+          case ReallocResult.Twilio:
+            return smsToSend.push(attempt)
+        }
+      })
+    })
     
     // Send fcm tokens
+    await this.sendFcms(Array.from(fcmToSend), models)
     
     // Send fallback sms
+    await this.sendTwilios(smsToSend, models)
     
+    // Save the messages
+    await Promise.all(messages.map(m => m.save()))
   }
   
   /** Process an attempt to reallocate to a new donor */
   processAttempt (attempt: IMessageAttempt, message: IMessage, organisation: IOrganisation): ReallocResult {
     
     // Get the donors that have already been used
-    let usedDonors = message.attempts
+    let usedDonorsIds = message.attempts
       .filter(prevAttempt => prevAttempt.recipient.equals(attempt.recipient))
-      .map(prevAttempt => prevAttempt.donor.toHexString())
+      .reduce((set, attempt) =>
+        set.add(attempt.donor.toHexString()
+      ), new Set<string>())
     
     // Work out the donors we can use
     let potentialDonors = organisation.activeDonors
-      .filter(member => !usedDonors.includes(member.user.toHexString()))
+      .filter(member => !usedDonorsIds.has(member.user.toHexString()))
     
     // Randomly pick one of those donors
     let newDonor = shuffleArray(potentialDonors)[0]
@@ -60,7 +95,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
       message.attempts.push({
         state: MessageAttemptState.Pending,
         recipient: attempt.recipient,
-        donor: newDonor.id,
+        donor: newDonor.user,
         prevAttempt: attempt.id
       })
       

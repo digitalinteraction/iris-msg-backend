@@ -67,17 +67,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
     }
   }).populate({
     path: 'organisation',
-    match: {
-      deletedOn: null,
-      members: {
-        $elemMatch: {
-          role: MemberRole.Donor,
-          user: authJwt!.usr,
-          deletedOn: null,
-          confirmedOn: { $ne: null }
-        }
-      }
-    }
+    match: models.Organisation.memberQuery(MemberRole.Donor, authJwt!.usr)
   })
   
   // Build up of sms & fcm to send

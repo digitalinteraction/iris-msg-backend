@@ -1,12 +1,5 @@
 import { EventEmitter } from 'events'
 
-// import cron = require('cron-parser')
-// import cron = require('node-cron')
-
-// export enum TaskSync {
-//   Minute, Hour, Day
-// }
-
 export type TaskInterval = {
   milliseconds?: number
   seconds?: number
@@ -76,47 +69,3 @@ export class Task<T> extends EventEmitter {
     }
   }
 }
-
-//
-// [WIP] ~ Improvement over node-cron
-//
-// export class CronTask<T> extends Task<T> {
-//   timerId: NodeJS.Timer | null = null
-//
-//   public schedule (ctx: T) {
-//     // Do nothing if without an interval or already running
-//     if (!this.interval || this.timerId) return
-//
-//     // Work out the time to the first cron
-//     let cronExpr = cron.parseExpression(this.interval, {
-//       tz: process.env.TZ || 'Europe/London'
-//     })
-//
-//     // Fail if not valid
-//     if (!cronExpr) return
-//
-//     // Work out when the next tick should be
-//     let now = (new Date()).getTime()
-//     let next = cronExpr.next().getTime()
-//
-//     // Start the tick
-//     this.timerId = setTimeout(() => this.tick(ctx), next - now)
-//   }
-//
-//   private async tick (ctx: T) {
-//
-//     // Reschedule the task
-//     this.timerId = null
-//     this.schedule(ctx)
-//
-//     try {
-//       // Run our task & remember we are running
-//       this.isRunning = true
-//       await this.run(ctx)
-//     } catch (err) {
-//       console.log('TaskError', err.message)
-//     } finally {
-//       this.isRunning = false
-//     }
-//   }
-// }

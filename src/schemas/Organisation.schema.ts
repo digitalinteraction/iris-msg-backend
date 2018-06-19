@@ -1,6 +1,6 @@
 import { Schema, Document, Types, DocumentQuery, Model } from 'mongoose'
 import { MemberSchema, IMember } from './Member.schema'
-import { MemberRole } from '../types'
+import { MemberRole, AllMemberRoles } from '../types'
 
 const schemaOptions = {
   timestamps: true
@@ -23,6 +23,13 @@ export type IOrganisationClass = Model<IOrganisation> & {
   
   findByIdForCoordinator (orgId: any, userId: any)
     : DocumentQuery<IOrganisation | null, IOrganisation>
+  
+  memberQuery (
+    role?: MemberRole | MemberRole[],
+    user?: Types.ObjectId | string,
+    overrides?: object
+  )
+    : object
 }
 
 export const OrganisationSchema = new Schema({
@@ -77,6 +84,33 @@ OrganisationSchema.static(
         }
       }
     })
+  }
+)
+
+OrganisationSchema.static(
+  'memberQuery',
+  function (
+    this: typeof Model,
+    role?: MemberRole | MemberRole[],
+    user?: Types.ObjectId | string,
+    overrides: object = {}
+  ): object {
+    if (!role) role = AllMemberRoles
+    
+    let subQuery: any = {
+      deletedOn: null,
+      confirmedOn: { $ne: null }
+    }
+    
+    if (role) subQuery.role = role
+    if (user) subQuery.user = user
+    
+    return {
+      deletedOn: null,
+      members: {
+        $elemMatch: { ...subQuery, ...overrides }
+      }
+    }
   }
 )
 
