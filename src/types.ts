@@ -1,6 +1,17 @@
 import { IModelSet } from './models'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
+import { Document, Types } from 'mongoose'
+
+export interface IBaseModel extends Document {
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface IBaseSubModel extends Types.Subdocument {
+  createdAt: Date
+  updatedAt: Date
+}
 
 export interface RouteContext {
   models: IModelSet

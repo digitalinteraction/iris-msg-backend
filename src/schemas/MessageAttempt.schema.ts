@@ -1,11 +1,11 @@
 import { Schema, Types } from 'mongoose'
-import { MessageAttemptState } from '@/src/types'
+import { IBaseSubModel, MessageAttemptState } from '@/src/types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export interface IMessageAttempt extends Types.Subdocument {
+export interface IMessageAttempt extends IBaseSubModel {
   state: MessageAttemptState
   recipient: Types.ObjectId
   donor: Types.ObjectId

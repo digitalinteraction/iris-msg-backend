@@ -37,6 +37,7 @@ beforeEach(async () => {
   })
   
   tst.addMember(org, seed.User.subA, MemberRole.Subscriber)
+  tst.addMember(org, seed.User.subB, MemberRole.Subscriber)
   
   await org.save()
   
@@ -49,6 +50,7 @@ beforeEach(async () => {
     organisation: org.id,
     attempts: [
       {
+        createdAt: tst.inThePast,
         state: MessageAttemptState.Pending,
         recipient: seed.User.subA.id,
         donor: seed.User.donorA.id
@@ -91,9 +93,25 @@ describe('ReallocationTask', () => {
     expect(sentFcm).toHaveLength(1)
   })
   it('should fallback to Twilio', async () => {
-    await task.run({ models })
+    msg.attempts[0].state = MessageAttemptState.Failed
+    msg.attempts.push({
+      createdAt: tst.inThePast,
+      state: MessageAttemptState.Pending,
+      recipient: seed.User.subA.id,
+      donor: seed.User.donorB
+    })
+    
+    await msg.save()
+    
     await task.run({ models })
     
     expect(sentSms).toHaveLength(1)
+  })
+  it('should not reallocate young attempts', async () => {
+    msg.attempts.push({
+      state: MessageAttemptState.Pending,
+      recipient: seed.User.subB.id,
+      donor: seed.User.donorB
+    })
   })
 })

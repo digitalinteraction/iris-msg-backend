@@ -1,10 +1,11 @@
 import { Schema, Document, Model, DocumentQuery } from 'mongoose'
+import { IBaseModel } from '@/src/types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export interface IUser extends Document {
+export interface IUser extends IBaseModel {
   phoneNumber: string
   locale: string
   fcmToken: string | null

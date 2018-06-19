@@ -1,5 +1,5 @@
-import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
-import { AuthCodeType, AllAuthCodeTypes } from '../types'
+import { Model, Schema, Types, DocumentQuery } from 'mongoose'
+import { IBaseModel, AuthCodeType, AllAuthCodeTypes } from '../types'
 
 const schemaOptions = {
   timestamps: true
@@ -10,7 +10,7 @@ export type IAuthCodeClass = Model<IAuthCode> & {
   fromCode (code: any, type: AuthCodeType): DocumentQuery<IAuthCode | null, IAuthCode>
 }
 
-export interface IAuthCode extends Document {
+export interface IAuthCode extends IBaseModel {
   code: number
   type: AuthCodeType
   expiresOn: Date

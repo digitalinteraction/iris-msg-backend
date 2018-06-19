@@ -1,12 +1,12 @@
-import { Schema, Document, Types, DocumentQuery, Model } from 'mongoose'
+import { Schema, Types, DocumentQuery, Model } from 'mongoose'
 import { MemberSchema, IMember } from './Member.schema'
-import { MemberRole, AllMemberRoles } from '../types'
+import { IBaseModel, MemberRole, AllMemberRoles } from '../types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export interface IOrganisation extends Document {
+export interface IOrganisation extends IBaseModel {
   name: string
   info: string
   locale: string

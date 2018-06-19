@@ -1,11 +1,11 @@
 import { Schema, Types } from 'mongoose'
-import { MemberRole } from '../types'
+import { IBaseSubModel, MemberRole } from '../types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export interface IMember extends Types.Subdocument {
+export interface IMember extends IBaseSubModel {
   role: MemberRole
   confirmedOn: Date | null
   deletedOn: Date | null

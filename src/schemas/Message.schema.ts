@@ -1,11 +1,12 @@
-import { Schema, Document, Types, Model } from 'mongoose'
+import { Schema, Types, Model } from 'mongoose'
 import { MessageAttemptSchema, IMessageAttempt } from './MessageAttempt.schema'
+import { IBaseModel } from '@/src/types'
 
 const schemaOptions = {
   timestamps: true
 }
 
-export interface IMessage extends Document {
+export interface IMessage extends IBaseModel {
   content: string
   attempts: Types.DocumentArray<IMessageAttempt>
   organisation: Schema.Types.ObjectId

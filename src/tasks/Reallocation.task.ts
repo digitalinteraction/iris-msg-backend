@@ -5,9 +5,9 @@ import { MessageAttemptState, FcmType } from '@/src/types'
 import { sendTwilioMessage, makeFirebaseMessenger } from '@/src/services'
 
 export enum ReallocResult {
-  Twilio,
-  Reallocated,
-  Failed
+  Twilio = 'twilio',
+  Reallocated = 'reallocated',
+  Failed = 'failed'
 }
 
 export interface ReallocationContext {
@@ -30,10 +30,17 @@ export class ReallocationTask extends Task<ReallocationContext> {
   
   async run ({ models }: ReallocationContext) {
     
+    let thiryMins = 30 * 60 * 1000
+    let thirtyMinsAgo = new Date()
+    thirtyMinsAgo.setMinutes(thirtyMinsAgo.getMinutes() - thiryMins)
+    
     // Find messages which are older than process.env.DONATION_MAX_AGE
     let messages = await models.Message.find({
       attempts: {
-        $elemMatch: { state: MessageAttemptState.Pending }
+        $elemMatch: {
+          state: MessageAttemptState.Pending,
+          createdAt: { $lte: thirtyMinsAgo }
+        }
       }
     }).populate('organisation')
     
@@ -45,15 +52,20 @@ export class ReallocationTask extends Task<ReallocationContext> {
       let org: IOrganisation = message.organisation as any
       if (!org) return
       
+      // Look through each attempt (filtering out too-new / non-pending ones)
       message.attempts.forEach(attempt => {
         if (attempt.state !== MessageAttemptState.Pending) return
+        if (attempt.createdAt >= thirtyMinsAgo) return
         
+        // Mark it as not response
         attempt.state = MessageAttemptState.NoResponse
         
+        // Reallocate the message
         let result = this.processAttempt(
           attempt, message, org
         )
         
+        // Handle each response
         switch (result) {
           case ReallocResult.Reallocated:
             return fcmToSend.add(attempt.donor.toHexString())

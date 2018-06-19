@@ -1,4 +1,5 @@
 import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
+import { IBaseModel } from '@/src/types'
 
 const schemaOptions = {
   timestamps: true
@@ -21,7 +22,7 @@ export type ITwilioMessageClass = Model<ITwilioMessage> & {
   // ...
 }
 
-export interface ITwilioMessage extends Document {
+export interface ITwilioMessage extends IBaseModel {
   type: TwilioMessageType
   to: string
   body: string
