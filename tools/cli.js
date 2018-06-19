@@ -17,7 +17,7 @@ const MessageTypes = {
 
 cli.version('0.1.0')
 
-// FCM Command
+// A command to send an fcm to a device
 cli.command('fcm')
   .description('Send an fcm to a device')
   .option('-d, --deviceToken <token>', 'The fcm token of the device')
@@ -25,10 +25,17 @@ cli.command('fcm')
   .option('--sandbox', 'Whether to sandbox or not')
   .action(fcmCommand)
 
+// A command to get a jwt for a given user id
 cli.command('jwt')
   .description('Generate an fcm for a user')
   .option('-u, --user <user>', 'The user to generate for')
   .action(jwtCommand)
+
+// A command to initialy seed the database for dev
+cli.command('seed')
+  .description('Seed the database for dev')
+  .option('-p, --phone <phone>', 'The phone number of the initial user')
+  .action(seedCommand)
 
 // cli.command()
 
@@ -124,10 +131,19 @@ async function jwtCommand (cmd, ...args) {
   process.exit(0)
 }
 
-// async function seedCommand (cmd, ...args) {
-//
-//   let answers = await prompts([
-//
-//   ])
-//
-// }
+async function seedCommand (cmd, ...args) {
+  
+  let { phoneNumber, locale = 'GB' } = cmd
+  
+  // Get the phone number
+  
+  // Get the org name or a default
+  
+  // Create the initial user
+  
+  // Create an organisation
+  
+  // Add the user as a subscriber
+  
+  // Return the user's jwt
+}

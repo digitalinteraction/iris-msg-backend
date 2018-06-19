@@ -22,8 +22,10 @@
   "author": "robb-j",
   "license": "ISC",
   "dependencies": {
+    "@types/node-cron": "^1.2.0",
     "api-formatter": "^0.3.1",
     "body-parser": "^1.18.3",
+    "cron-parser": "^2.5.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
@@ -46,7 +48,6 @@
     "@types/jsonwebtoken": "^7.2.7",
     "@types/mongodb": "^3.0.19",
     "@types/mongoose": "^5.0.15",
-    "@types/node-cron": "^1.2.0",
     "@types/phone": "^1.0.3",
     "@types/superagent": "^3.8.0",
     "@types/supertest": "^2.0.4",

@@ -1,4 +1,4 @@
-import { Task, TaskContext } from './Task'
+import { Task } from './Task'
 import { IMessageAttempt, IMessage, IOrganisation, IModelSet } from 'src/models'
 import { shuffleArray } from '@/src/utils'
 import { MessageAttemptState, FcmType } from '@/src/types'
@@ -8,6 +8,10 @@ export enum ReallocResult {
   Twilio,
   Reallocated,
   Failed
+}
+
+export interface ReallocationContext {
+  
 }
 
 export const RetryStates = [
@@ -21,10 +25,10 @@ export const RetryStates = [
 ]
 
 // A task to regularly for check and reallocate donor's non-responses
-export class ReallocationTask extends Task {
+export class ReallocationTask extends Task<ReallocationContext> {
   interval = process.env.DONOR_TICK || null
   
-  async run (ctx: TaskContext) {
+  async run (ctx: ReallocationContext) {
     
     // Find messages which are older than process.env.DONATION_MAX_AGE
     
