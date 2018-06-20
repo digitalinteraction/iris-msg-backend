@@ -82,9 +82,12 @@ export function applyErrorHandler (app: express.Application) {
     if (error instanceof expressJwt.UnauthorizedError) {
       return api.sendFail(`jwt.${error.code}`, 401)
     }
-    if (error instanceof Error) {
+    if (error instanceof Error && api) {
       return api.sendFail(error.message, 400)
     }
+    
+    // winston.error(error) ?
+    
     return api.sendFail('api.general.unknown')
   })
 }
