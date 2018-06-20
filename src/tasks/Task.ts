@@ -13,10 +13,15 @@ export type TaskExecutor<T> = (ctx: T) => Promise<any> | void
 export class Task<T> extends EventEmitter {
   isRunning: boolean = false
   timerId: NodeJS.Timer | null = null
-  // internalTask: cron.ScheduledTask | null = null
+  
+  get intervalInMs (): number | null {
+    if (typeof this.interval === 'number') return this.interval
+    if (typeof this.interval === 'object') return this.intervalToMs(this.interval as any)
+    return null
+  }
   
   constructor (
-    public interval: TaskInterval | null = null,
+    public interval: TaskInterval | number | null = null,
     public executor: TaskExecutor<T> | null = null
   ) {
     // Extra setup ...
@@ -30,12 +35,12 @@ export class Task<T> extends EventEmitter {
   
   public schedule (ctx: T) {
     // Do nothing if without an interval or already running
-    if (!this.interval || this.timerId) return
+    if (!this.intervalInMs || this.timerId) return
     
     // Schedule the tick
     this.timerId = setInterval(
       () => this.tick(ctx),
-      this.intervalToMs(this.interval)
+      this.intervalInMs
     )
   }
   

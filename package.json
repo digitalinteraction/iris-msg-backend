@@ -8,8 +8,8 @@
     "build": "tsc -p .",
     "build:docs": "ocedocs",
     "coverage": "jest --coverage",
-    "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src",
-    "dev:watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev -s'",
+    "dev:once": "ts-node -r tsconfig-paths/register -r dotenv/config src",
+    "dev": "nodemon -q --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev:once -s'",
     "lint": "npx tslint -p .",
     "make:image": "node tools/buildAndPush.js",
     "preversion": "npm run lint -s && npm test -s",
@@ -33,7 +33,8 @@
     "jsonwebtoken": "^8.2.2",
     "mongoose": "^5.0.15",
     "phone": "^2.0.0",
-    "twilio": "^3.17.2"
+    "twilio": "^3.17.2",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",

@@ -84,7 +84,10 @@ async function fcmCommand (cmd, ...args) {
   }
   
   // Stop if any variable isn't set
-  if (!notification.title || !notification.body || !type || !deviceToken) return
+  if (!notification || !notification.title || !notification.body || !type || !deviceToken) {
+    console.log('Cancelled')
+    process.exit(1)
+  }
   
   try {
     // Configure firebase

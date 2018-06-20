@@ -15,7 +15,7 @@ export function firebaseSandbox (): boolean {
   return process.env.FIREBASE_SANDBOX
 }
 
-export async function initializeFirebase () {
+export function initializeFirebase () {
   if (firebaseConfig === null) return
   
   firebaseApp = firebase.initializeApp({

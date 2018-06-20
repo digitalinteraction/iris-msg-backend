@@ -24,22 +24,36 @@ export const RetryStates = [
   MessageAttemptState.NoResponse
 ]
 
+function parseNumberOrDefault (value: any, fallback: number) {
+  let parsed = parseInt(value, 10)
+  return Number.isNaN(parsed) ? fallback : parsed
+}
+
+export const MaxDonationAge = parseNumberOrDefault(
+  process.env.MAX_DONATION_AGE_IN_MINUTES, 30 * 60 * 1000
+)
+
+export const RellocationInterval = parseNumberOrDefault(
+  process.env.DONOR_TICK_IN_MINUTES, 5 * 60 * 1000
+)
+
 // A task to regularly for check and reallocate donor's non-responses
 export class ReallocationTask extends Task<ReallocationContext> {
-  interval = process.env.DONOR_TICK || null
+  interval = RellocationInterval
   
   async run ({ models }: ReallocationContext) {
     
-    let thiryMins = 30 * 60 * 1000
-    let thirtyMinsAgo = new Date()
-    thirtyMinsAgo.setMinutes(thirtyMinsAgo.getMinutes() - thiryMins)
+    let reallocationPoint = new Date()
+    reallocationPoint.setMinutes(
+      reallocationPoint.getMinutes() - (MaxDonationAge / 1000 / 60)
+    )
     
     // Find messages which are older than process.env.DONATION_MAX_AGE
     let messages = await models.Message.find({
       attempts: {
         $elemMatch: {
           state: MessageAttemptState.Pending,
-          createdAt: { $lte: thirtyMinsAgo }
+          createdAt: { $lte: reallocationPoint }
         }
       }
     }).populate('organisation')
@@ -55,7 +69,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
       // Look through each attempt (filtering out too-new / non-pending ones)
       message.attempts.forEach(attempt => {
         if (attempt.state !== MessageAttemptState.Pending) return
-        if (attempt.createdAt >= thirtyMinsAgo) return
+        if (attempt.createdAt >= reallocationPoint) return
         
         // Mark it as not response
         attempt.state = MessageAttemptState.NoResponse
