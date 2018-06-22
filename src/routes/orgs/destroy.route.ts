@@ -1,4 +1,5 @@
 import { RouteContext } from '@/src/types'
+import { Types } from 'mongoose'
 
 // function makeError (name: string) {
 //   return `api.orgs.destroy.${name}`
@@ -11,6 +12,10 @@ import { RouteContext } from '@/src/types'
  * - org_id
  */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+  // Fail if passed a bad mongo id
+  if (!Types.ObjectId.isValid(req.params.org_id)) {
+    throw new Error('api.general.badAuth')
+  }
   
   // Check the user is verified
   let user = await models.User.findWithJwt(authJwt)

@@ -52,7 +52,7 @@ describe('orgs.show', () => {
     expect(res.body.data).toBeNull()
   })
   
-  it('should fail for bad mongo ids', async () => {
+  it('should fail gracefully for bad mongo ids', async () => {
     await pushMember(seed.Organisation.a, {
       user: seed.User.verified.id,
       role: MemberRole.Coordinator,
