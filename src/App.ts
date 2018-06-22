@@ -2,11 +2,18 @@ import * as express from 'express'
 import * as mongoose from 'mongoose'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels, IModelSet } from './models'
+import { I18n, i18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
 import { Task, ReallocationTask } from './tasks'
 
 const RequiredVariables = [
-  'MONGO_URI', 'JWT_SECRET', 'API_URL', 'WEB_URL', 'TWILIO_TOKEN', 'TWILIO_SID', 'TWILIO_NUMBER'
+  'MONGO_URI',
+  'JWT_SECRET',
+  'API_URL',
+  'WEB_URL',
+  'TWILIO_TOKEN',
+  'TWILIO_SID',
+  'TWILIO_NUMBER'
 ]
 
 export default class App {
@@ -24,9 +31,11 @@ export default class App {
       
       initializeFirebase()
       
+      let i18n = await this.makeI18n()
+      
       let models = makeModels(mongoose.connection)
       
-      let app = this.createExpressApp(models)
+      let app = this.createExpressApp(models, i18n)
       
       await this.connectToMongo()
       
@@ -38,6 +47,11 @@ export default class App {
       console.log('Failed to start')
       console.log(error)
     }
+  }
+  
+  async makeI18n (): Promise<I18n> {
+    await i18n.setup()
+    return i18n
   }
   
   setupLogger () {
@@ -78,16 +92,16 @@ export default class App {
     }
   }
   
-  createExpressApp (models: IModelSet): express.Application {
+  createExpressApp (models: IModelSet, i18n: I18n): express.Application {
     let app = express()
     applyMiddleware(app)
-    applyRoutes(app, models)
+    applyRoutes(app, models, i18n)
     applyErrorHandler(app)
     return app
   }
   
   async connectToMongo () {
-    return mongoose.connect(process.env.MONGO_URI)
+    return mongoose.connect(process.env.MONGO_URI!)
   }
 }
 

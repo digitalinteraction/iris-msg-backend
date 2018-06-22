@@ -1,10 +1,12 @@
 import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
+import cors = require('cors')
 import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
 import { IModelSet } from './models'
+import { I18n } from './i18n'
 import * as middleware from './middleware'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
@@ -14,12 +16,14 @@ type ExpressRoute = (
   next: express.NextFunction
 ) => void
 
-export function makeRoute (route: CustomRoute, models: IModelSet): ExpressRoute {
+export function makeRoute (
+  route: CustomRoute, models: IModelSet, i18n: I18n
+): ExpressRoute {
   return async (req, res, next) => {
     try {
       let api = (req as any).api as Api
       let authJwt = (req as any).user
-      await route({ models, req, res, next, api, authJwt })
+      await route({ models, i18n, req, res, next, api, authJwt })
     } catch (error) {
       next(error)
     }
@@ -31,13 +35,25 @@ export function applyMiddleware (app: express.Application) {
   app.use(middleware.api())
 }
 
-export function applyRoutes (app: express.Application, models: IModelSet) {
+export function applyRoutes (
+  app: express.Application, models: IModelSet, i18n: I18n
+) {
   
-  const r = (route: CustomRoute) => makeRoute(route, models)
+  const r = (route: CustomRoute) => makeRoute(route, models, i18n)
   
   // Reusable middleware
   let requiredJwt = middleware.jwt()
   let optionalJwt = middleware.jwt({ credentialsRequired: false })
+  
+  // Setup cors
+  app.use(cors({
+    origin: process.env.WEB_URL,
+    allowedHeaders: [
+      'X-Requested-With',
+      'X-HTTP-Method-Override',
+      'Content-Type, Accept'
+    ]
+  }))
   
   // General
   app.get('/', r(routes.general.hello))

@@ -1,4 +1,5 @@
 import { IModelSet } from './models'
+import { I18n } from './i18n'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
@@ -13,8 +14,16 @@ export interface IBaseSubModel extends Types.Subdocument {
   updatedAt: Date
 }
 
+export type LocaliseArgs = { [id: string]: any } | Array<any>
+
+export interface ILocaliser {
+  translate (locale: string, key: string, args: LocaliseArgs): string
+  // pluralise (locale: string, key: string, count: number): string
+}
+
 export interface RouteContext {
   models: IModelSet
+  i18n: I18n
   api: Api
   req: Request
   res: Response

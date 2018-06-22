@@ -4,6 +4,7 @@ import express = require('express')
 import expressJwt = require('express-jwt')
 import { RouteContext, MemberRole } from '@/src/types'
 import { IModelSet, makeModels, IOrganisation, IUser, IMember } from '../src/models'
+import { DebugI18n } from '../src/i18n'
 import { applyMiddleware, applyErrorHandler } from '@/src/router'
 import { sign } from 'jsonwebtoken'
 
@@ -43,8 +44,9 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
     try {
       let api = (req as any).api
       let authJwt = req.user
+      let i18n = new DebugI18n()
       await route({
-        req, res, next, models, api, authJwt
+        req, res, next, models, i18n, api, authJwt
       })
     } catch (err) {
       next(err)
