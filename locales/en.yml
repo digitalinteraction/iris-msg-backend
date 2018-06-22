@@ -8,7 +8,7 @@ api:
   auth:
     login_request:
       badNumber: No phoneNumber provided or it was invalid
-      badLocale: No locale provided or it was invalid
+      badCountry: No locale provided or it was invalid
     login_check:
       badCode: No code was provided
     me:
@@ -29,7 +29,7 @@ api:
       notFound: Organisation was not found or user cannot access it
     create:
       badNumber: No phoneNumber provided or it was invalid
-      badLocale: No locale provided or it was invalid
+      badCountry: No locale provided or it was invalid
       badRole: No role provided or it was invalid
       notFound: Organisation was not found or user cannot access it
       alreadyMember: That user is already a member in that role
@@ -48,7 +48,6 @@ api:
     attempts_update:
 
 sms:
-  verifyRequest: Your Iris Msg verification code is {0}
   loginRequest: Your Iris Msg verification code is {0}
   newSubscriber: You have been subscribed to {{0}} on Iris Msg, you can unsubscribe at {{1}}
   
@@ -59,4 +58,3 @@ jtw:
   credentials_bad_scheme:
   credentials_bad_format:
   credentials_required:
-                    

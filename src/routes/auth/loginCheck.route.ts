@@ -26,8 +26,8 @@ export default async ({ req, api, models }: RouteContext) => {
   }
   
   // Generate an authentication
-  let payload: AuthJwt = { usr: auth.user.id }
-  let token = sign(payload, process.env.JWT_SECRET)
+  let payload: AuthJwt = { usr: auth.user.id, loc: auth.user.locale }
+  let token = sign(payload, process.env.JWT_SECRET!)
   
   // Send the jwt authentication
   api.sendData({

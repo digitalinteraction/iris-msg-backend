@@ -11,7 +11,7 @@ users:
       Requests a login sms to be sent and creates a new user if it doesn't exist
     body:
       phoneNumber: string - The local phone number of the user
-      locale: string - The ISO_3166-2 country where the phone is
+      countryCode: string - The ISO_3166-2 country where the phone is
   
   - post: /login/check login_check
     name: Check login
@@ -59,7 +59,7 @@ members:
       org_id: string - The id of the organisation to be added to
     body:
       phoneNumber: string - The phone number of the person to invite
-      locale: string - The ISO_3166-2 country where the phone is
+      countryCode: string - The ISO_3166-2 country where the phone is
       role: string - The role of the new user (coordinator|donor|subscriber)
   
   - delete: /members/:mem_id destroy

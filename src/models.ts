@@ -1,4 +1,4 @@
-import { Model, Connection, Types } from 'mongoose'
+import { Connection, Types } from 'mongoose'
 
 import {
   UserSchema, IUser, IUserClass

@@ -30,7 +30,7 @@ export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions
 
   if (options.jwt !== undefined) {
     app.use(expressJwt({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET!,
       credentialsRequired: options.jwt
     }))
   }
@@ -44,7 +44,7 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
     try {
       let api = (req as any).api
       let authJwt = req.user
-      let i18n = new DebugI18n()
+      let i18n = new DebugI18n().makeInstance('en')
       await route({
         req, res, next, models, i18n, api, authJwt
       })
@@ -55,7 +55,7 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
 }
 
 export async function openDb (): Promise<TestDatabase> {
-  let connection = createConnection(process.env.MONGO_URI)
+  let connection = createConnection(process.env.MONGO_URI!)
   let models = makeModels(connection)
   await new Promise(resolve => connection.on('connected', resolve))
   return { db: connection, models }
@@ -77,7 +77,7 @@ export async function closeDb (db: Connection): Promise<void> {
 
 export function jwtHeader (userOrUserId: any) {
   let userId = userOrUserId.id || userOrUserId
-  let token = sign({ usr: userId }, process.env.JWT_SECRET)
+  let token = sign({ usr: userId }, process.env.JWT_SECRET!)
   return { Authorization: `Bearer ${token}` }
 }
 

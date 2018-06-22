@@ -50,4 +50,13 @@ describe('auth.login.request', () => {
     expect(user!.verifiedOn).toBeNull()
     expect(sentMessages).toHaveLength(1)
   })
+  
+  it('should localise the message', async () => {
+    await agent.post('/')
+      .send({ phoneNumber: '07880123001', locale: 'GB' })
+    
+    let [ sms ] = sentMessages
+    let code = await models.AuthCode.findOne()
+    expect(sms.body).toEqual(`en:sms.loginRequest:0=${code!.formatted}`)
+  })
 })

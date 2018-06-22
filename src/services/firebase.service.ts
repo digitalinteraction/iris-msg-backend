@@ -1,18 +1,16 @@
 import * as firebase from 'firebase-admin'
-import { FcmType } from '@/src/types'
 
 export let firebaseApp: firebase.app.App | undefined = undefined
 
 const firebaseConfig = getGoogleConfig()
 
 export function firebaseEnabled (): boolean {
-  return process.env.FIREBASE_DB &&
-    process.env.FIREBASE_DB !== '' &&
+  return process.env.FIREBASE_DB !== undefined &&
     firebaseConfig !== null
 }
 
 export function firebaseSandbox (): boolean {
-  return process.env.FIREBASE_SANDBOX
+  return !!process.env.FIREBASE_SANDBOX
 }
 
 export function initializeFirebase () {
@@ -34,9 +32,4 @@ export function getGoogleConfig (): firebase.AppOptions | null {
 
 export function makeFirebaseMessenger (): firebase.messaging.Messaging {
   return firebase.messaging(firebaseApp)
-}
-
-interface INotification {
-  title: string,
-  body: string
 }

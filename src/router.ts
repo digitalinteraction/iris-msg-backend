@@ -1,12 +1,13 @@
 import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
+import langParser = require('accept-language-parser')
 import cors = require('cors')
 import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
 import { IModelSet } from './models'
-import { I18n } from './i18n'
+import { I18n, LocalI18n, AvailableLocales } from './i18n'
 import * as middleware from './middleware'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
@@ -16,13 +17,19 @@ type ExpressRoute = (
   next: express.NextFunction
 ) => void
 
+export function getLocale (req: express.Request): string {
+  let accept: any = req.headers['accept-language'] || ''
+  return langParser.pick(AvailableLocales, accept) || 'en'
+}
+
 export function makeRoute (
-  route: CustomRoute, models: IModelSet, i18n: I18n
+  route: CustomRoute, models: IModelSet, localiser: I18n
 ): ExpressRoute {
   return async (req, res, next) => {
     try {
       let api = (req as any).api as Api
       let authJwt = (req as any).user
+      let i18n = localiser.makeInstance(getLocale(req))
       await route({ models, i18n, req, res, next, api, authJwt })
     } catch (error) {
       next(error)

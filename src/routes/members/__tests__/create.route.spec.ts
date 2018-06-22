@@ -82,7 +82,7 @@ describe('orgs.members.invite', () => {
   
   it('should fail if already a member', async () => {
     let org = seed.Organisation.a
-    let m = tst.addMember(org, seed.User.verified, MemberRole.Donor)
+    tst.addMember(org, seed.User.verified, MemberRole.Donor)
     await org.save()
     let res = await inviteMember('07880123002', MemberRole.Donor)
     expect(res.status).toBe(400)

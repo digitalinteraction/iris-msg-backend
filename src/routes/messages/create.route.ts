@@ -1,7 +1,6 @@
 import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/types'
 import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
 import { roundRobin } from '@/src/utils'
-import { ObjectId } from 'mongodb'
 import { MongooseDocument } from 'mongoose'
 import { makeFirebaseMessenger, firebaseEnabled } from '@/src/services'
 

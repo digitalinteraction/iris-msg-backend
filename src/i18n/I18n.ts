@@ -10,8 +10,6 @@ export type Localisation = {
   [locale: string]: object | any
 }
 
-const fileRegex = /^(.*)\.(\w+)$/
-
 export class I18n {
   public isSetup = false
   public locales: Localisation = {}
@@ -53,7 +51,7 @@ export class I18n {
   
   translate (locale: string, key: string, args?: LocaliseArgs): string {
     return this.processTranslation(
-      dot.get(this.locales, `${locale}.${key}`),
+      dot.get(this.locales, `${locale.toLowerCase()}.${key}`),
       key,
       args
     )

@@ -4,7 +4,7 @@ import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels, IModelSet } from './models'
 import { I18n, i18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
-import { Task, ReallocationTask } from './tasks'
+import { ReallocationTask } from './tasks'
 
 const RequiredVariables = [
   'MONGO_URI',

@@ -1,5 +1,5 @@
 import { IModelSet } from './models'
-import { I18n } from './i18n'
+import { LocalI18n } from './i18n'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
@@ -23,7 +23,7 @@ export interface ILocaliser {
 
 export interface RouteContext {
   models: IModelSet
-  i18n: I18n
+  i18n: LocalI18n
   api: Api
   req: Request
   res: Response
@@ -39,6 +39,7 @@ export enum AuthCodeType {
 
 export interface AuthJwt {
   usr: string
+  loc: string
 }
 
 export enum MemberRole {

@@ -1,4 +1,4 @@
-import { Model, Schema, Document, Types, DocumentQuery } from 'mongoose'
+import { Model, Schema, DocumentQuery } from 'mongoose'
 import { IBaseModel } from '@/src/types'
 
 const schemaOptions = {

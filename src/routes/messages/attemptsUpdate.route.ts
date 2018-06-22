@@ -75,7 +75,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   let fcmToSend = new Set<string>()
   
   // Process each update
-  let promises = updates.map(async update => {
+  updates.map(update => {
     let { message, attempt } = getMessageAndAttempt(update.attempt, messages)
     if (!attempt || !message || !message.organisation) return
     

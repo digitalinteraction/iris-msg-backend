@@ -13,7 +13,7 @@
     "lint": "npx tslint -p .",
     "make:image": "node tools/buildAndPush.js",
     "preversion": "npm run lint -s && npm test -s",
-    "mongo:once": "docker run -it --rm -p 27017:27017 mongo",
+    "mongo:once": "docker run -it --rm -v iris_dev:/data/db -p 27017:27017 mongo",
     "start": "node -r tsconfig-paths/register -r dotenv/config dist",
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
@@ -39,6 +39,7 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@types/accept-language-parser": "^1.5.0",
     "@types/body-parser": "^1.17.0",
     "@types/cors": "^2.8.4",
     "@types/dot-prop": "^4.2.0",
@@ -56,6 +57,7 @@
     "@types/superagent": "^3.8.0",
     "@types/supertest": "^2.0.4",
     "@types/twilio": "0.0.9",
+    "accept-language-parser": "^1.5.0",
     "commander": "^2.15.1",
     "jest": "^23.1.0",
     "jest-environment-node": "^23.1.0",

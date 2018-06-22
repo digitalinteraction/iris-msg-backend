@@ -168,7 +168,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
       let message: IMessage = attempt.ownerDocument() as any
       
       let recipient = await models.User.findById(attempt.recipient)
-      if (!recipient) return
+      if (!recipient) return Promise.resolve()
       
       return sendTwilioMessage(recipient.phoneNumber, message.content)
     }))

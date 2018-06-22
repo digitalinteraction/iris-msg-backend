@@ -16,7 +16,7 @@ export class Task<T> extends EventEmitter {
   
   get intervalInMs (): number | null {
     if (typeof this.interval === 'number') return this.interval
-    if (typeof this.interval === 'object') return this.intervalToMs(this.interval as any)
+    if (typeof this.interval !== null) return this.intervalToMs(this.interval as any)
     return null
   }
   

@@ -8,37 +8,44 @@ function makeError (name: string) {
 
 /* body params:
  * - phoneNumber ~ The phone number to login with e.g. 07880123456
- * - locale ~ The 'ISO_3166-2' country code e.g. GB
+ * - countryCode ~ The 'ISO_3166-2' country code e.g. GB
  */
-export default async ({ req, res, next, api, models }: RouteContext) => {
-  const { User, AuthCode } = models
+export default async ({ req, api, models, i18n }: RouteContext) => {
+  const { phoneNumber, countryCode } = req.body
   
+  // Validate the correct body parameters were passed
   let errors = new Set<String>()
-  if (!req.body.phoneNumber) errors.add(makeError('badNumber'))
-  if (!req.body.locale) errors.add(makeError('badLocale'))
+  if (!phoneNumber) errors.add(makeError('badNumber'))
+  if (!countryCode) errors.add(makeError('badCountry'))
   if (errors.size > 0) throw errors
   
-  let phoneNumber = phone(req.body.phoneNumber, req.body.locale)[0]
-  if (!phoneNumber) throw makeError('badNumber')
+  // Validate the phone number
+  let parsedNumber = phone(req.body.phoneNumber, countryCode)[0]
+  if (!parsedNumber) throw makeError('badNumber')
   
-  let user = await User.findOne({ phoneNumber })
+  // See if a user already exists with that number
+  let user = await models.User.findOne({ phoneNumber: parsedNumber })
   
+  // Create a new user if they don't exist
   if (!user) {
-    user = await User.create({
-      locale: req.body.locale,
-      phoneNumber
+    user = await models.User.create({
+      locale: i18n.locale,
+      phoneNumber: parsedNumber
     })
   }
   
-  //
+  // Create an auth code to login with
+  let auth = await models.AuthCode.forUser(user.id, AuthCodeType.Login)
   
-  let auth = await AuthCode.forUser(user.id, AuthCodeType.Login)
-  
+  // Send the authentication code
   await makeTwilioClient().messages.create({
-    to: phoneNumber,
+    to: parsedNumber,
     from: process.env.TWILIO_NUMBER,
-    body: `Your Iris Msg code is ${auth.formatted}`
+    body: i18n.translate('sms.loginRequest', [
+      auth.formatted
+    ])
   })
   
+  // Return a success resposne
   api.sendData('ok')
 }
