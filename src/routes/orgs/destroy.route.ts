@@ -1,9 +1,9 @@
 import { RouteContext } from '@/src/types'
 import { Types } from 'mongoose'
 
-// function makeError (name: string) {
-//   return `api.orgs.destroy.${name}`
-// }
+function makeError (name: string) {
+  return `api.orgs.destroy.${name}`
+}
 
 /* auth:
  * - jwt
@@ -14,14 +14,14 @@ import { Types } from 'mongoose'
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   // Fail if passed a bad mongo id
   if (!Types.ObjectId.isValid(req.params.org_id)) {
-    throw new Error('api.general.badAuth')
+    throw makeError('notFound')
   }
   
   // Check the user is verified
   let user = await models.User.findWithJwt(authJwt)
   
   // Fail if the user doesn't exist or isn't verified
-  if (!user) throw new Error('api.general.badAuth')
+  if (!user) throw makeError('notFound')
   
   // Find the organisation where the user is an active coordinator
   let org = await models.Organisation.findByIdForCoordinator(
@@ -29,7 +29,7 @@ export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   )
   
   // Fail if the organisation wasn't found
-  if (!org) throw new Error('api.general.badAuth')
+  if (!org) throw makeError('notFound')
   
   // Set the organisation to be deleted
   org.deletedOn = new Date()

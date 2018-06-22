@@ -12,11 +12,14 @@ function makeError (name: string) {
  * - org_id
  */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+  // Fail for bad mongo ids
+  if (!Types.ObjectId.isValid(req.params.org_id)) {
+    throw makeError('notFound')
+  }
   
   // Check the user is verified
   let user = await models.User.findWithJwt(authJwt)
   
-  if (!Types.ObjectId.isValid(req.params.org_id)) throw makeError('notFound')
   if (!user) throw makeError('notFound')
   
   let [ org ] = await models.Organisation.findForUser(user.id)

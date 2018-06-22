@@ -51,7 +51,7 @@ describe('orgs.destroy', () => {
       .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.general.badAuth')
+    expect(res.body.meta.messages).toContain('api.orgs.destroy.notFound')
   })
   
   it('should fail gracefully for bad mongo ids', async () => {
@@ -65,6 +65,6 @@ describe('orgs.destroy', () => {
       .set(tst.jwtHeader(seed.User.verified.id))
     
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages[0]).not.toContain('Cast to ObjectId failed')
+    expect(res.body.meta.messages).toContain('api.orgs.destroy.notFound')
   })
 })

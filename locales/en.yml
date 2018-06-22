@@ -22,7 +22,7 @@ api:
     show:
       notFound: Couldn't find that org or no permission to view it
     destroy:
-      badAuth: The current user isn't a coordinator of that org
+      notFound: Organisation not found or user doesn't have access to destroy
   
   members:
     accept:
