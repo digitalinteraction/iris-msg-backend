@@ -1,4 +1,5 @@
 import { RouteContext, AuthJwt } from '@/src/types'
+import { Types } from 'mongoose'
 import { sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
@@ -9,6 +10,10 @@ function makeError (name: string) {
  * - mem_id ~ The id of the member
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
+  
+  if (!Types.ObjectId.isValid(req.params.mem_id)) {
+    throw makeError('notFound')
+  }
   
   // Find an organisation with that unconfirmed member
   let org = await models.Organisation.findOne({
