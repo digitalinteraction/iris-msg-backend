@@ -58,3 +58,8 @@ jtw:
   credentials_bad_scheme:
   credentials_bad_format:
   credentials_required:
+
+fcm:
+  new_donations:
+    title: You have new donations
+    body: ...

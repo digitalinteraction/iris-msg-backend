@@ -12,7 +12,7 @@ function makeError (name: string) {
  * - orgId
  * - content
  */
-export default async ({ req, api, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   // Check the request body
   let { orgId, content } = req.body
   let errors = new Set<string>()
@@ -84,8 +84,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   await Promise.all(donorList.map(donor => {
     return messenger.send({
       notification: {
-        title: 'New donations',
-        body: 'You have new pending donations'
+        title: i18n.translate('fcm.new_donations.title'),
+        body: i18n.translate('fcm.new_donations.body')
       },
       data: {
         type: FcmType.NewDonations

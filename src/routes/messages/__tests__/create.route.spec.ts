@@ -66,7 +66,10 @@ describe('messages.create', () => {
     expect(messages).toHaveLength(1)
   })
   it('should allocate message attempts to active donors', async () => {
-    // ...
+    await sendMessage('Hey', org.id)
+    
+    let message = await models.Message.findOne()
+    expect(message!.attempts).toHaveLength(4)
   })
   it('should send an fcm to allocated donors', async () => {
     await sendMessage('Hey', org.id)
@@ -76,5 +79,8 @@ describe('messages.create', () => {
       token: 'abcdefg-123456-abcdefg',
       data: { type: FcmType.NewDonations }
     })
+    let [ fcm ] = sentFcm
+    expect(fcm.notification.title).toContain('en:fcm.new_donations.title')
+    expect(fcm.notification.body).toContain('en:fcm.new_donations.body')
   })
 })

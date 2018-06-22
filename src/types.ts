@@ -17,7 +17,7 @@ export interface IBaseSubModel extends Types.Subdocument {
 export type LocaliseArgs = { [id: string]: any } | Array<any>
 
 export interface ILocaliser {
-  translate (locale: string, key: string, args: LocaliseArgs): string
+  translate (locale: string, key: string, args?: LocaliseArgs): string
   // pluralise (locale: string, key: string, count: number): string
 }
 
