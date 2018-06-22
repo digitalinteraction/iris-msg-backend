@@ -1,3 +1,4 @@
+import { Types } from 'mongoose'
 
 /**
  * Allocates each item in setA an item from setB,
@@ -39,4 +40,11 @@ export function shuffleArray<T> (a: T[]): T[] {
     ;[a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+/**
+ * If a value is a valid Mongo ObjectId
+ */
+export function isMongoId (value: any): boolean {
+  return Types.ObjectId.isValid(value)
 }

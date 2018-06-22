@@ -1,7 +1,7 @@
 import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/types'
 import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
-import { roundRobin } from '@/src/utils'
-import { MongooseDocument, Types } from 'mongoose'
+import { roundRobin, isMongoId } from '@/src/utils'
+import { MongooseDocument } from 'mongoose'
 import { makeFirebaseMessenger, firebaseEnabled } from '@/src/services'
 
 function makeError (name: string) {
@@ -19,7 +19,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   if (!content || content.length >= 140) {
     errors.add(makeError('badContent'))
   }
-  if (!orgId || !Types.ObjectId.isValid(orgId)) {
+  if (!orgId || !isMongoId(orgId)) {
     errors.add(makeError('badOrg'))
   }
   if (!firebaseEnabled()) errors.add('badFirebase')

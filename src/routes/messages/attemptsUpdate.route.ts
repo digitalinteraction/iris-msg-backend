@@ -5,6 +5,8 @@ import {
   MemberRole
 } from '@/src/types'
 
+import { isMongoId } from '@/src/utils'
+
 import {
   IMessageAttempt,
   IMessage
@@ -13,8 +15,6 @@ import {
 import {
   ReallocationTask, RetryStates, ReallocResult
 } from '@/src/tasks'
-
-import { Types } from 'mongoose'
 
 function makeError (name: string) {
   return `api.messages.attempts_update.${name}`
@@ -43,7 +43,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   rawUpdates.forEach((item: any) => {
     let isValid = item.attempt &&
-      Types.ObjectId.isValid(item.attempt) &&
+      isMongoId(item.attempt) &&
       item.newState &&
       AllMessageAttemptStates.includes(item.newState)
   

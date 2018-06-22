@@ -1,5 +1,5 @@
 import { RouteContext, MemberRole } from '@/src/types'
-import { Types } from 'mongoose'
+import { isMongoId } from '@/src/utils'
 
 function makeError (name: string) {
   return `api.members.unsubscribe.${name}`
@@ -10,7 +10,7 @@ function makeError (name: string) {
  */
 export default async ({ req, res, models }: RouteContext) => {
   try {
-    if (!Types.ObjectId.isValid(req.params.mem_id)) {
+    if (!isMongoId(req.params.mem_id)) {
       throw makeError('notFound')
     }
     

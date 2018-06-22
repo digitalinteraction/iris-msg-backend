@@ -1,5 +1,5 @@
 import { RouteContext } from '@/src/types'
-import { Types } from 'mongoose'
+import { isMongoId } from '@/src/utils'
 
 function makeError (name: string) {
   return `api.members.destroy.${name}`
@@ -14,7 +14,7 @@ function makeError (name: string) {
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
-  if (!Types.ObjectId.isValid(req.params.org_id) || !Types.ObjectId.isValid(req.params.org_id)) {
+  if (!isMongoId(req.params.org_id) || !isMongoId(req.params.org_id)) {
     throw makeError('notFound')
   }
   

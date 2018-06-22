@@ -1,4 +1,5 @@
 import { RouteContext, MemberRole, AllMemberRoles } from '@/src/types'
+import { isMongoId } from '@/src/utils'
 import { makeTwilioClient, makeApiUrl } from '@/src/services'
 import phone = require('phone')
 
@@ -41,6 +42,7 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   if (!countryCode) errors.add(makeError('badLocale'))
   if (!role) errors.add(makeError('badRole'))
   if (!AllMemberRoles.includes(role)) errors.add(makeError('badRole'))
+  if (!isMongoId(req.params.org_id)) errors.add(makeError('notFound'))
   if (errors.size > 0) throw errors
   
   // Fail if the formatted phoneNumber is invalid

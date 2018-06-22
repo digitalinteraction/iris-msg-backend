@@ -1,5 +1,5 @@
 import { RouteContext } from '@/src/types'
-import { Types } from 'mongoose'
+import { isMongoId } from '@/src/utils'
 
 function makeError (name: string) {
   return `api.orgs.destroy.${name}`
@@ -13,7 +13,7 @@ function makeError (name: string) {
  */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   // Fail if passed a bad mongo id
-  if (!Types.ObjectId.isValid(req.params.org_id)) {
+  if (!isMongoId(req.params.org_id)) {
     throw makeError('notFound')
   }
   
