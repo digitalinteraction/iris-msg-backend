@@ -1,6 +1,6 @@
 import * as tst from '@/tools/testHarness'
 import loginCheck from '../loginCheck.route'
-import { IModelSet } from '@/src/models'
+import { IModelSet, IAuthCode } from '@/src/models'
 import { AuthCodeType } from '@/src/types'
 import { verify } from 'jsonwebtoken'
 
@@ -8,13 +8,14 @@ let db: any
 let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
+let code: IAuthCode
 
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/auth', models)
   agent = tst.mockRoute(loginCheck, models)
   
-  await models.AuthCode.create({
+  code = await models.AuthCode.create({
     code: 123456,
     expiresOn: new Date(Date.UTC(5000, 0)),
     usedOn: null,
@@ -67,5 +68,17 @@ describe('auth.login.check', () => {
     await agent.post('/').send({ code: 654321 })
     let user = await models.User.findById(seed.User.unverified.id)
     expect(user!.verifiedOn).toBeInstanceOf(Date)
+  })
+  
+  it('should mark the code as used', async () => {
+    await agent.post('/').send({ code: 123456 })
+    let updatedCode = await models.AuthCode.findById(code.id)
+    expect(updatedCode!.usedOn).toBeInstanceOf(Date)
+  })
+  
+  it('should fail for used codes', async () => {
+    await code.update({ usedOn: new Date() })
+    let res = await agent.post('/').send({ code: 123456 })
+    expect(res.status).toBe(400)
   })
 })

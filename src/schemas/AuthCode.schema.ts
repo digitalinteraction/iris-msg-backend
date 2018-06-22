@@ -62,7 +62,8 @@ AuthCodeSchema.static('fromCode', function
   return this.findOne({
     type,
     code: Number.isNaN(code) ? -1 : code,
-    expiresOn: { $gte: new Date() }
+    expiresOn: { $gte: new Date() },
+    usedOn: null
   })
 })
 

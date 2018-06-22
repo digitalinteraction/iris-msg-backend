@@ -25,6 +25,10 @@ export default async ({ req, api, models }: RouteContext) => {
     await auth.user.save()
   }
   
+  // Mark the code as used
+  auth.usedOn = new Date()
+  await auth.save()
+  
   // Generate an authentication
   let payload: AuthJwt = { usr: auth.user.id, loc: auth.user.locale }
   let token = sign(payload, process.env.JWT_SECRET!)
