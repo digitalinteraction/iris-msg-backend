@@ -29,22 +29,22 @@ export function makeMessage (role: MemberRole, orgName: string, memberId: any): 
  *
  * body params:
  * - phoneNumber
- * - locale
+ * - countryCode
  * - role
  */
-export default async ({ req, api, models, authJwt }: RouteContext) => {
-  let { phoneNumber, locale, role } = req.body
+export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
+  let { phoneNumber, countryCode, role } = req.body
   
-  // Fail if 'phoneNumber', 'locale' or 'role' are not set
+  // Fail if 'phoneNumber', 'countryCode' or 'role' are not set
   let errors = new Set<String>()
   if (!phoneNumber) errors.add(makeError('badNumber'))
-  if (!locale) errors.add(makeError('badLocale'))
+  if (!countryCode) errors.add(makeError('badLocale'))
   if (!role) errors.add(makeError('badRole'))
   if (!AllMemberRoles.includes(role)) errors.add(makeError('badRole'))
   if (errors.size > 0) throw errors
   
   // Fail if the formatted phoneNumber is invalid
-  phoneNumber = phone(phoneNumber, locale)[0]
+  phoneNumber = phone(phoneNumber, countryCode)[0]
   if (!phoneNumber) throw makeError('badNumber')
   
   // Ensure the User exists & is verified
@@ -62,7 +62,9 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Create the member if they don't exist
   if (newUser === null) {
     newUser = await models.User.create({
-      phoneNumber, verifiedOn: new Date()
+      verifiedOn: new Date(),
+      locale: i18n.locale,
+      phoneNumber
     })
   } else {
     // Check if they are already a member in that role

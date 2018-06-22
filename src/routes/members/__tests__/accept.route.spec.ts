@@ -56,7 +56,7 @@ describe('orgs.members.accept', () => {
       .set(tst.jwtHeader(seed.User.current.id))
     
     expect(res.body.data.token).toBeDefined()
-    let payload = verify(res.body.data.token, process.env.JWT_SECRET) as any
+    let payload = verify(res.body.data.token, process.env.JWT_SECRET!) as any
     expect(payload.usr).toBe(seed.User.current.id)
   })
   

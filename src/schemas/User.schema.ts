@@ -24,7 +24,7 @@ export const UserSchema = new Schema({
   },
   locale: {
     type: String,
-    default: 'GB'
+    default: 'en'
   },
   fcmToken: {
     type: String,

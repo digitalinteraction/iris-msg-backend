@@ -34,7 +34,7 @@ afterEach(async () => {
 async function inviteMember (phoneNumber: string, role: MemberRole): Promise<Response> {
   return agent.post('/' + seed.Organisation.a.id)
     .set(tst.jwtHeader(seed.User.current.id))
-    .send({ phoneNumber, role, locale: 'GB' })
+    .send({ phoneNumber, role, countryCode: 'GB' })
 }
 
 describe('orgs.members.invite', () => {
@@ -72,6 +72,7 @@ describe('orgs.members.invite', () => {
     })
     
     expect(user).toBeTruthy()
+    expect(user!.locale).toEqual('en')
     expect(user!.verifiedOn).toEqual(expect.any(Date))
   })
   
