@@ -78,4 +78,21 @@ describe('orgs.create', () => {
       .send({ name: 'New Org', info: 'Some info' })
     expect(res.status).toBe(400)
   })
+  
+  it('should fail with a long name', async () => {
+    let longName = 'An organisation with a really really really long name'
+    let res = await agent.post('/')
+      .set(tst.jwtHeader(seed.User.verified.id))
+      .send({ name: longName, info: 'Some info' })
+    expect(res.status).toBe(400)
+  })
+  
+  it('should fail with a long info', async () => {
+    let longInfo = 'Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.'
+    
+    let res = await agent.post('/')
+      .set(tst.jwtHeader(seed.User.verified.id))
+      .send({ name: 'New Org', info: longInfo })
+    expect(res.status).toBe(400)
+  })
 })

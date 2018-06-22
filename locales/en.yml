@@ -16,7 +16,7 @@ api:
   
   orgs:
     create:
-      badName: No name provided or it was invalid
+      badName: No name provided or more than 40 characters
       badInfo: No info provided or it was invalid
     index:
     show:

@@ -14,6 +14,7 @@ function makeError (name: string) {
  * - info
  */
 export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+  const { name, info } = req.body
   
   // Check the user is verified
   let user = (await models.User.findWithJwt(authJwt))!
@@ -21,14 +22,14 @@ export default async ({ req, api, next, models, authJwt }: RouteContext) => {
   // Check name & info are set
   let errors = new Set<string>()
   if (!user) errors.add('api.general.badAuth')
-  if (!req.body.name) errors.add(makeError('badName'))
-  if (!req.body.info) errors.add(makeError('badInfo'))
+  if (!name || name.length >= 30) errors.add(makeError('badName'))
+  if (!info || info.length >= 140) errors.add(makeError('badInfo'))
   if (errors.size > 0) throw errors
   
   // Create the organisation
   let org = await models.Organisation.create({
-    name: req.body.name,
-    info: req.body.info,
+    name: name,
+    info: info,
     members: [
       {
         role: MemberRole.Coordinator,
