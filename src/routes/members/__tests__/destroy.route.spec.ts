@@ -46,4 +46,18 @@ describe('orgs.members.destroy', () => {
     let updatedSub = updatedOrg!.members.id(subscriber.id)
     expect(updatedSub.deletedOn).toBeInstanceOf(Date)
   })
+  
+  it('should fail gracefully for bad org_ids', async () => {
+    let res = await agent.delete(`/${org.id}abc/${subscriber.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(400)
+    expect(res.body.meta.messages).toContain('api.members.destroy.notFound')
+  })
+  
+  it('should fail gracefully for bad mem_ids', async () => {
+    let res = await agent.delete(`/${org.id}/${subscriber.id}def`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(400)
+    expect(res.body.meta.messages).toContain('api.members.destroy.notFound')
+  })
 })

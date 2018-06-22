@@ -1,4 +1,5 @@
 import { RouteContext } from '@/src/types'
+import { Types } from 'mongoose'
 
 function makeError (name: string) {
   return `api.members.destroy.${name}`
@@ -12,6 +13,10 @@ function makeError (name: string) {
  * - mem_id
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
+  
+  if (!Types.ObjectId.isValid(req.params.org_id) || !Types.ObjectId.isValid(req.params.org_id)) {
+    throw makeError('notFound')
+  }
   
   // Find the current user
   let user = await models.User.findWithJwt(authJwt)
