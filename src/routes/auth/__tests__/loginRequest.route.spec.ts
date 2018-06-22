@@ -25,26 +25,26 @@ afterEach(async () => {
 describe('auth.login.request', () => {
   it('should create an auth code', async () => {
     await agent.post('/')
-      .send({ phoneNumber: '07880123001', locale: 'GB' })
+      .send({ phoneNumber: '07880123001', countryCode: 'GB' })
     let code = await models.AuthCode.findOne()
     expect(code).toBeTruthy()
   })
   
   it('should send an sms', async () => {
     await agent.post('/')
-      .send({ phoneNumber: '07880123001', locale: 'GB' })
+      .send({ phoneNumber: '07880123001', countryCode: 'GB' })
     expect(sentMessages).toHaveLength(1)
   })
   
   it('should format the code', async () => {
     await agent.post('/')
-      .send({ phoneNumber: '07880123001', locale: 'GB' })
+      .send({ phoneNumber: '07880123001', countryCode: 'GB' })
     expect(sentMessages[0].body).toMatch(/\d{3}-\d{3}/)
   })
   
   it('should create an unverified user', async () => {
     await agent.post('/')
-      .send({ phoneNumber: '07880123003', locale: 'GB' })
+      .send({ phoneNumber: '07880123003', countryCode: 'GB' })
     let user = await models.User.findOne({ phoneNumber: '+447880123003' })
     expect(user).toBeInstanceOf(models.User)
     expect(user!.verifiedOn).toBeNull()
@@ -53,7 +53,7 @@ describe('auth.login.request', () => {
   
   it('should localise the message', async () => {
     await agent.post('/')
-      .send({ phoneNumber: '07880123001', locale: 'GB' })
+      .send({ phoneNumber: '07880123001', countryCode: 'GB' })
     
     let [ sms ] = sentMessages
     let code = await models.AuthCode.findOne()

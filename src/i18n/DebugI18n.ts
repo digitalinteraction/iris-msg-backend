@@ -15,10 +15,10 @@ export class DebugI18n extends I18n {
         .map(key => `${key}=${(args as any)[key]}`)
         .join(',')
     }
-    return `translate:${locale}:${key}:${formattedArgs}`
+    return `${locale}:${key}:${formattedArgs}`
   }
   
   pluralise (locale: string, key: string, count: number): string {
-    return `pluralise:${locale}:${key}:${count}`
+    return `${locale}:${key}:${count}`
   }
 }

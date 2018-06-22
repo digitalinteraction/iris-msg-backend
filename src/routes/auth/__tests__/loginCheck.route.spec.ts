@@ -41,7 +41,7 @@ describe('auth.login.check', () => {
   
   it('should return a jwt', async () => {
     let res = await agent.post('/').send({ code: 123456 })
-    let payload = verify(res.body.data.token, process.env.JWT_SECRET) as any
+    let payload = verify(res.body.data.token, process.env.JWT_SECRET!) as any
     expect(payload.usr).toBe(seed.User.verified.id)
   })
   
