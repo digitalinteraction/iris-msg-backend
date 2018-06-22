@@ -1,4 +1,5 @@
 import { RouteContext, MemberRole } from '@/src/types'
+import { Types } from 'mongoose'
 
 function makeError (name: string) {
   return `api.members.unsubscribe.${name}`
@@ -7,8 +8,12 @@ function makeError (name: string) {
 /* url params:
  * - mem_id
  */
-export default async ({ req, res, next, models }: RouteContext) => {
+export default async ({ req, res, models }: RouteContext) => {
   try {
+    if (!Types.ObjectId.isValid(req.params.mem_id)) {
+      throw makeError('notFound')
+    }
+    
     // Find an organisation with that confirmed member
     let org = await models.Organisation.findOne({
       deletedOn: null,

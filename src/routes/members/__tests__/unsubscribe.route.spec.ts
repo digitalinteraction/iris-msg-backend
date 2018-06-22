@@ -44,6 +44,7 @@ describe('orgs.members.unsubscribe', () => {
     
     expect(updatedMem.deletedOn).toBeInstanceOf(Date)
   })
+  
   it('should only remove subscribers', async () => {
     member = tst.addMember(
       org, seed.User.current, MemberRole.Coordinator
@@ -54,5 +55,12 @@ describe('orgs.members.unsubscribe', () => {
       .set(tst.jwtHeader(seed.User.current.id))
     
     expect(res.status).toBe(400)
+  })
+  
+  it('should handle bad mongo ids', async () => {
+    let res = await agent.post(`/${member.id}abcdef`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(400)
+    expect(res.text).toContain('api.members.unsubscribe.notFound')
   })
 })
