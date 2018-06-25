@@ -18,6 +18,7 @@ build_img:
   stage: build
   only:
     - tags
+    - master
   tags:
     - dind
   script:
