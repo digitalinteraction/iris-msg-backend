@@ -1,10 +1,12 @@
 FROM node:10-alpine as base
 WORKDIR /app
+HEALTHCHECK CMD curl -f 127.0.0.1:3000/health || exit 1
+RUN apk add -q --no-cache curl
 COPY ["package.json", "package-lock.json", "tsconfig.json", "/app/"]
+RUN npm install --no-audit --no-optional -s
 
 # A builder image to compile the typescript and install modules
 FROM base as builder
-RUN npm ci -s
 COPY tools /app/tools
 COPY locales /app/locales
 COPY seeds /app/seeds
@@ -19,7 +21,8 @@ RUN npm run build:docs -s
 
 # From the base, copy the dist and node modules out
 FROM base as dist
-RUN npm ci --production -s
-COPY --from=builder /app/dist /app/src
+RUN npm prune --production -s
+COPY locales /app/locales
+COPY --from=builder /app/dist /app
 COPY --from=builder /app/docs /app/docs
 CMD [ "npm", "start", "-s" ]

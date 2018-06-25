@@ -1,6 +1,7 @@
 import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
 import { IModelSet } from '../models'
+import { DebugI18n } from '../i18n'
 import supertest = require('supertest')
 import express = require('express')
 import expressJwt = require('express-jwt')
@@ -49,8 +50,9 @@ describe('Routing', () => {
     ({ db, models } = await openDb())
     app = express()
     seed = await applySeed('test/router', models)
+    let i18n = new DebugI18n()
     applyMiddleware(app)
-    applyRoutes(app, models)
+    applyRoutes(app, models, i18n)
     applyErrorHandler(app)
     agent = supertest.agent(app)
     replacements = {

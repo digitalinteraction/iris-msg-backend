@@ -4,6 +4,8 @@ api:
   general:
     unknown: Something went wrong
     badAuth: User is not logged in or unverified
+  health:
+    noDb: Not connected to the database
   
   auth:
     login_request:

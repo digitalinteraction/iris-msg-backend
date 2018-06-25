@@ -64,6 +64,7 @@ export function applyRoutes (
   
   // General
   app.get('/', r(routes.general.hello))
+  app.get('/health', r(routes.general.health))
   app.use('/docs', express.static('docs'))
   
   // Auth

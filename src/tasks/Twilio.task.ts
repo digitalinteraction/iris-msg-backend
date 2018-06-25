@@ -1,8 +1,13 @@
-import { Task, TaskContext } from './Task'
+import { Task } from './Task'
+import { IModelSet } from '../models'
 
-export class TwilioTask extends Task {
+export interface ITwilioContext {
+  models: IModelSet
+}
+
+export class TwilioTask extends Task<ITwilioContext> {
   
-  async run (ctx: TaskContext) {
+  async run (ctx: ITwilioContext) {
     
     // Get twilio paged messages (sorted by priority)
     

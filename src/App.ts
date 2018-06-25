@@ -32,17 +32,15 @@ export default class App {
       initializeFirebase()
       
       let i18n = await this.makeI18n()
-      
       let models = makeModels(mongoose.connection)
-      
       let app = this.createExpressApp(models, i18n)
+      
+      await new Promise(resolve => app.listen(3000, resolve))
+      console.log('Server started on :3000')
       
       await this.connectToMongo()
       
       this.startTasks(models)
-      
-      await new Promise(resolve => app.listen(3000, resolve))
-      console.log('Server started on :3000')
     } catch (error) {
       console.log('Failed to start')
       console.log(error)
