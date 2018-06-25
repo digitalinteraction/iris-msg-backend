@@ -36,6 +36,7 @@ api:
     deep_link:
     destroy:
       notFound: An Organisation was not found that the current user is a coordinator of and the target member exists exists on it
+      badDestroy: Cannot remove the last coordinator / subscriber for an organisation
     unsubscribe:
       notFound: An Organisation was not found where that member exists on it
   

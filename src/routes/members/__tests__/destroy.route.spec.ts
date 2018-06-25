@@ -9,6 +9,8 @@ let seed: tst.Seed
 let agent: tst.Agent
 
 let org: IOrganisation
+let coordinator: IMember
+let donor: IMember
 let subscriber: IMember
 
 beforeEach(async () => {
@@ -19,12 +21,9 @@ beforeEach(async () => {
   })
   
   org = seed.Organisation.a
-  tst.addMember(
-    org, seed.User.current, MemberRole.Coordinator
-  )
-  subscriber = tst.addMember(
-    org, seed.User.verified, MemberRole.Subscriber
-  )
+  coordinator = tst.addMember(org, seed.User.current, MemberRole.Coordinator)
+  donor = tst.addMember(org, seed.User.current, MemberRole.Donor)
+  subscriber = tst.addMember(org, seed.User.verified, MemberRole.Subscriber)
   await org.save()
 })
 
@@ -59,5 +58,19 @@ describe('orgs.members.destroy', () => {
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)
     expect(res.body.meta.messages).toContain('api.members.destroy.notFound')
+  })
+  
+  it('should fail if deleting the last coordinator', async () => {
+    let res = await agent.delete(`/${org.id}/${coordinator.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(400)
+    expect(res.body.meta.messages).toContain('api.members.destroy.badDestroy')
+  })
+  
+  it('should fail if deleting the last donor', async () => {
+    let res = await agent.delete(`/${org.id}/${donor.id}`)
+      .set(tst.jwtHeader(seed.User.current.id))
+    expect(res.status).toBe(400)
+    expect(res.body.meta.messages).toContain('api.members.destroy.badDestroy')
   })
 })
