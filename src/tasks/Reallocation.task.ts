@@ -20,7 +20,6 @@ export const RetryStates = [
   MessageAttemptState.NoService,
   MessageAttemptState.NoSmsData,
   MessageAttemptState.RadioOff,
-  MessageAttemptState.NoSenders,
   MessageAttemptState.NoResponse
 ]
 

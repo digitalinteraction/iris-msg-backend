@@ -10,8 +10,8 @@ All JavaScript must adhere to the [JavaScript Standard Style](https://standardjs
 
 ## Commit Messages
 
-* Use the past tense ("Added feature" not "Add feature")
-* Use the imperative mood ("Moved cursor to..." not "Moves cursor to...")
+* Use the present tense ("Add feature" not "Added feature")
+* Use the imperative mood ("Moves cursor to..." not "Moved cursor to...")
 * Use the first line (72 letters) as a general description then bullet changes on subsequent lines with an `*`
   * Unless you change something _really_ small
 * Consider starting the commit message with an applicable emoji:

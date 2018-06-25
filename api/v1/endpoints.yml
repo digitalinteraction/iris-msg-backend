@@ -98,6 +98,11 @@ messages:
     name: Pending Attempts
     info: Gets the pending messages you have to send as a donor
   
-  # - post: /attempts attempts_update
-  #   name: Update Attempts
-  #   info: Gets the pending messages you have to send as a donor
+  - post: /attempts attempts_update
+    name: Update Attempts
+    info: Sets the state of a set of MessageAttempts
+    body:
+      updates: array - The updates to perform
+      updates[n].attempt: string - The id of the attempt to update
+      updates[n].newState: |
+        string - The new state of the attempt (success|failed|rejected|no_service|no_sms_data|radio_off)

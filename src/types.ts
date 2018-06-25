@@ -49,16 +49,15 @@ export enum MemberRole {
 }
 
 export enum MessageAttemptState {
-  Pending = 'PENDING',
-  Rejected = 'REJECTED',
-  Failed = 'FAILED',
-  Success = 'SUCCESS',
-  NoService = 'NO_SERVICE',
-  NoSmsData = 'NO_SMS_DATA',
-  RadioOff = 'RADIO_OFF',
-  Twilio = 'TWILIO',
-  NoSenders = 'NO_SENDERS',
-  NoResponse = 'NO_RESPONSE'
+  Pending = 'pending',
+  Rejected = 'rejected',
+  Failed = 'failed',
+  Success = 'success',
+  NoService = 'no_service',
+  NoSmsData = 'no_sms_data',
+  RadioOff = 'radio_off',
+  Twilio = 'twilio',
+  NoResponse = 'no_response'
 }
 
 export enum FcmType {

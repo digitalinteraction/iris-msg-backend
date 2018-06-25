@@ -16,10 +16,6 @@ import {
   ReallocationTask, RetryStates, ReallocResult
 } from '@/src/tasks'
 
-function makeError (name: string) {
-  return `api.messages.attempts_update.${name}`
-}
-
 interface IAttemptUpdate {
   attempt: string,
   newState: MessageAttemptState
@@ -29,6 +25,19 @@ interface IMessageAndAttempt {
   message?: IMessage
   attempt?: IMessageAttempt
 }
+
+function makeError (name: string) {
+  return `api.messages.attempts_update.${name}`
+}
+
+const AllowedStates = [
+  MessageAttemptState.Success,
+  MessageAttemptState.Failed,
+  MessageAttemptState.Rejected,
+  MessageAttemptState.NoService,
+  MessageAttemptState.NoSmsData,
+  MessageAttemptState.RadioOff
+]
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
@@ -45,7 +54,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
     let isValid = item.attempt &&
       isMongoId(item.attempt) &&
       item.newState &&
-      AllMessageAttemptStates.includes(item.newState)
+      AllowedStates.includes(item.newState)
   
     if (!isValid) {
       errors.add(makeError('badAttempts'))
