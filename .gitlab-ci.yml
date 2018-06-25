@@ -1,0 +1,30 @@
+#
+# A GitLab CI file to build a docker image on push when the commit is tagged
+# NOTE - When using `npm version` add `tag-version-prefix=""` to `.npmrc`
+# NOTE - Tags aren't pushed by default, you can `git push --tags` each time
+#        or `git config --global push.followTags true`
+#
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+build_img:
+  stage: build
+  only:
+    - tags
+  tags:
+    - dind
+  script:
+    - if [ -z "$CI_COMMIT_TAG" ]; then exit 0; fi
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - echo "Building image $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    - docker pull "$CI_REGISTRY_IMAGE"
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG" -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    - docker push "$CI_REGISTRY_IMAGE:latest"
