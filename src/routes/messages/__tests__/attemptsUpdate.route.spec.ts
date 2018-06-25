@@ -85,6 +85,7 @@ describe('messages.attempts_update', () => {
     expect(res.body.meta.messages).toEqual([])
     expect(res.status).toBe(200)
   })
+  
   it('should reallocate to a new donor', async () => {
     await sendUpdate(
       seed.User.donorA, msg.attempts[0], MessageAttemptState.Rejected
@@ -97,12 +98,14 @@ describe('messages.attempts_update', () => {
     expect(first.state).toEqual(MessageAttemptState.Rejected)
     expect(second.state).toEqual(MessageAttemptState.Pending)
   })
+  
   it('should send the donor an fcm', async () => {
     await sendUpdate(
       seed.User.donorA, msg.attempts[0], MessageAttemptState.Rejected
     )
     expect(sentFcm).toHaveLength(1)
   })
+  
   it('should fall back to twilio when no active donors', async () => {
     msg.attempts.push({
       state: MessageAttemptState.Failed,
@@ -124,5 +127,15 @@ describe('messages.attempts_update', () => {
     
     expect(sentSms).toHaveLength(1)
   })
+  
+  it('should not update attempts that are not the current user', async () => {
+    let res = await sendUpdate(
+      seed.User.donorB, msg.attempts[0], MessageAttemptState.Rejected
+    )
+    let updatedMessage = await models.Message.findById(msg.id)
+    let attempt = updatedMessage!.attempts[0]
+    expect(attempt.state).toBe(MessageAttemptState.Pending)
+  })
+  
   // it('should not realloc for unaccesible orgs', async () => {})
 })

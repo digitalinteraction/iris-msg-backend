@@ -66,11 +66,12 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   let reallocator = new ReallocationTask()
   let updates = rawUpdates as IAttemptUpdate[]
   
-  // Fetch messages for the updates
+  // Fetch messages for the updates, filtering the current user as the donor
   let messages = await models.Message.find({
     attempts: {
       $elemMatch: {
         _id: updates.map(s => s.attempt),
+        donor: authJwt!.usr,
         state: MessageAttemptState.Pending
       }
     }
