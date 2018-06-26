@@ -30,7 +30,7 @@ export async function shrinkLink (longUrl: string): Promise<string> {
     
     let res = await shrinkAgent.post('/', { url: longUrl })
     
-    return res.data.public || `${process.env.SHRINK_URL}/${res.data.short}`
+    return res.data.public || longUrl
   } catch (error) {
     return longUrl
   }
