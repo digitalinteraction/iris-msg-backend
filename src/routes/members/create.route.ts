@@ -1,20 +1,25 @@
 import { RouteContext, MemberRole, AllMemberRoles } from '@/src/types'
 import { isMongoId } from '@/src/utils'
-import { makeTwilioClient, makeApiUrl } from '@/src/services'
+import { makeTwilioClient, makeApiUrl, shrinkLink } from '@/src/services'
 import phone = require('phone')
 
 function makeError (name: string) {
   return `api.members.create.${name}`
 }
-export function makeMessage (role: MemberRole, orgName: string, memberId: any): string {
+
+export async function makeMessage (role: MemberRole, orgName: string, memberId: any): Promise<string> {
   switch (role) {
     case MemberRole.Subscriber:
-      const unsubLink = makeApiUrl(`unsub/${memberId}`)
+      const unsubLink = await shrinkLink(
+        makeApiUrl(`unsub/${memberId}`)
+      )
       return `You are now subscribed to ${orgName} on irismsg.io, you can unsubscribe at ${unsubLink}`
       
     case MemberRole.Donor:
       // TODO: Update to use a deep link ...
-      const acceptLink = makeApiUrl(`accept/${memberId}`)
+      const acceptLink = await shrinkLink(
+        makeApiUrl(`accept/${memberId}`)
+      )
       return `You have been invited to donate for ${orgName} on irismsg.io, ${acceptLink}`
       
     case MemberRole.Coordinator:
@@ -93,11 +98,13 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   org.members.push(member)
   await org.save()
   
+  let message = await makeMessage(role as MemberRole, org.name, member.id)
+  
   // Send the member an sms
   await makeTwilioClient().messages.create({
     to: phoneNumber,
     from: process.env.TWILIO_NUMBER,
-    body: makeMessage(role as MemberRole, org.name, member.id)
+    body: message
   })
   
   api.sendData(member)

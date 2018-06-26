@@ -92,13 +92,13 @@ describe('orgs.members.invite', () => {
   describe('#makeMessage', () => {
     it('should add an unsub link for subscribers', async () => {
       let memberId = 'fake-id'
-      let message = makeMessage(MemberRole.Subscriber, 'Fake Org', memberId)
+      let message = await makeMessage(MemberRole.Subscriber, 'Fake Org', memberId)
       expect(message).toContain('http://localhost:3000/unsub/fake-id')
     })
     
     it('should add a accept link for donors', async () => {
       let memberId = 'fake-id'
-      let message = makeMessage(MemberRole.Donor, 'Fake Org', memberId)
+      let message = await makeMessage(MemberRole.Donor, 'Fake Org', memberId)
       expect(message).toContain('http://localhost:3000/accept/fake-id')
     })
   })
