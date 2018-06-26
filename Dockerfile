@@ -1,5 +1,6 @@
 FROM node:10-alpine as base
 WORKDIR /app
+EXPOSE 3000
 HEALTHCHECK CMD curl -f 127.0.0.1:3000/health || exit 1
 RUN apk add -q --no-cache curl
 COPY ["package.json", "package-lock.json", "tsconfig.json", "/app/"]
