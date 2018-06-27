@@ -26,4 +26,7 @@ RUN npm prune --production -s
 COPY locales /app/locales
 COPY --from=builder /app/dist /app
 COPY --from=builder /app/docs /app/docs
+COPY tools/cli.js /app/tools/cli.js
+RUN ln -s /app/tools/cli.js /usr/local/bin/cli \
+  && chmod +x /usr/local/bin/cli
 CMD [ "npm", "start", "-s" ]
