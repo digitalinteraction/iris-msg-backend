@@ -93,7 +93,10 @@ export function applyRoutes (
   app.post('/messages/attempts', requiredJwt, r(routes.messages.attemptsUpdate))
   
   // Public folder fallback
-  app.use(express.static(path.join(__dirname, 'public')))
+  app.use(express.static(path.join(__dirname, 'public'), {
+    dotfiles: 'allow',
+    index: false
+  }))
 }
 
 export function applyErrorHandler (app: express.Application) {
