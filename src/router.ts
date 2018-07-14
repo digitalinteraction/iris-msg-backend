@@ -9,6 +9,7 @@ import * as routes from './routes'
 import { IModelSet } from './models'
 import { I18n, LocalI18n, AvailableLocales } from './i18n'
 import * as middleware from './middleware'
+import * as path from 'path'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
 type ExpressRoute = (
@@ -90,6 +91,9 @@ export function applyRoutes (
   app.post('/messages', requiredJwt, r(routes.messages.create))
   app.get('/messages/attempts', requiredJwt, r(routes.messages.attemptsIndex))
   app.post('/messages/attempts', requiredJwt, r(routes.messages.attemptsUpdate))
+  
+  // Public folder fallback
+  app.use(express.static(path.join(__dirname, 'public')))
 }
 
 export function applyErrorHandler (app: express.Application) {
