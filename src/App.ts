@@ -1,5 +1,7 @@
 import * as express from 'express'
 import * as mongoose from 'mongoose'
+import { existsSync } from 'fs'
+import { join } from 'path'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels, IModelSet } from './models'
 import { I18n, i18n } from './i18n'
@@ -14,6 +16,11 @@ const RequiredVariables = [
   'TWILIO_TOKEN',
   'TWILIO_SID',
   'TWILIO_NUMBER'
+]
+
+const RequiredFiles = [
+  'assetlinks.json',
+  'google-account.json'
 ]
 
 export default class App {
@@ -74,12 +81,28 @@ export default class App {
   }
   
   checkEnvironment () {
-    // Ensure all required variables are set
-    RequiredVariables.forEach(varName => {
-      if (process.env[varName]) return
-      console.log(`Missing variable '${varName}'`)
-      process.exit(1)
+    
+    // See if there are any missing variables
+    let missingVars = RequiredVariables.filter(varName => {
+      return process.env[varName] === undefined
     })
+    
+    // Fail if there are any missing variables
+    if (missingVars.length > 0) {
+      console.log(`Missing variables: ${missingVars.join(', ')}`)
+      process.exit(1)
+    }
+    
+    // See if there are any missing files
+    // Uses `sync` because the app cannot start without them
+    let missingFiles = RequiredFiles
+      .map(filename => join(__dirname, '..', filename))
+      .filter(path => !existsSync(path))
+    
+    if (missingFiles.length > 0) {
+      console.log(`Missing files: ${missingFiles.join(', ')}`)
+      process.exit(1)
+    }
     
     // Work out if we can use firebase
     if (!firebaseEnabled()) {
