@@ -1,29 +1,36 @@
-import { RouteContext, MemberRole, AllMemberRoles } from '@/src/types'
+import { RouteContext, MemberRole, AllMemberRoles, MemberJwt } from '@/src/types'
 import { isMongoId } from '@/src/utils'
 import { makeTwilioClient, makeApiUrl, shrinkLink } from '@/src/services'
 import phone = require('phone')
+import { sign } from 'jsonwebtoken'
+import { LocalI18n } from 'src/i18n'
 
 function makeError (name: string) {
   return `api.members.create.${name}`
 }
 
-export async function makeMessage (role: MemberRole, orgName: string, memberId: any): Promise<string> {
+export async function makeMessage (
+  i18n: LocalI18n, role: MemberRole, orgName: string, memberId: any, orgId: any
+): Promise<string> {
+  
+  let payload: MemberJwt = { mem: memberId, org: orgId }
+  let token = sign(payload, process.env.JWT_SECRET!)
+  
   switch (role) {
     case MemberRole.Subscriber:
       const unsubLink = await shrinkLink(
-        makeApiUrl(`unsub/${memberId}`)
+        makeApiUrl(`unsub/${token}`)
       )
-      return `You are now subscribed to ${orgName} on irismsg.io, you can unsubscribe at ${unsubLink}`
+      return i18n.translate('sms.newSubscriber', [ orgName, unsubLink ])
       
     case MemberRole.Donor:
-      // TODO: Update to use a deep link ...
       const acceptLink = await shrinkLink(
-        makeApiUrl(`accept/${memberId}`)
+        makeApiUrl(`invite/${token}`)
       )
-      return `You have been invited to donate for ${orgName} on irismsg.io, ${acceptLink}`
+      return i18n.translate('sms.newDonor', [ orgName, acceptLink ])
       
     case MemberRole.Coordinator:
-      return `You have been added as a coordinator to ${orgName} on irismsg.io`
+      return i18n.translate('sms.newCoordinator')
   }
 }
 
@@ -98,7 +105,7 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   org.members.push(member)
   await org.save()
   
-  let message = await makeMessage(role as MemberRole, org.name, member.id)
+  let message = await makeMessage(i18n, role as any, org.name, member.id, org.id)
   
   // Send the member an sms
   await makeTwilioClient().messages.create({

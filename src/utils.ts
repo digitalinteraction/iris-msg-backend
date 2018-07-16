@@ -48,3 +48,9 @@ export function shuffleArray<T> (a: T[]): T[] {
 export function isMongoId (value: any): boolean {
   return Types.ObjectId.isValid(value)
 }
+
+export function isMemberJwt (value: any): boolean {
+  return typeof value === 'object'
+    && typeof value.mem === 'string'
+    && typeof value.org === 'string'
+}

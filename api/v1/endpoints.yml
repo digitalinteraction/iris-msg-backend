@@ -68,21 +68,20 @@ members:
       org_id: string - The id of the organisation to be removed from
       mem_id: string - The id of the membership to be removed
   
-  - post: ../accept/:mem_id accept
+  - post: ../../accept/:token accept
     info: Accept an invitation to join an organisation and returns UserAuth
     params:
-      org_id: string - The id of the organisation to join
-      mem_id: string - The id of the membership being accepted
+      token: string - The invite token the user was sent
   
-  - get: ../../unsub/:mem_id unsubscribe
+  - get: ../../unsub/:token unsubscribe
     info: Unsubscribes a member from an organisation (uses a soft delete)
     params:
-      mem_id: string - The id of the member to be unsubscribe
+      token: string - The unsubscribe token the user was sent
   
-  - get: ../../invite/:mem_id deep_link
-    info: Gets a deeplink redirection to accept an invite in the app
+  - get: ../../invite/:token showInvite
+    info: Gets the information for a deep-linked donation accept screen
     params:
-      mem_id: string - The id of the membership to link to
+      token: string - The invite token the user was sent
 
 messages:
   name: Messages

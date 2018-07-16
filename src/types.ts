@@ -42,6 +42,11 @@ export interface AuthJwt {
   loc: string
 }
 
+export interface MemberJwt {
+  mem: string,
+  org: string
+}
+
 export enum MemberRole {
   Coordinator = 'coordinator',
   Donor = 'donor',

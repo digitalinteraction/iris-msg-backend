@@ -2,6 +2,7 @@ import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
 import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
 import { IModelSet } from '../models'
 import { DebugI18n } from '../i18n'
+import { sign } from 'jsonwebtoken'
 import supertest = require('supertest')
 import express = require('express')
 import expressJwt = require('express-jwt')
@@ -19,9 +20,9 @@ const expectedRoutes = [
   
   { method: 'post', url: '/organisations/:org_id/members' },
   { method: 'del', url: '/organisations/:org_id/members/:mem_id' },
-  { method: 'post', url: '/organisations/accept/:mem_id' },
-  { method: 'get', url: '/unsub/:mem_id' },
-  { method: 'get', url: '/invite/:mem_id' },
+  { method: 'post', url: '/accept/:mem_jwt' },
+  { method: 'get', url: '/unsub/:mem_jwt' },
+  { method: 'get', url: '/invite/:mem_jwt' },
   
   { method: 'post', url: '/messages' },
   { method: 'get', url: '/messages/attempts' },
@@ -57,7 +58,11 @@ describe('Routing', () => {
     agent = supertest.agent(app)
     replacements = {
       org_id: seed.Organisation.a.id,
-      mem_id: 'a_dummy_id'
+      mem_id: 'a_dummy_id',
+      mem_jwt: sign(
+        { mem: 'a_dummy_id', org: seed.Organisation.a.id },
+        process.env.JWT_SECRET!
+      )
     }
   })
   

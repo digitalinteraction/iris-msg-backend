@@ -11,13 +11,12 @@ let agent: tst.Agent
 
 let org: IOrganisation
 let member: IMember
+let token: string
 
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(accept, models, {
-    jwt: true, path: '/:mem_id'
-  })
+  agent = tst.mockRoute(accept, models, { path: '/:token' })
   
   org = seed.Organisation.a
   member = org.members.create({
@@ -27,6 +26,8 @@ beforeEach(async () => {
   })
   org.members.push(member)
   await org.save()
+  
+  token = tst.makeMemberToken(member.id, org.id)
 })
 
 afterEach(async () => {
@@ -35,15 +36,13 @@ afterEach(async () => {
 
 describe('orgs.members.accept', () => {
   it('should succeed with a http/200', async () => {
-    let res = await agent.post(`/${member.id}`)
-      .set(tst.jwtHeader(seed.User.current.id))
+    let res = await agent.post(`/${token}`)
     
     expect(res.status).toBe(200)
   })
   
   it('should mark the member as confirmed', async () => {
-    await agent.post(`/${member.id}`)
-      .set(tst.jwtHeader(seed.User.current.id))
+    await agent.post(`/${token}`)
     
     let updatedOrg = await models.Organisation.findById(org.id)
     let updatedMem = updatedOrg!.members.id(member.id)
@@ -52,8 +51,7 @@ describe('orgs.members.accept', () => {
   })
   
   it('should return a UserAuth', async () => {
-    let res = await agent.post(`/${member.id}`)
-      .set(tst.jwtHeader(seed.User.current.id))
+    let res = await agent.post(`/${token}`)
     
     expect(res.body.data.token).toBeDefined()
     let payload = verify(res.body.data.token, process.env.JWT_SECRET!) as any
@@ -61,8 +59,7 @@ describe('orgs.members.accept', () => {
   })
   
   it('should fail gracefully for bad mongo ids', async () => {
-    let res = await agent.post(`/${member.id}abcdef`)
-      .set(tst.jwtHeader(seed.User.current.id))
+    let res = await agent.post(`/${token}abcdef`)
     
     expect(res.status).toBe(400)
     expect(res.body.meta.messages).toContain('api.members.accept.notFound')

@@ -1,5 +1,5 @@
 export { default as accept } from './accept.route'
 export { default as destroy } from './destroy.route'
 export { default as create } from './create.route'
-export { default as deepLink } from './deepLink.route'
+export { default as showInvite } from './showInvite.route'
 export { default as unsubscribe } from './unsubscribe.route'

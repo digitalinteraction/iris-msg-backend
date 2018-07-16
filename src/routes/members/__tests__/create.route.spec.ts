@@ -3,6 +3,7 @@ import create, { makeMessage } from '../create.route'
 import { IModelSet } from '@/src/models'
 import { MemberRole } from '@/src/types'
 import { Response } from 'superagent'
+import { verify } from 'jsonwebtoken'
 import twilio = require('twilio')
 
 jest.mock('twilio')
@@ -12,6 +13,7 @@ let models: IModelSet
 let seed: tst.Seed
 let agent: tst.Agent
 let sentMessages: any[]
+let i18n = tst.mockI18n()
 
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
@@ -35,6 +37,11 @@ async function inviteMember (phoneNumber: string, role: MemberRole): Promise<Res
   return agent.post('/' + seed.Organisation.a.id)
     .set(tst.jwtHeader(seed.User.current.id))
     .send({ phoneNumber, role, countryCode: 'GB' })
+}
+
+function jwtPayloadFromMessageUrl (url: string): any {
+  let token = url.split('/').pop()!
+  return verify(token, process.env.JWT_SECRET!) as any
 }
 
 describe('orgs.members.invite', () => {
@@ -90,16 +97,26 @@ describe('orgs.members.invite', () => {
   })
   
   describe('#makeMessage', () => {
+    let memberId = 'fake-mem-id'
+    let orgId = 'fake-org-id'
+    
     it('should add an unsub link for subscribers', async () => {
-      let memberId = 'fake-id'
-      let message = await makeMessage(MemberRole.Subscriber, 'Fake Org', memberId)
-      expect(message).toContain('http://localhost:3000/unsub/fake-id')
+      let message = await makeMessage(i18n, MemberRole.Subscriber, 'Fake Org', memberId, orgId)
+      
+      let { mem, org } = jwtPayloadFromMessageUrl(message)
+      
+      expect(mem).toBe(memberId)
+      expect(org).toBe(orgId)
     })
     
     it('should add a accept link for donors', async () => {
-      let memberId = 'fake-id'
-      let message = await makeMessage(MemberRole.Donor, 'Fake Org', memberId)
-      expect(message).toContain('http://localhost:3000/accept/fake-id')
+      
+      let message = await makeMessage(i18n, MemberRole.Donor, 'Fake Org', memberId, orgId)
+      
+      let { mem, org } = jwtPayloadFromMessageUrl(message)
+      
+      expect(mem).toBe(memberId)
+      expect(org).toBe(orgId)
     })
   })
 })

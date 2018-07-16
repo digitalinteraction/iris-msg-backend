@@ -44,7 +44,7 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
     try {
       let api = (req as any).api
       let authJwt = req.user
-      let i18n = new DebugI18n().makeInstance('en')
+      let i18n = mockI18n()
       await route({
         req, res, next, models, i18n, api, authJwt
       })
@@ -52,6 +52,10 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
       next(err)
     }
   }, options)
+}
+
+export function mockI18n () {
+  return new DebugI18n().makeInstance('en')
 }
 
 export async function openDb (): Promise<TestDatabase> {
@@ -79,6 +83,10 @@ export function jwtHeader (userOrUserId: any) {
   let userId = userOrUserId.id || userOrUserId
   let token = sign({ usr: userId }, process.env.JWT_SECRET!)
   return { Authorization: `Bearer ${token}` }
+}
+
+export function makeMemberToken (mem: string, org: string): string {
+  return sign({ mem, org }, process.env.JWT_SECRET!)
 }
 
 export const inTheFuture = new Date(32535129600000)

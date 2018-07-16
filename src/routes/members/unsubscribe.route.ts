@@ -1,25 +1,29 @@
-import { RouteContext, MemberRole } from '@/src/types'
-import { isMongoId } from '@/src/utils'
+import { RouteContext, MemberRole, MemberJwt } from '@/src/types'
+import { isMemberJwt } from '@/src/utils'
+import { verify } from 'jsonwebtoken'
 
 function makeError (name: string) {
   return `api.members.unsubscribe.${name}`
 }
 
 /* url params:
- * - mem_id
+ * - token
  */
 export default async ({ req, res, models }: RouteContext) => {
   try {
-    if (!isMongoId(req.params.mem_id)) {
-      throw makeError('notFound')
-    }
+    // Decode the jwt payload
+    let payload = verify(req.params.token, process.env.JWT_SECRET!) as MemberJwt
+    
+    // Fail for invalid payloads
+    if (!isMemberJwt(payload)) throw new Error()
     
     // Find an organisation with that confirmed member
     let org = await models.Organisation.findOne({
+      _id: payload.org,
       deletedOn: null,
       members: {
         $elemMatch: {
-          _id: req.params.mem_id,
+          _id: payload.mem,
           role: MemberRole.Subscriber,
           deletedOn: null,
           confirmedOn: { $ne: null }
@@ -27,16 +31,18 @@ export default async ({ req, res, models }: RouteContext) => {
       }
     })
     
-    if (!org) throw makeError('notFound')
+    // Fail for invalid org/member combos
+    if (!org) throw new Error()
     
-    let mem = org.members.id(req.params.mem_id)
+    // Delete the member & save
+    let mem = org.members.id(payload.mem)
     mem.deletedOn = new Date()
-    
     await org.save()
     
-    res.send('You have been unsubscribed')
+    // Let the user know what happend (human readable)
+    res.send('<p>You have been unsubscribed</p>')
     
   } catch (error) {
-    res.status(400).send(error)
+    res.status(400).send(makeError('notFound'))
   }
 }

@@ -84,9 +84,9 @@ export function applyRoutes (
   // Org Members
   app.post('/organisations/:org_id/members', requiredJwt, r(routes.members.create))
   app.delete('/organisations/:org_id/members/:mem_id', requiredJwt, r(routes.members.destroy))
-  app.post('/organisations/accept/:mem_id', r(routes.members.accept))
-  app.get('/unsub/:mem_id', r(routes.members.unsubscribe))
-  app.get('/invite/:mem_id', r(routes.members.deepLink))
+  app.post('/accept/:token', r(routes.members.accept))
+  app.get('/unsub/:token', r(routes.members.unsubscribe))
+  app.get('/invite/:token', r(routes.members.showInvite))
   
   // Messaging
   app.post('/messages', requiredJwt, r(routes.messages.create))

@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "success": true,
+    "messages": [],
+    "status": 200,
+    "name": "iris-msg-api",
+    "version": "0.3.2"
+  },
+  "data": {
+    "organisation": {
+      "deletedOn": null,
+      "members": [
+        {
+          "confirmedOn": "2018-06-25T16:48:50.528Z",
+          "deletedOn": null,
+          "_id": "5b311cf24bf2d200119ecda6",
+          "role": "coordinator",
+          "user": "5b2d0a9f6b6fe5e4bc9acd34",
+          "createdAt": "2018-06-25T16:48:50.532Z",
+          "updatedAt": "2018-06-25T16:48:50.532Z"
+        },
+        {
+          "confirmedOn": "2018-06-25T16:48:50.528Z",
+          "deletedOn": null,
+          "_id": "5b311cf24bf2d200119ecda5",
+          "role": "donor",
+          "user": "5b2d0a9f6b6fe5e4bc9acd34",
+          "createdAt": "2018-06-25T16:48:50.532Z",
+          "updatedAt": "2018-06-25T16:48:50.532Z"
+        },
+        {
+          "confirmedOn": null,
+          "deletedOn": null,
+          "_id": "5b4cc989f4f54c1601863184",
+          "user": "5b4caef1317cf211af7b5200",
+          "role": "donor",
+          "createdAt": "2018-07-16T16:36:25.697Z",
+          "updatedAt": "2018-07-16T16:36:25.697Z"
+        }
+      ],
+      "_id": "5b311cf24bf2d200119ecda4",
+      "name": "Top Hat Notifications",
+      "info": "The latest alerts about hats of all kinds",
+      "createdAt": "2018-06-25T16:48:50.532Z",
+      "updatedAt": "2018-07-16T16:36:25.697Z",
+      "__v": 7
+    },
+    "member": {
+      "confirmedOn": null,
+      "deletedOn": null,
+      "_id": "5b4cc989f4f54c1601863184",
+      "user": "5b4caef1317cf211af7b5200",
+      "role": "donor",
+      "createdAt": "2018-07-16T16:36:25.697Z",
+      "updatedAt": "2018-07-16T16:36:25.697Z"
+    }
+  }
+}

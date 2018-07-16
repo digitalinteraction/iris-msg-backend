@@ -1,26 +1,34 @@
-import { RouteContext, AuthJwt } from '@/src/types'
-import { isMongoId } from '@/src/utils'
-import { sign } from 'jsonwebtoken'
+import { RouteContext, MemberJwt, AuthJwt } from '@/src/types'
+import { isMemberJwt } from '@/src/utils'
+import { verify, sign } from 'jsonwebtoken'
 
 function makeError (name: string) {
   return `api.members.accept.${name}`
 }
 
 /* url params:
- * - mem_id ~ The id of the member
+ * - token
  */
-export default async ({ req, api, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models }: RouteContext) => {
   
-  if (!isMongoId(req.params.mem_id)) {
+  // Decode the jwt payload
+  let memberPayload: MemberJwt
+  try {
+    memberPayload = verify(req.params.token, process.env.JWT_SECRET!) as any
+  } catch (error) {
     throw makeError('notFound')
   }
   
+  // Fail for invalid jwts
+  if (!isMemberJwt(memberPayload)) throw makeError('notFound')
+  
   // Find an organisation with that unconfirmed member
   let org = await models.Organisation.findOne({
+    _id: memberPayload.org,
     deletedOn: null,
     members: {
       $elemMatch: {
-        _id: req.params.mem_id,
+        _id: memberPayload.mem,
         deletedOn: null,
         confirmedOn: null
       }
@@ -29,7 +37,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   if (!org) throw makeError('notFound')
   
   // Find the member and its user record
-  let member = org.members.id(req.params.mem_id)
+  let member = org.members.id(memberPayload.mem)
   let user = await models.User.findById(member.user)
   
   if (!user) throw makeError('notFound')

@@ -35,7 +35,8 @@ api:
       badRole: No role provided or it was invalid
       notFound: Organisation was not found or user cannot access it
       alreadyMember: That user is already a member in that role
-    deep_link:
+    showInvite:
+      notFound: Invalid jwt or the Organisation / Member do not exist any more
     destroy:
       notFound: An Organisation was not found that the current user is a coordinator of and the target member exists exists on it
       badDestroy: Cannot remove the last coordinator / subscriber for an organisation
@@ -52,7 +53,9 @@ api:
 
 sms:
   loginRequest: Your Iris Msg verification code is {0}
-  newSubscriber: You have been subscribed to {{0}} on Iris Msg, you can unsubscribe at {{1}}
+  newSubscriber: You are now subscribed to {0} on irismsg.io, you can unsubscribe at {1}
+  newDonor: You have been invited to donate for {0} on irismsg.io, {1}
+  newCoordinator: You have been added as a coordinator to {0} on irismsg.io
   
 
 jtw:
