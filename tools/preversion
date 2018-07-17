@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+[[ `git branch` = *"* master"* ]] || {
+  echo "'npm version' can only be run on 'master'"
+  exit 1
+}
+
+npm run test -s
