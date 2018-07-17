@@ -8,10 +8,19 @@ const prompts = require('prompts')
 const jwt = require('jsonwebtoken')
 const firebase = require('firebase-admin')
 
-const MessageTypes = {
+const MessageTemplates = {
   new_donations: {
-    title: '[dev] You have new donations',
-    body: 'Organisations need you help!'
+    notification: {
+      title: '[dev] You have new donations',
+      body: 'Organisations need you help!',
+    },
+    android: {
+      priority: 'high',
+      notification: {
+        icon: 'ic_notifications_black_24dp',
+        clickAction: 'irismsg://donate'
+      }
+    }
   }
 }
 
@@ -73,18 +82,18 @@ async function fcmCommand (cmd, ...args) {
   }
   
   // Pick a message depending on the type
-  let notification = MessageTypes[type]
+  let message = MessageTemplates[type]
   
   // Ask for a notification if not provided
-  if (!notification && type === 'custom') {
-    notification = await prompts([
+  if (type === 'custom') {
+    message.notification = await prompts([
       { type: 'text', name: 'title', message: 'Notification title' },
       { type: 'text', name: 'body', message: 'Notification body' }
     ])
   }
   
   // Stop if any variable isn't set
-  if (!notification || !notification.title || !notification.body || !type || !deviceToken) {
+  if (!type || !deviceToken) {
     console.log('Cancelled')
     process.exit(1)
   }
@@ -99,8 +108,8 @@ async function fcmCommand (cmd, ...args) {
     
     // Send the fcm (optionally in sandbox using a cli arguement)
     let res = await firebase.messaging(app).send({
+      ...message,
       data: { type },
-      notification,
       token: deviceToken
     }, !!sandbox)
     
