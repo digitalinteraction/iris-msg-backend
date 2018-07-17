@@ -1,4 +1,4 @@
-export { default as accept } from './accept.route'
+export { default as acceptInvite } from './acceptInvite.route'
 export { default as destroy } from './destroy.route'
 export { default as create } from './create.route'
 export { default as showInvite } from './showInvite.route'

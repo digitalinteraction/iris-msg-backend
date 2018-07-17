@@ -68,7 +68,7 @@ members:
       org_id: string - The id of the organisation to be removed from
       mem_id: string - The id of the membership to be removed
   
-  - post: ../../accept/:token accept
+  - post: ../../accept/:token acceptInvite
     info: Accept an invitation to join an organisation and returns UserAuth
     params:
       token: string - The invite token the user was sent

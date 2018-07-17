@@ -27,5 +27,5 @@ export default async ({ req, api, next, models, authJwt }: RouteContext) => {
     .limit(1)
   
   if (!org) throw makeError('notFound')
-  else api.sendData(org)
+  else api.sendData(org.toJSONWithActiveMembers())
 }

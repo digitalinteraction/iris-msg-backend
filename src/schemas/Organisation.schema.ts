@@ -15,6 +15,7 @@ export interface IOrganisation extends IBaseModel {
   
   activeSubscribers: IMember[]
   activeDonors: IMember[]
+  toJSONWithActiveMembers (): any
 }
 
 export type IOrganisationClass = Model<IOrganisation> & {
@@ -28,8 +29,7 @@ export type IOrganisationClass = Model<IOrganisation> & {
     role?: MemberRole | MemberRole[],
     user?: Types.ObjectId | string,
     overrides?: object
-  )
-    : object
+  ): object
 }
 
 export const OrganisationSchema = new Schema({
@@ -121,3 +121,10 @@ OrganisationSchema.virtual('activeDonors').get(function (this: IOrganisation) {
     member.confirmedOn !== null
   )
 })
+
+OrganisationSchema.methods.toJSONWithActiveMembers = function (this: IOrganisation) {
+  return {
+    ...this.toJSON(),
+    members: this.members.filter(member => member.isActive)
+  }
+}

@@ -40,5 +40,9 @@ export default async ({ req, api, next, models }: RouteContext) => {
   
   // Return the organisation and member records
   let member = organisation.members.id(memberJwt.mem)
-  api.sendData({ organisation, member })
+  api.sendData({
+    organisation: organisation.toJSONWithActiveMembers(),
+    member: organisation.members.id(memberJwt.mem),
+    user: await models.User.findOne(member.user)
+  })
 }

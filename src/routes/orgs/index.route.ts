@@ -14,7 +14,9 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   if (!user) return api.sendData([])
   
+  let orgs = await models.Organisation.findForUser(user.id)
+  
   api.sendData(
-    await models.Organisation.findForUser(user.id)
+    orgs.map(o => o.toJSONWithActiveMembers())
   )
 }

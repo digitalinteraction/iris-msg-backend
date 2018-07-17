@@ -33,7 +33,7 @@ afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe('orgs.members.getInvite', () => {
+describe('orgs.members.showInvite', () => {
   it('should succeed with a http/200', async () => {
     let res = await agent.get(`/${token}`)
     expect(res.status).toBe(200)
@@ -42,7 +42,13 @@ describe('orgs.members.getInvite', () => {
   it('should return the organisation and member', async () => {
     let res = await agent.get(`/${token}`)
     expect(res.body.data).toBeDefined()
+    
     expect(res.body.data.organisation).toBeDefined()
     expect(res.body.data.member).toBeDefined()
+    expect(res.body.data.user).toBeDefined()
+    
+    expect(res.body.data.organisation._id).toBe(org.id)
+    expect(res.body.data.member._id).toBe(member.id)
+    expect(res.body.data.user._id).toBe(seed.User.current.id)
   })
 })

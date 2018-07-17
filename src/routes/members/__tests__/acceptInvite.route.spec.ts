@@ -1,5 +1,5 @@
 import * as tst from '@/tools/testHarness'
-import accept from '../accept.route'
+import acceptInvite from '../acceptInvite.route'
 import { IModelSet, IOrganisation, IMember } from '@/src/models'
 import { MemberRole } from '@/src/types'
 import { verify } from 'jsonwebtoken'
@@ -16,7 +16,7 @@ let token: string
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
-  agent = tst.mockRoute(accept, models, { path: '/:token' })
+  agent = tst.mockRoute(acceptInvite, models, { path: '/:token' })
   
   org = seed.Organisation.a
   member = org.members.create({
@@ -34,7 +34,7 @@ afterEach(async () => {
   await tst.closeDb(db)
 })
 
-describe('orgs.members.accept', () => {
+describe('orgs.members.acceptInvite', () => {
   it('should succeed with a http/200', async () => {
     let res = await agent.post(`/${token}`)
     
@@ -63,5 +63,12 @@ describe('orgs.members.accept', () => {
     
     expect(res.status).toBe(400)
     expect(res.body.meta.messages).toContain('api.members.accept.notFound')
+  })
+  
+  it('should return the organisation', async () => {
+    let res = await agent.post(`/${token}`)
+    
+    expect(res.body.data.organisation).toBeDefined()
+    expect(res.body.data.organisation._id).toBe(org.id)
   })
 })

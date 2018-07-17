@@ -48,7 +48,11 @@ export default async ({ req, api, models }: RouteContext) => {
   
   // Generate a user auth jwt
   let payload: AuthJwt = { usr: user!.id, loc: user!.locale }
-  let token = sign(payload, process.env.JWT_SECRET!)
   
-  api.sendData({ user, token })
+  // Send back the organisation, user and a signed jwt auth token
+  api.sendData({
+    organisation: org.toJSONWithActiveMembers(),
+    token: sign(payload, process.env.JWT_SECRET!),
+    user
+  })
 }

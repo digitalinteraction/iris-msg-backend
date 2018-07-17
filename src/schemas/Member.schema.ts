@@ -10,6 +10,8 @@ export interface IMember extends IBaseSubModel {
   confirmedOn: Date | null
   deletedOn: Date | null
   user: Types.ObjectId
+  
+  isActive: boolean
 }
 
 export const MemberSchema = new Schema({
@@ -33,3 +35,7 @@ export const MemberSchema = new Schema({
     ref: 'User'
   }
 }, schemaOptions)
+
+MemberSchema.virtual('isActive').get(function (this: IMember): boolean {
+  return this.confirmedOn !== null && this.deletedOn === null
+})
