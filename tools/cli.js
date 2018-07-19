@@ -11,14 +11,21 @@ const firebase = require('firebase-admin')
 const MessageTemplates = {
   new_donations: {
     notification: {
-      title: '[dev] You have new donations',
-      body: 'Organisations need you help!',
+      title: 'New Donations',
+      body: 'Your organisations need your help, donate some sms!',
+    },
+    data: {
+      type: 'new_donations'
     },
     android: {
       priority: 'high',
+      ttl: 30 * 60 * 1000,
+      restrictedPackageName: 'uk.ac.ncl.openlab.irismsg',
       notification: {
         icon: 'ic_notifications_black_24dp',
-        clickAction: 'irismsg://donate'
+        color: '#1289b2',
+        tag: 'new_donations',
+        clickAction: 'fcm.action.DONATE'
       }
     }
   }
@@ -46,8 +53,6 @@ cli.command('seed')
   .option('-p, --phone <phone>', 'The phone number of the initial user')
   .action(seedCommand)
 
-// cli.command()
-
 // Process cli args or fallback to a help page
 cli.parse(process.argv)
 if (process.argv.length === 2) cli.help()
@@ -64,7 +69,6 @@ async function fcmCommand (cmd, ...args) {
       message: 'Pick fcm type',
       choices: [
         { title: 'New Donations', value: 'new_donations' },
-        { title: 'Data only', value: 'data' },
         { title: 'Custom', value: 'custom' }
       ]
     })
@@ -81,10 +85,10 @@ async function fcmCommand (cmd, ...args) {
     deviceToken = answer.deviceToken
   }
   
-  // Pick a message depending on the type
-  let message = MessageTemplates[type]
+  // Build a message from the type template
+  let message = MessageTemplates[type] || {}
   
-  // Ask for a notification if not provided
+  // If in custom mode, ask for the title/body
   if (type === 'custom') {
     message.notification = await prompts([
       { type: 'text', name: 'title', message: 'Notification title' },
@@ -106,12 +110,11 @@ async function fcmCommand (cmd, ...args) {
       databaseURL: process.env.FIREBASE_DB
     })
     
+    message = { ...message, token: deviceToken }
+    console.log('Payload', message)
+    
     // Send the fcm (optionally in sandbox using a cli arguement)
-    let res = await firebase.messaging(app).send({
-      ...message,
-      data: { type },
-      token: deviceToken
-    }, !!sandbox)
+    let res = await firebase.messaging(app).send(message, !!sandbox)
     
     console.log('FCM Sent!', res)
   } catch (err) {

@@ -15,7 +15,8 @@ const RequiredVariables = [
   'WEB_URL',
   'TWILIO_TOKEN',
   'TWILIO_SID',
-  'TWILIO_NUMBER'
+  'TWILIO_NUMBER',
+  'PLAY_STORE_URL'
 ]
 
 const RequiredFiles = [

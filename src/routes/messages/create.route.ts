@@ -90,6 +90,16 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
       data: {
         type: FcmType.NewDonations
       },
+      android: {
+        priority: 'high',
+        ttl: 30 * 60 * 1000,
+        notification: {
+          icon: 'ic_notifications_black_24dp',
+          color: '#1289b2',
+          tag: 'new_donations',
+          clickAction: 'fcm.action.DONATE'
+        }
+      },
       token: donor.user.fcmToken!
     })
   }))

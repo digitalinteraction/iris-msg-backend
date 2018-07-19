@@ -25,7 +25,7 @@ export async function makeMessage (
       
     case MemberRole.Donor:
       const acceptLink = await shrinkLink(
-        makeApiUrl(`invite/${token}`)
+        makeApiUrl(`open/invite/${token}`)
       )
       return i18n.translate('sms.newDonor', [ orgName, acceptLink ])
       

@@ -8,6 +8,13 @@ import express = require('express')
 import expressJwt = require('express-jwt')
 
 const expectedRoutes = [
+  { method: 'get', url: '/' },
+  { method: 'get', url: '/health' },
+  { method: 'get', url: '/.well-known/assetlinks.json' },
+  { method: 'get', url: '/docs' },
+  { method: 'get', url: '/open/invite/:mem_jwt' },
+  { method: 'get', url: '/open/donate' },
+  
   { method: 'get', url: '/users/me' },
   { method: 'post', url: '/users/login/request' },
   { method: 'post', url: '/users/login/check' },

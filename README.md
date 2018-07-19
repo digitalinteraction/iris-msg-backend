@@ -16,6 +16,7 @@
 | `TWILIO_NUMBER`   | Your twilio number, the number service sms will be sent from |
 | `TWILIO_FALLBACK` | If the sms donation algorithm should fall back to using twilio |
 | `FIREBASE_DB`     | Where your firebase database is |
+| `PLAY_STORE_URL`  | The link to download the irismsg app |
 
 ## Mounted Files
 
