@@ -1,21 +1,22 @@
 {
-    "meta": {
-        "success": true,
-        "messages": [],
-        "status": 200,
-        "name": "iris-msg-api",
-        "version": "0.1.0"
+  "meta": {
+    "success": true,
+    "messages": [],
+    "status": 200,
+    "name": "iris-api",
+    "version": "0.4.1",
+    "codes": []
+  },
+  "data": {
+    "user": {
+      "locale": "GB",
+      "fcmToken": null,
+      "verifiedOn": "2018-06-16T16:53:55.798Z",
+      "_id": "5b25404dc8681c1947bd9402",
+      "phoneNumber": "+447880123456",
+      "createdAt": "2018-06-16T16:52:29.659Z",
+      "updatedAt": "2018-06-16T16:52:29.659Z"
     },
-    "data": {
-        "user": {
-            "locale": "GB",
-            "fcmToken": null,
-            "verifiedOn": "2018-06-16T16:53:55.798Z",
-            "_id": "5b25404dc8681c1947bd9402",
-            "phoneNumber": "+447880123456",
-            "createdAt": "2018-06-16T16:52:29.659Z",
-            "updatedAt": "2018-06-16T16:52:29.659Z"
-        },
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOiI1YjI1NDA0ZGM4NjgxYzE5NDdiZDk0MDIiLCJpYXQiOjE1MjkxNjgwMzV9.PnrQCHEQ6Arknp_Z5uBuh5C5H9cyYztBhwLS5wSe2II"
-    }
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOiI1YjI1NDA0ZGM4NjgxYzE5NDdiZDk0MDIiLCJpYXQiOjE1MjkxNjgwMzV9.PnrQCHEQ6Arknp_Z5uBuh5C5H9cyYztBhwLS5wSe2II"
+  }
 }

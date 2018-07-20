@@ -1,38 +1,72 @@
 {
-    "meta": {
-        "success": true,
-        "messages": [],
-        "status": 200,
-        "name": "iris-msg-api",
-        "version": "0.1.0"
-    },
-    "data": {
+  "meta": {
+    "success": true,
+    "messages": [],
+    "status": 200,
+    "name": "iris-api",
+    "version": "0.4.1",
+    "codes": []
+  },
+  "data": {
+    "deletedOn": null,
+    "members": [
+      {
+        "confirmedOn": "2018-06-25T16:48:50.528Z",
         "deletedOn": null,
-        "members": [
-            {
-                "confirmedOn": "2018-06-16T17:08:08.795Z",
-                "deletedOn": null,
-                "_id": "5b2543f86fc52f1965763bba",
-                "role": "coordinator",
-                "user": "5b25404dc8681c1947bd9402",
-                "createdAt": "2018-06-16T17:08:08.815Z",
-                "updatedAt": "2018-06-16T17:08:08.815Z"
-            },
-            {
-                "confirmedOn": "2018-06-16T17:08:08.795Z",
-                "deletedOn": null,
-                "_id": "5b2543f86fc52f1965763bb9",
-                "role": "donor",
-                "user": "5b25404dc8681c1947bd9402",
-                "createdAt": "2018-06-16T17:08:08.815Z",
-                "updatedAt": "2018-06-16T17:08:08.815Z"
-            }
-        ],
-        "_id": "5b2543f86fc52f1965763bb8",
-        "name": "Top Hat Notifications",
-        "info": "The latest alerts about hats of all kinds",
-        "createdAt": "2018-06-16T17:08:08.816Z",
-        "updatedAt": "2018-06-16T17:08:08.816Z",
-        "__v": 0
-    }
+        "_id": "5b311cf24bf2d200119ecda6",
+        "role": "coordinator",
+        "user": {
+          "locale": "en",
+          "verifiedOn": "2018-06-22T14:42:06.056Z",
+          "_id": "5b2d0a9f6b6fe5e4bc9acd34",
+          "phoneNumber": "+447880123456",
+          "createdAt": "2018-06-22T14:41:35.549Z",
+          "updatedAt": "2018-06-25T16:52:50.441Z",
+          "__v": 0
+        },
+        "createdAt": "2018-06-25T16:48:50.532Z",
+        "updatedAt": "2018-06-25T16:48:50.532Z"
+      },
+      {
+        "confirmedOn": "2018-07-17T09:17:44.533Z",
+        "deletedOn": null,
+        "_id": "5b4cc989f4f54c1601863184",
+        "user": {
+          "locale": "en",
+          "verifiedOn": "2018-07-16T14:42:57.973Z",
+          "_id": "5b4caef1317cf211af7b5200",
+          "phoneNumber": "+447702810103",
+          "createdAt": "2018-07-16T14:42:57.975Z",
+          "updatedAt": "2018-07-16T14:42:57.975Z",
+          "__v": 0
+        },
+        "role": "donor",
+        "createdAt": "2018-07-16T16:36:25.697Z",
+        "updatedAt": "2018-07-16T16:36:25.697Z"
+      },
+      {
+        "confirmedOn": "2018-07-17T09:24:14.467Z",
+        "deletedOn": null,
+        "_id": "5b4db5bea4c3051c363e68f5",
+        "user": {
+          "locale": "en",
+          "verifiedOn": "2018-06-22T14:42:06.056Z",
+          "_id": "5b2d0a9f6b6fe5e4bc9acd34",
+          "phoneNumber": "+447880123456",
+          "createdAt": "2018-06-22T14:41:35.549Z",
+          "updatedAt": "2018-06-25T16:52:50.441Z",
+          "__v": 0
+        },
+        "role": "subscriber",
+        "createdAt": "2018-07-17T09:24:14.474Z",
+        "updatedAt": "2018-07-17T09:24:14.474Z"
+      }
+    ],
+    "_id": "5b311cf24bf2d200119ecda4",
+    "name": "Top Hat Notifications",
+    "info": "The latest alerts about hats of all kinds",
+    "createdAt": "2018-06-25T16:48:50.532Z",
+    "updatedAt": "2018-07-17T09:49:46.703Z",
+    "__v": 9
+  }
 }

@@ -47,7 +47,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
     .populate('attempts.recipient')
     .populate('organisation') as any
   
-  let formattedMessages = messages.map(message => {
+  api.sendData(messages.map(message => {
     let attempts = message.attempts
       .filter(attempt =>
         attempt.donor.toString() === authJwt.usr &&
@@ -60,8 +60,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
         recipient: attempt.recipient.id,
         phoneNumber: attempt.recipient.phoneNumber
       }))
-    return { ...message.toJSON(), attempts }
-  })
-  
-  api.sendData(formattedMessages)
+    let organisation = message.organisation.toJSONWithActiveMembers()
+    return { ...message.toJSON(), organisation, attempts }
+  }))
 }

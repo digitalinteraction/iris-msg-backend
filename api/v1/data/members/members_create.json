@@ -1,18 +1,19 @@
 {
-    "meta": {
-        "success": true,
-        "messages": [],
-        "status": 200,
-        "name": "iris-msg-api",
-        "version": "0.1.0"
-    },
-    "data": {
-        "confirmedOn": null,
-        "deletedOn": null,
-        "_id": "5b2547239f38231af2946538",
-        "user": "5b25404dc8681c1947bd9402",
-        "role": "donor",
-        "createdAt": "2018-06-16T17:21:39.822Z",
-        "updatedAt": "2018-06-16T17:21:39.822Z"
-    }
+  "meta": {
+    "success": true,
+    "messages": [],
+    "status": 200,
+    "name": "iris-api",
+    "version": "0.4.1",
+    "codes": []
+  },
+  "data": {
+    "confirmedOn": null,
+    "deletedOn": null,
+    "_id": "5b2547239f38231af2946538",
+    "user": "5b25404dc8681c1947bd9402",
+    "role": "donor",
+    "createdAt": "2018-06-16T17:21:39.822Z",
+    "updatedAt": "2018-06-16T17:21:39.822Z"
+  }
 }

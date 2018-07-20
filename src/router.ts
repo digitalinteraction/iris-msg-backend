@@ -7,11 +7,9 @@ import { RouteContext } from './types'
 import { Api } from 'api-formatter'
 import * as routes from './routes'
 import { IModelSet } from './models'
-import { I18n, LocalI18n, AvailableLocales } from './i18n'
+import { I18n, LocalI18n, AvailableLocales, LocalisedApi } from './i18n'
 import * as middleware from './middleware'
 import * as path from 'path'
-
-type LocalisedApi = middleware.LocalisedApi
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
 
