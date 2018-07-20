@@ -65,4 +65,20 @@ describe('orgs.show', () => {
     expect(res.status).toBe(400)
     expect(res.body.meta.messages[0]).not.toContain('Cast to ObjectId failed')
   })
+  
+  it('should populate users on member records', async () => {
+    await pushMember(seed.Organisation.a, {
+      user: seed.User.verified.id,
+      role: MemberRole.Coordinator,
+      confirmedOn: new Date()
+    })
+    
+    let res = await agent.get('/' + seed.Organisation.a.id)
+      .set(tst.jwtHeader(seed.User.verified.id))
+    
+    let member = res.body.data.members[0]
+    expect(member.user).toBeInstanceOf(Object)
+    expect(member.user._id).toBe(seed.User.verified.id)
+    expect(member.user.fcmToken).toBeUndefined()
+  })
 })

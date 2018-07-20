@@ -56,14 +56,13 @@ sms:
   newSubscriber: You are now subscribed to {0} on irismsg.io, you can unsubscribe at {1}
   newDonor: You have been invited to donate for {0} on irismsg.io, you can view the invite at {1}
   newCoordinator: You have been added as a coordinator to {0} on irismsg.io
-  
 
-jtw:
-  revoked_token:
-  invalid_token:
-  credentials_bad_scheme:
-  credentials_bad_format:
-  credentials_required:
+jwt:
+  revoked_token: Your access has been revoked, please log in again
+  invalid_token: Your token is invalid, please check it and try again
+  credentials_bad_scheme: Your token is invalid, please check it and try again
+  credentials_bad_format: Your token is invalid, please check it and try again
+  credentials_required: A JWT bearer token is required for this endpoint
 
 fcm:
   new_donations:

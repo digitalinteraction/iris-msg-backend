@@ -61,7 +61,7 @@ describe('Routing', () => {
     let i18n = new DebugI18n()
     applyMiddleware(app)
     applyRoutes(app, models, i18n)
-    applyErrorHandler(app)
+    applyErrorHandler(app, i18n)
     agent = supertest.agent(app)
     replacements = {
       org_id: seed.Organisation.a.id,
@@ -94,6 +94,7 @@ describe('#applyErrorHandler', () => {
   let app: express.Express
   let agent: supertest.SuperTest<supertest.Test>
   let failer: () => void
+  let i18n = new DebugI18n()
   
   beforeEach(async () => {
     app = express()
@@ -101,19 +102,19 @@ describe('#applyErrorHandler', () => {
     app.get('/', (req, res, next) => {
       next(failer())
     })
-    applyErrorHandler(app)
+    applyErrorHandler(app, i18n)
     agent = supertest.agent(app)
   })
   
   it('should convert a Set to messages', async () => {
     failer = () => new Set([ 'a', 'b', 'c' ])
     let res = await agent.get('/')
-    expect(res.body.meta.messages).toEqual([ 'a', 'b', 'c' ])
+    expect(res.body.meta.codes).toEqual([ 'a', 'b', 'c' ])
   })
   it('should convert a String to messages', async () => {
     failer = () => 'error'
     let res = await agent.get('/')
-    expect(res.body.meta.messages).toEqual([ 'error' ])
+    expect(res.body.meta.codes).toEqual([ 'error' ])
   })
   it('should convert a JWTUnauthorizedError to messages', async () => {
     failer = () => new expressJwt.UnauthorizedError(
@@ -121,16 +122,16 @@ describe('#applyErrorHandler', () => {
     )
     let res = await agent.get('/')
     expect(res.status).toBe(401)
-    expect(res.body.meta.messages).toEqual([ 'jwt.revoked_token' ])
+    expect(res.body.meta.codes).toEqual([ 'jwt.revoked_token' ])
   })
   it('should convert an Error to messages', async () => {
     failer = () => new Error('error')
     let res = await agent.get('/')
-    expect(res.body.meta.messages).toEqual([ 'error' ])
+    expect(res.body.meta.codes).toEqual([ 'error' ])
   })
   it('should default to an unknown error', async () => {
     failer = () => 7
     let res = await agent.get('/')
-    expect(res.body.meta.messages).toEqual([ 'api.general.unknown' ])
+    expect(res.body.meta.codes).toEqual([ 'api.general.unknown' ])
   })
 })

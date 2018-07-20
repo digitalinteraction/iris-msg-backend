@@ -1,5 +1,6 @@
-import { Api, IApiOptions } from 'api-formatter'
+import { Api, Messages, IApiOptions, MetaBlock } from 'api-formatter'
+import { LocalisedApi } from '@/src/i18n'
 
 export default function (options: IApiOptions = {}) {
-  return Api.middleware({ ...options, name: 'iris-msg-api' })
+  return LocalisedApi.middleware(options)
 }

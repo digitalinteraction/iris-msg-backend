@@ -1,5 +1,5 @@
 import { RouteContext, MessageAttemptState } from '@/src/types'
-import { IMessage, IMessageAttempt, IUser } from '@/src/models'
+import { IMessage, IMessageAttempt, IUser, IOrganisation } from '@/src/models'
 import { Types } from 'mongoose'
 
 // function makeError (name: string) {
@@ -21,8 +21,9 @@ type IMessageAttemptWithRecipient = {
   recipient: IUser
 } & IMessageAttempt
 
-type IMessageWithRecipients = {
+type IMessagePopulated = {
   attempts: Types.DocumentArray<IMessageAttemptWithRecipient>
+  organisation: IOrganisation
 } & IMessage
 
 export default async ({ req, api, models, authJwt }: RouteContext) => {
@@ -41,9 +42,10 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   }
   
   // Fetch messages which the user has pending donations
-  let messages: IMessageWithRecipients[] = await models.Message
+  let messages: IMessagePopulated[] = await models.Message
     .find(query)
-    .populate('attempts.recipient') as any
+    .populate('attempts.recipient')
+    .populate('organisation') as any
   
   let formattedMessages = messages.map(message => {
     let attempts = message.attempts

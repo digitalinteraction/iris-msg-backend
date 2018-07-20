@@ -82,7 +82,7 @@ describe('messages.attempts_update', () => {
     let res = await sendUpdate(
       seed.User.donorA, msg.attempts[0], MessageAttemptState.Rejected
     )
-    expect(res.body.meta.messages).toEqual([])
+    expect(res.body.meta.codes).toEqual([])
     expect(res.status).toBe(200)
   })
   

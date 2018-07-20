@@ -50,27 +50,27 @@ describe('orgs.members.destroy', () => {
     let res = await agent.delete(`/${org.id}abc/${subscriber.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.members.destroy.notFound')
+    expect(res.body.meta.codes).toContain('api.members.destroy.notFound')
   })
   
   it('should fail gracefully for bad mem_ids', async () => {
     let res = await agent.delete(`/${org.id}/${subscriber.id}def`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.members.destroy.notFound')
+    expect(res.body.meta.codes).toContain('api.members.destroy.notFound')
   })
   
   it('should fail if deleting the last coordinator', async () => {
     let res = await agent.delete(`/${org.id}/${coordinator.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.members.destroy.badDestroy')
+    expect(res.body.meta.codes).toContain('api.members.destroy.badDestroy')
   })
   
   it('should fail if deleting the last donor', async () => {
     let res = await agent.delete(`/${org.id}/${donor.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.members.destroy.badDestroy')
+    expect(res.body.meta.codes).toContain('api.members.destroy.badDestroy')
   })
 })

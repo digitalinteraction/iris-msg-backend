@@ -62,7 +62,7 @@ describe('orgs.members.acceptInvite', () => {
     let res = await agent.post(`/${token}abcdef`)
     
     expect(res.status).toBe(400)
-    expect(res.body.meta.messages).toContain('api.members.accept.notFound')
+    expect(res.body.meta.codes).toContain('api.members.accept.notFound')
   })
   
   it('should return the organisation', async () => {

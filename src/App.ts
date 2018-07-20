@@ -118,7 +118,7 @@ export default class App {
     let app = express()
     applyMiddleware(app)
     applyRoutes(app, models, i18n)
-    applyErrorHandler(app)
+    applyErrorHandler(app, i18n)
     return app
   }
   

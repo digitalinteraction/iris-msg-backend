@@ -35,7 +35,7 @@ export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions
     }))
   }
   app.use(options.path || '', route)
-  applyErrorHandler(app)
+  applyErrorHandler(app, new DebugI18n())
   return supertest.agent(app)
 }
 
@@ -45,6 +45,8 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
       let api = (req as any).api
       let authJwt = req.user
       let i18n = mockI18n()
+      api.setLocaliser(i18n)
+      
       await route({
         req, res, next, models, i18n, api, authJwt
       })

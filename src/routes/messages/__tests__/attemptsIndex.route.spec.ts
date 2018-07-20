@@ -76,7 +76,7 @@ describe('messages.attempts_index', () => {
     expect(res.body.data).toHaveLength(1)
     expect(res.body.data[0]).toMatchObject({
       content: 'Hey there!',
-      organisation: org.id,
+      organisation: expect.any(Object),
       author: seed.User.current.id
     })
     
@@ -98,5 +98,13 @@ describe('messages.attempts_index', () => {
       recipient: expect.anything(),
       phoneNumber: '+447880123011'
     })
+  })
+  it('should embed organisations', async () => {
+    let res = await agent.get('/')
+      .set(tst.jwtHeader(seed.User.donorA.id))
+    
+    let msg = res.body.data[0]
+    expect(msg.organisation._id).toBe(org.id)
+    expect(msg.organisation.name).toBe(org.name)
   })
 })

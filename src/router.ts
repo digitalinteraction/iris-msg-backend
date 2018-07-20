@@ -11,7 +11,10 @@ import { I18n, LocalI18n, AvailableLocales } from './i18n'
 import * as middleware from './middleware'
 import * as path from 'path'
 
+type LocalisedApi = middleware.LocalisedApi
+
 type CustomRoute = (ctx: RouteContext) => Promise<void>
+
 type ExpressRoute = (
   req: express.Request,
   res: express.Response,
@@ -28,9 +31,10 @@ export function makeRoute (
 ): ExpressRoute {
   return async (req, res, next) => {
     try {
-      let api = (req as any).api as Api
+      let api = (req as any).api as LocalisedApi
       let authJwt = (req as any).user
       let i18n = localiser.makeInstance(getLocale(req))
+      api.setLocaliser(i18n)
       await route({ models, i18n, req, res, next, api, authJwt })
     } catch (error) {
       next(error)
@@ -47,7 +51,8 @@ export function applyRoutes (
   app: express.Application, models: IModelSet, i18n: I18n
 ) {
   
-  const r = (route: CustomRoute) => makeRoute(route, models, i18n)
+  const r = (route: CustomRoute) =>
+    makeRoute(route, models, i18n)
   
   // Reusable middleware
   let requiredJwt = middleware.jwt()
@@ -101,10 +106,12 @@ export function applyRoutes (
   }))
 }
 
-export function applyErrorHandler (app: express.Application) {
+export function applyErrorHandler (app: express.Application, localiser: I18n) {
   
   app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    let api = (req as any).api as Api
+    
+    let api = (req as any).api as LocalisedApi
+    api.setLocaliser(localiser.makeInstance(getLocale(req)))
     
     if (error instanceof Set) {
       return api.sendFail(Array.from(error))

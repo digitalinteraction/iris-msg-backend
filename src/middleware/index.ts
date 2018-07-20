@@ -1,4 +1,4 @@
-import api from './api.middle'
+import api, { LocalisedApi } from './api.middle'
 import jwt from './jwt.middle'
 
-export { api, jwt }
+export { api, jwt, LocalisedApi }
