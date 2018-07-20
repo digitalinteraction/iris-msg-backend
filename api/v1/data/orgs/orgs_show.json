@@ -7,66 +7,53 @@
     "version": "0.4.1",
     "codes": []
   },
-  "data": {
-    "deletedOn": null,
-    "members": [
-      {
-        "confirmedOn": "2018-06-25T16:48:50.528Z",
-        "deletedOn": null,
-        "_id": "5b311cf24bf2d200119ecda6",
-        "role": "coordinator",
-        "user": {
-          "locale": "en",
-          "verifiedOn": "2018-06-22T14:42:06.056Z",
-          "_id": "5b2d0a9f6b6fe5e4bc9acd34",
-          "phoneNumber": "+447880123456",
-          "createdAt": "2018-06-22T14:41:35.549Z",
-          "updatedAt": "2018-06-25T16:52:50.441Z",
-          "__v": 0
+  "data": [
+    {
+      "deletedOn": null,
+      "members": [
+        {
+          "confirmedOn": "2018-06-25T16:48:50.528Z",
+          "deletedOn": null,
+          "_id": "5b311cf24bf2d200119ecda6",
+          "role": "coordinator",
+          "user": "5b2d0a9f6b6fe5e4bc9acd34",
+          "createdAt": "2018-06-25T16:48:50.532Z",
+          "updatedAt": "2018-06-25T16:48:50.532Z"
         },
-        "createdAt": "2018-06-25T16:48:50.532Z",
-        "updatedAt": "2018-06-25T16:48:50.532Z"
-      },
-      {
-        "confirmedOn": "2018-07-17T09:17:44.533Z",
-        "deletedOn": null,
-        "_id": "5b4cc989f4f54c1601863184",
-        "user": {
-          "locale": "en",
-          "verifiedOn": "2018-07-16T14:42:57.973Z",
-          "_id": "5b4caef1317cf211af7b5200",
-          "phoneNumber": "+447702810103",
-          "createdAt": "2018-07-16T14:42:57.975Z",
-          "updatedAt": "2018-07-16T14:42:57.975Z",
-          "__v": 0
+        {
+          "confirmedOn": "2018-07-17T09:17:44.533Z",
+          "deletedOn": null,
+          "_id": "5b4cc989f4f54c1601863184",
+          "user": "5b4caef1317cf211af7b5200",
+          "role": "donor",
+          "createdAt": "2018-07-16T16:36:25.697Z",
+          "updatedAt": "2018-07-16T16:36:25.697Z"
         },
-        "role": "donor",
-        "createdAt": "2018-07-16T16:36:25.697Z",
-        "updatedAt": "2018-07-16T16:36:25.697Z"
-      },
-      {
-        "confirmedOn": "2018-07-17T09:24:14.467Z",
-        "deletedOn": null,
-        "_id": "5b4db5bea4c3051c363e68f5",
-        "user": {
-          "locale": "en",
-          "verifiedOn": "2018-06-22T14:42:06.056Z",
-          "_id": "5b2d0a9f6b6fe5e4bc9acd34",
-          "phoneNumber": "+447880123456",
-          "createdAt": "2018-06-22T14:41:35.549Z",
-          "updatedAt": "2018-06-25T16:52:50.441Z",
-          "__v": 0
+        {
+          "confirmedOn": "2018-07-17T09:24:14.467Z",
+          "deletedOn": null,
+          "_id": "5b4db5bea4c3051c363e68f5",
+          "user": "5b2d0a9f6b6fe5e4bc9acd34",
+          "role": "subscriber",
+          "createdAt": "2018-07-17T09:24:14.474Z",
+          "updatedAt": "2018-07-17T09:24:14.474Z"
         },
-        "role": "subscriber",
-        "createdAt": "2018-07-17T09:24:14.474Z",
-        "updatedAt": "2018-07-17T09:24:14.474Z"
-      }
-    ],
-    "_id": "5b311cf24bf2d200119ecda4",
-    "name": "Top Hat Notifications",
-    "info": "The latest alerts about hats of all kinds",
-    "createdAt": "2018-06-25T16:48:50.532Z",
-    "updatedAt": "2018-07-17T09:49:46.703Z",
-    "__v": 9
-  }
+        {
+          "confirmedOn": "2018-07-17T09:49:46.692Z",
+          "deletedOn": null,
+          "_id": "5b4db5cba4c3051c363e68f6",
+          "user": "5b2d0a9f6b6fe5e4bc9acd34",
+          "role": "donor",
+          "createdAt": "2018-07-17T09:24:27.708Z",
+          "updatedAt": "2018-07-17T09:49:46.702Z"
+        }
+      ],
+      "_id": "5b311cf24bf2d200119ecda4",
+      "name": "Top Hat Notifications",
+      "info": "The latest alerts about hats of all kinds",
+      "createdAt": "2018-06-25T16:48:50.532Z",
+      "updatedAt": "2018-07-17T09:49:46.703Z",
+      "__v": 9
+    }
+  ]
 }
