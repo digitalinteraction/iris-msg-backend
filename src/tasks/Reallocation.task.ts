@@ -10,6 +10,11 @@ export enum ReallocResult {
   Failed = 'failed'
 }
 
+export type Reallocation = {
+  type: ReallocResult
+  newUser?: string
+}
+
 export interface ReallocationContext {
   models: IModelSet
 }
@@ -70,7 +75,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
         if (attempt.state !== MessageAttemptState.Pending) return
         if (attempt.createdAt >= reallocationPoint) return
         
-        // Mark it as not response
+        // Mark it as no-response
         attempt.state = MessageAttemptState.NoResponse
         
         // Reallocate the message
@@ -79,9 +84,9 @@ export class ReallocationTask extends Task<ReallocationContext> {
         )
         
         // Handle each response
-        switch (result) {
+        switch (result.type) {
           case ReallocResult.Reallocated:
-            return fcmToSend.add(attempt.donor.toHexString())
+            return result.newUser && fcmToSend.add(result.newUser)
           case ReallocResult.Twilio:
             return smsToSend.push(attempt)
         }
@@ -99,7 +104,9 @@ export class ReallocationTask extends Task<ReallocationContext> {
   }
   
   /** Process an attempt to reallocate to a new donor */
-  processAttempt (attempt: IMessageAttempt, message: IMessage, organisation: IOrganisation): ReallocResult {
+  processAttempt (
+    attempt: IMessageAttempt, message: IMessage, organisation: IOrganisation
+  ): Reallocation {
     
     // Get the donors that have already been used
     let usedDonorsIds = message.attempts
@@ -124,7 +131,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
         prevAttempt: attempt.id
       })
       
-      return ReallocResult.Reallocated
+      return { type: ReallocResult.Reallocated, newUser: newDonor.user.toString() }
     } else if (process.env.TWILIO_FALLBACK) {
       
       // Add the twilio message
@@ -135,9 +142,9 @@ export class ReallocationTask extends Task<ReallocationContext> {
         prevAttempt: attempt.id
       })
       
-      return ReallocResult.Twilio
+      return { type: ReallocResult.Twilio }
     } else {
-      return ReallocResult.Failed
+      return { type: ReallocResult.Failed }
     }
   }
   

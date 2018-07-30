@@ -41,7 +41,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   // TODO: Verified check here!
   if (RequiredRoles.includes(member.role)) {
     let roleCount = org.members.reduce((sum, mem) => {
-      return sum + (mem.role === member.role ? 1 : 0)
+      let isSameRole = mem.role === member.role && mem.isActive
+      return sum + (isSameRole ? 1 : 0)
     }, 0)
     if (roleCount <= 1) throw makeError('badDestroy')
   }

@@ -89,8 +89,9 @@ describe('ReallocationTask', () => {
   
   it('should send the new donor an fcm', async () => {
     await task.run({ models })
-  
+    
     expect(sentFcm).toHaveLength(1)
+    expect(sentFcm[0].token).toEqual('abcdefg-123456-3')
   })
   it('should fallback to Twilio', async () => {
     msg.attempts[0].state = MessageAttemptState.Failed

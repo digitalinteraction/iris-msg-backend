@@ -99,11 +99,12 @@ describe('messages.attempts_update', () => {
     expect(second.state).toEqual(MessageAttemptState.Pending)
   })
   
-  it('should send the donor an fcm', async () => {
+  it('should send the new donor an fcm', async () => {
     await sendUpdate(
       seed.User.donorA, msg.attempts[0], MessageAttemptState.Rejected
     )
     expect(sentFcm).toHaveLength(1)
+    expect(sentFcm[0].token).toEqual('abcdefg-123456-3')
   })
   
   it('should fall back to twilio when no active donors', async () => {

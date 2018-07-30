@@ -76,7 +76,7 @@ describe('messages.create', () => {
     
     expect(sentFcm).toHaveLength(2)
     expect(sentFcm[0]).toMatchObject({
-      token: 'abcdefg-123456-abcdefg',
+      token: expect.any(String),
       data: { type: FcmType.NewDonations }
     })
     let [ fcm ] = sentFcm

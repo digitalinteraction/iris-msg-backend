@@ -67,7 +67,7 @@ describe('orgs.members.destroy', () => {
     expect(res.body.meta.codes).toContain('api.members.destroy.badDestroy')
   })
   
-  it('should fail if deleting the last donor', async () => {
+  it('should fail if deleting the verified last donor', async () => {
     let res = await agent.delete(`/${org.id}/${donor.id}`)
       .set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(400)

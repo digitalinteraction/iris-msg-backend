@@ -1,27 +1,27 @@
 User:
   current:
     phoneNumber: '+447880123001'
-    fcmToken: abcdefg-123456-abcdefg
+    fcmToken: abcdefg-123456-1
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorA:
     phoneNumber: '+447880123002'
-    fcmToken: abcdefg-123456-abcdefg
+    fcmToken: abcdefg-123456-2
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorB:
     phoneNumber: '+447880123003'
-    fcmToken: abcdefg-123456-abcdefg
+    fcmToken: abcdefg-123456-3
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorC:
     phoneNumber: '+447880123004'
-    fcmToken: abcdefg-123456-abcdefg
+    fcmToken: abcdefg-123456-4
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   donorD:
     phoneNumber: '+447880123005'
-    fcmToken: abcdefg-123456-abcdefg
+    fcmToken: abcdefg-123456-5
     verifiedOn: 2013-09-25T16:00:00.1Z
   
   subA:
