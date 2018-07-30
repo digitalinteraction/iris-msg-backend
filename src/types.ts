@@ -3,6 +3,7 @@ import { LocalI18n } from './i18n'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
+import winston = require('winston')
 
 export interface IBaseModel extends Document {
   createdAt: Date
@@ -28,8 +29,13 @@ export interface RouteContext {
   req: Request
   res: Response
   next: NextFunction,
-  authJwt?: AuthJwt
+  authJwt?: AuthJwt,
+  log: winston.Logger
 }
+
+export type ExpressMiddleware = (
+  req: Request, res: Response, next: NextFunction
+) => void
 
 export enum AuthCodeType {
   Verify = 'verify',

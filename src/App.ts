@@ -7,6 +7,7 @@ import { makeModels, IModelSet } from './models'
 import { I18n, i18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
+import * as winston from 'winston'
 
 const RequiredVariables = [
   'MONGO_URI',
@@ -33,22 +34,28 @@ export default class App {
   
   async run () {
     try {
-      this.setupLogger()
+      let logger = this.makeLogger()
+      logger.debug('Starting up')
       
       this.checkEnvironment()
+      logger.debug('Environment is ok')
       
       initializeFirebase()
+      logger.debug('Initialized Firebase')
       
       let i18n = await this.makeI18n()
       let models = makeModels(mongoose.connection)
-      let app = this.createExpressApp(models, i18n)
+      let app = this.createExpressApp(models, i18n, logger)
+      logger.debug('Created app')
       
       await new Promise(resolve => app.listen(3000, resolve))
-      console.log('Server started on :3000')
+      logger.info('Server started on 0.0.0.0:3000')
       
       await this.connectToMongo()
+      logger.debug('Connected to Mongo')
       
-      this.startTasks(models)
+      this.startTasks(models, logger)
+      logger.debug('Started tasks')
     } catch (error) {
       console.log('Failed to start')
       console.log(error)
@@ -60,25 +67,61 @@ export default class App {
     return i18n
   }
   
-  setupLogger () {
-    // ...
+  makeLogger (): winston.Logger {
     
-    // none | debug | info | warn | error
+    let logLevel = (process.env.LOG_LEVEL || 'error').toLowerCase()
     
-    // none > disable logs
+    let allowedLevels = [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
     
-    // debug > debug.log
-    // debug info
+    if (!allowedLevels.includes(logLevel)) {
+      console.log(`Invalid Log level '${logLevel}'`)
+      process.exit(1)
+    }
     
-    // info  > info.log
-    // access logs
+    let allLevels = winston.config.npm.levels
+    let current = winston.config.npm.levels[logLevel]
+    console.log(logLevel, current)
     
-    // warn  > warn.log
-    // error > error.log
+    let logsPath = join(__dirname, '../logs')
+    
+    return winston.createLogger({
+      level: logLevel,
+      format: winston.format.json(),
+      transports: [
+        new winston.transports.File({
+          filename: 'error.log',
+          dirname: logsPath,
+          level: 'error',
+          silent: current < allLevels.error
+        }),
+        new winston.transports.File({
+          filename: 'warn.log',
+          dirname: logsPath,
+          level: 'warn',
+          silent: current < allLevels.warn
+        }),
+        new winston.transports.File({
+          filename: 'info.log',
+          dirname: logsPath,
+          level: 'info',
+          silent: current < allLevels.info
+        }),
+        new winston.transports.File({
+          filename: 'debug.log',
+          dirname: logsPath,
+          level: 'debug',
+          silent: current < allLevels.debug
+        }),
+        new winston.transports.Console({
+          level: logLevel,
+          format: winston.format.simple()
+        })
+      ]
+    })
   }
   
-  startTasks (models: IModelSet) {
-    this.reallocTask.schedule({ models })
+  startTasks (models: IModelSet, log: winston.Logger) {
+    this.reallocTask.schedule({ models, log })
   }
   
   checkEnvironment () {
@@ -109,16 +152,18 @@ export default class App {
     if (!firebaseEnabled()) {
       console.log(`Firebase isn't configured`)
       console.log(`- Ensure 'FIREBASE_DB' is set`)
-      console.log(`- Ensure 'google-account.json' is mounted`)
+      console.log(`- Ensure 'google-account.json' is mounted and valid`)
       process.exit(1)
     }
   }
   
-  createExpressApp (models: IModelSet, i18n: I18n): express.Application {
+  createExpressApp (
+    models: IModelSet, i18n: I18n, log: winston.Logger
+  ): express.Application {
     let app = express()
-    applyMiddleware(app)
-    applyRoutes(app, models, i18n)
-    applyErrorHandler(app, i18n)
+    applyMiddleware(app, log)
+    applyRoutes(app, models, i18n, log)
+    applyErrorHandler(app, i18n, log)
     return app
   }
   

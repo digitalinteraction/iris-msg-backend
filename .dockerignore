@@ -9,3 +9,4 @@ coverage
 *.env
 google-account.json
 assetlinks.json
+logs/*.log

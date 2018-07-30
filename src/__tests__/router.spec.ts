@@ -1,5 +1,5 @@
 import { applyMiddleware, applyRoutes, applyErrorHandler } from '../router'
-import { openDb, closeDb, applySeed, jwtHeader } from '../../tools/testHarness'
+import * as tst from '../../tools/testHarness'
 import { IModelSet } from '../models'
 import { DebugI18n } from '../i18n'
 import { sign } from 'jsonwebtoken'
@@ -55,13 +55,14 @@ describe('Routing', () => {
   let replacements: Replacements
   
   beforeEach(async () => {
-    ({ db, models } = await openDb())
+    ({ db, models } = await tst.openDb())
     app = express()
-    seed = await applySeed('test/router', models)
+    seed = await tst.applySeed('test/router', models)
     let i18n = new DebugI18n()
-    applyMiddleware(app)
-    applyRoutes(app, models, i18n)
-    applyErrorHandler(app, i18n)
+    let log = tst.mockLog()
+    applyMiddleware(app, log)
+    applyRoutes(app, models, i18n, log)
+    applyErrorHandler(app, i18n, log)
     agent = supertest.agent(app)
     replacements = {
       org_id: seed.Organisation.a.id,
@@ -74,14 +75,14 @@ describe('Routing', () => {
   })
   
   afterEach(async () => {
-    await closeDb(db)
+    await tst.closeDb(db)
   })
   
   expectedRoutes.forEach(({ method = 'get', url, auth = false }) => {
     it(`${method.toUpperCase()}: ${url}`, async () => {
       let req = (agent as any)[method](processUrl(url, replacements))
       if (auth) {
-        req.set(jwtHeader(seed.User.verified.id))
+        req.set(tst.jwtHeader(seed.User.verified.id))
       }
       let res = await req
       expect(res.status).not.toBe(404)
@@ -95,14 +96,15 @@ describe('#applyErrorHandler', () => {
   let agent: supertest.SuperTest<supertest.Test>
   let failer: () => void
   let i18n = new DebugI18n()
+  let log = tst.mockLog()
   
   beforeEach(async () => {
     app = express()
-    applyMiddleware(app)
+    applyMiddleware(app, log)
     app.get('/', (req, res, next) => {
       next(failer())
     })
-    applyErrorHandler(app, i18n)
+    applyErrorHandler(app, i18n, log)
     agent = supertest.agent(app)
   })
   

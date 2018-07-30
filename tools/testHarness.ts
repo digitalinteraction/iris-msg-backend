@@ -2,9 +2,10 @@ import { createConnection, Connection } from 'mongoose'
 import supertest = require('supertest')
 import express = require('express')
 import expressJwt = require('express-jwt')
+import winston = require('winston')
 import { RouteContext, MemberRole } from '@/src/types'
 import { IModelSet, makeModels, IOrganisation, IUser, IMember } from '../src/models'
-import { DebugI18n } from '../src/i18n'
+import { DebugI18n, LocalI18n } from '../src/i18n'
 import { applyMiddleware, applyErrorHandler } from '@/src/router'
 import { sign } from 'jsonwebtoken'
 
@@ -26,7 +27,8 @@ export interface MockRouteOptions {
 
 export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions = {}): Agent {
   let app = express()
-  applyMiddleware(app)
+  let log = mockLog()
+  applyMiddleware(app, log)
 
   if (options.jwt !== undefined) {
     app.use(expressJwt({
@@ -35,7 +37,7 @@ export function mockExpressRoute (route: ExpressRoute, options: MockRouteOptions
     }))
   }
   app.use(options.path || '', route)
-  applyErrorHandler(app, new DebugI18n())
+  applyErrorHandler(app, new DebugI18n(), log)
   return supertest.agent(app)
 }
 
@@ -45,10 +47,11 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
       let api = (req as any).api
       let authJwt = req.user
       let i18n = mockI18n()
+      let log = mockLog()
       api.setLocaliser(i18n)
       
       await route({
-        req, res, next, models, i18n, api, authJwt
+        req, res, next, models, i18n, api, authJwt, log
       })
     } catch (err) {
       next(err)
@@ -56,8 +59,12 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   }, options)
 }
 
-export function mockI18n () {
+export function mockI18n (): LocalI18n {
   return new DebugI18n().makeInstance('en')
+}
+
+export function mockLog (): winston.Logger {
+  return winston.createLogger({ silent: true })
 }
 
 export async function openDb (): Promise<TestDatabase> {

@@ -2,6 +2,7 @@ import express = require('express')
 import bodyParser = require('body-parser')
 import expressJwt = require('express-jwt')
 import langParser = require('accept-language-parser')
+import winston = require('winston')
 import cors = require('cors')
 import { RouteContext } from './types'
 import { Api } from 'api-formatter'
@@ -25,7 +26,7 @@ export function getLocale (req: express.Request): string {
 }
 
 export function makeRoute (
-  route: CustomRoute, models: IModelSet, localiser: I18n
+  route: CustomRoute, models: IModelSet, localiser: I18n, log: winston.Logger
 ): ExpressRoute {
   return async (req, res, next) => {
     try {
@@ -33,24 +34,26 @@ export function makeRoute (
       let authJwt = (req as any).user
       let i18n = localiser.makeInstance(getLocale(req))
       api.setLocaliser(i18n)
-      await route({ models, i18n, req, res, next, api, authJwt })
+      await route({ models, i18n, req, res, next, api, authJwt, log })
     } catch (error) {
       next(error)
     }
   }
 }
 
-export function applyMiddleware (app: express.Application) {
+export function applyMiddleware (
+  app: express.Application, log: winston.Logger
+) {
   app.use(bodyParser.json())
   app.use(middleware.api())
+  app.use(middleware.log(log))
 }
 
 export function applyRoutes (
-  app: express.Application, models: IModelSet, i18n: I18n
+  app: express.Application, models: IModelSet, i18n: I18n, log: winston.Logger
 ) {
   
-  const r = (route: CustomRoute) =>
-    makeRoute(route, models, i18n)
+  const r = (route: CustomRoute) => makeRoute(route, models, i18n, log)
   
   // Reusable middleware
   let requiredJwt = middleware.jwt()
@@ -104,7 +107,9 @@ export function applyRoutes (
   }))
 }
 
-export function applyErrorHandler (app: express.Application, localiser: I18n) {
+export function applyErrorHandler (
+  app: express.Application, localiser: I18n, log: winston.Logger
+) {
   
   app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     
@@ -112,19 +117,26 @@ export function applyErrorHandler (app: express.Application, localiser: I18n) {
     api.setLocaliser(localiser.makeInstance(getLocale(req)))
     
     if (error instanceof Set) {
-      return api.sendFail(Array.from(error))
+      let errors = Array.from(error)
+      log.error(`Caught errors: ${errors.join()}`)
+      return api.sendFail(errors)
     }
-    if (Array.isArray(error) || typeof error === 'string') {
+    if (Array.isArray(error)) {
+      log.error(`Caught errors: ${error.join()}`)
+      return api.sendFail(error)
+    }
+    if (typeof error === 'string') {
+      log.error(`Caught error: ${error}`, error)
       return api.sendFail(error)
     }
     if (error instanceof expressJwt.UnauthorizedError) {
+      log.error(`Caught jwt.UnauthorizedError error`)
       return api.sendFail(`jwt.${error.code}`, 401)
     }
     if (error instanceof Error && api) {
+      log.error(`Caught an error '${error.message}'`)
       return api.sendFail(error.message, 400)
     }
-    
-    // winston.error(error) ?
     
     return api.sendFail('api.general.unknown')
   })

@@ -3,6 +3,7 @@ import { IMessageAttempt, IMessage, IOrganisation, IModelSet } from 'src/models'
 import { shuffleArray } from '@/src/utils'
 import { MessageAttemptState, FcmType } from '@/src/types'
 import { sendTwilioMessage, makeFirebaseMessenger } from '@/src/services'
+import winston = require('winston')
 
 export enum ReallocResult {
   Twilio = 'twilio',
@@ -17,6 +18,7 @@ export type Reallocation = {
 
 export interface ReallocationContext {
   models: IModelSet
+  log: winston.Logger
 }
 
 export const RetryStates = [
