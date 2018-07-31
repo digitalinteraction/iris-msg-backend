@@ -1,4 +1,4 @@
-import { ReallocationTask } from '../Reallocation.task'
+import { ReallocationTask, ReallocationContext } from '../Reallocation.task'
 
 import * as tst from '@/tools/testHarness'
 import { IModelSet, IOrganisation, IMessage } from '@/src/models'
@@ -19,6 +19,7 @@ let msg: IMessage
 
 let sentFcm: any[]
 let sentSms: any[]
+let ctx: ReallocationContext
 
 beforeEach(async () => {
   ({ db, models } = await tst.openDb())
@@ -59,6 +60,9 @@ beforeEach(async () => {
   })
   
   task = new ReallocationTask()
+  
+  let log = tst.mockLog()
+  ctx = { models, log }
 })
 
 afterEach(async () => {
@@ -67,7 +71,7 @@ afterEach(async () => {
 
 describe('ReallocationTask', () => {
   it('should mark the previos attempt as NoResponse', async () => {
-    await task.run({ models })
+    await task.run(ctx)
   
     let updatedMessage = await models.Message.findById(msg.id)
     let prevAttempt = updatedMessage!.attempts[0]
@@ -77,7 +81,7 @@ describe('ReallocationTask', () => {
   
   it('should reallocate the task to another donor', async () => {
     
-    await task.run({ models })
+    await task.run(ctx)
   
     let updatedMessage = await models.Message.findById(msg.id)
     let nextAttempt = updatedMessage!.attempts[1]
@@ -88,7 +92,7 @@ describe('ReallocationTask', () => {
   })
   
   it('should send the new donor an fcm', async () => {
-    await task.run({ models })
+    await task.run(ctx)
     
     expect(sentFcm).toHaveLength(1)
     expect(sentFcm[0].token).toEqual('abcdefg-123456-3')
@@ -104,7 +108,7 @@ describe('ReallocationTask', () => {
     
     await msg.save()
     
-    await task.run({ models })
+    await task.run(ctx)
     
     expect(sentSms).toHaveLength(1)
   })

@@ -47,7 +47,9 @@ export const RellocationInterval = parseNumberOrDefault(
 export class ReallocationTask extends Task<ReallocationContext> {
   interval = RellocationInterval
   
-  async run ({ models }: ReallocationContext) {
+  async run ({ models, log }: ReallocationContext) {
+    
+    log.debug(`[ReallocationTask] started ${new Date().toISOString()}`)
     
     let reallocationPoint = new Date()
     reallocationPoint.setMinutes(
@@ -64,8 +66,11 @@ export class ReallocationTask extends Task<ReallocationContext> {
       }
     }).populate('organisation')
     
+    log.debug(`[ReallocationTask] ${messages.length} messages to resend`)
+    
     let smsToSend = new Array<IMessageAttempt>()
     let fcmToSend = new Set<string>()
+    let reallocationCount = 0
     
     // Attempt to reallocate unsent attempts
     messages.forEach(message => {
@@ -79,6 +84,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
         
         // Mark it as no-response
         attempt.state = MessageAttemptState.NoResponse
+        reallocationCount++
         
         // Reallocate the message
         let result = this.processAttempt(
@@ -103,6 +109,13 @@ export class ReallocationTask extends Task<ReallocationContext> {
     
     // Save the messages
     await Promise.all(messages.map(m => m.save()))
+    
+    // Log the result
+    log.debug(`[ReallocationTask] Finished`, {
+      resent: reallocationCount,
+      sms: smsToSend.length,
+      fcm: fcmToSend.size
+    })
   }
   
   /** Process an attempt to reallocate to a new donor */

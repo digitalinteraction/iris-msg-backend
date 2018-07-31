@@ -46,7 +46,9 @@ export function applyMiddleware (
 ) {
   app.use(bodyParser.json())
   app.use(middleware.api())
-  app.use(middleware.log(log))
+  app.use(middleware.log(log, [
+    /\/docs/
+  ]))
 }
 
 export function applyRoutes (
