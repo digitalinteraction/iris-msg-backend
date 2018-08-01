@@ -25,6 +25,9 @@ api:
       notFound: Couldn't find that org or no permission to view it
     destroy:
       notFound: Organisation not found or user doesn't have access to destroy
+    members:
+      badRole: Invalid role filter passed
+      notFound: Couldn't find that org or no permission to view it
   
   members:
     accept:

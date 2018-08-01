@@ -13,7 +13,7 @@ function makeError (name: string) {
  * - name
  * - info
  */
-export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   const { name, info } = req.body
   
   // Check the user is verified
