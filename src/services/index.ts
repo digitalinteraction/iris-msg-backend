@@ -6,7 +6,8 @@ export {
 export {
   makeFirebaseMessenger,
   initializeFirebase,
-  firebaseEnabled
+  firebaseEnabled,
+  sendNewDonationFcm
 } from './firebase.service'
 
 export {

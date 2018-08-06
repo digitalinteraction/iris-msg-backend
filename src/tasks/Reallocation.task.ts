@@ -2,8 +2,9 @@ import { Task } from './Task'
 import { IMessageAttempt, IMessage, IOrganisation, IModelSet } from 'src/models'
 import { shuffleArray } from '@/src/utils'
 import { MessageAttemptState, FcmType } from '@/src/types'
-import { sendTwilioMessage, makeFirebaseMessenger } from '@/src/services'
+import { sendTwilioMessage, makeFirebaseMessenger, sendNewDonationFcm } from '@/src/services'
 import winston = require('winston')
+import { LocalI18n } from '@/src/i18n'
 
 export enum ReallocResult {
   Twilio = 'twilio',
@@ -18,6 +19,7 @@ export type Reallocation = {
 
 export interface ReallocationContext {
   models: IModelSet
+  i18n: LocalI18n
   log: winston.Logger
 }
 
@@ -47,7 +49,7 @@ export const RellocationInterval = parseNumberOrDefault(
 export class ReallocationTask extends Task<ReallocationContext> {
   interval = RellocationInterval
   
-  async run ({ models, log }: ReallocationContext) {
+  async run ({ models, i18n, log }: ReallocationContext) {
     
     log.debug(`[ReallocationTask] started ${new Date().toISOString()}`)
     
@@ -102,7 +104,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
     })
     
     // Send fcm tokens
-    await this.sendFcms(Array.from(fcmToSend), models)
+    await this.sendFcms(Array.from(fcmToSend), models, i18n, log)
     
     // Send fallback sms
     await this.sendTwilios(smsToSend, models)
@@ -164,23 +166,13 @@ export class ReallocationTask extends Task<ReallocationContext> {
   }
   
   /** Send fcms to donors to let them know they have donations */
-  async sendFcms (userIds: string[], models: IModelSet) {
-    let firebase = makeFirebaseMessenger()
+  async sendFcms (userIds: string[], models: IModelSet, i18n: LocalI18n, log: winston.Logger) {
+    let messenger = makeFirebaseMessenger()
     let donors = await models.User.find({ _id: userIds })
     
-    await Promise.all(donors.map(user => {
-      if (!user.fcmToken) return Promise.resolve({})
-      return firebase.send({
-        notification: {
-          title: 'New donations',
-          body: 'You have new pending donations'
-        },
-        data: {
-          type: FcmType.NewDonations
-        },
-        token: user.fcmToken!
-      })
-    }))
+    await Promise.all(donors.map(
+      user => sendNewDonationFcm(messenger, user, i18n, log)
+    ))
   }
   
   /** Send twilio fallback sms */

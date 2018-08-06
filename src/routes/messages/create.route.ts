@@ -2,7 +2,7 @@ import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/ty
 import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
 import { roundRobin, isMongoId } from '@/src/utils'
 import { MongooseDocument } from 'mongoose'
-import { makeFirebaseMessenger, firebaseEnabled } from '@/src/services'
+import { makeFirebaseMessenger, firebaseEnabled, sendNewDonationFcm } from '@/src/services'
 
 function makeError (name: string) {
   return `api.messages.create.${name}`
@@ -12,7 +12,7 @@ function makeError (name: string) {
  * - orgId
  * - content
  */
-export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
+export default async ({ req, api, models, i18n, authJwt, log }: RouteContext) => {
   // Check the request body
   let { orgId, content } = req.body
   let errors = new Set<string>()
@@ -81,28 +81,9 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   
   // Send out fcm's to each donor
   let messenger = makeFirebaseMessenger()
-  await Promise.all(donorList.map(donor => {
-    return messenger.send({
-      notification: {
-        title: i18n.translate('fcm.new_donations.title'),
-        body: i18n.translate('fcm.new_donations.body')
-      },
-      data: {
-        type: FcmType.NewDonations
-      },
-      android: {
-        priority: 'high',
-        ttl: 30 * 60 * 1000,
-        notification: {
-          icon: 'ic_notifications_black_24dp',
-          color: '#1289b2',
-          tag: 'new_donations',
-          clickAction: 'fcm.action.DONATE'
-        }
-      },
-      token: donor.user.fcmToken!
-    })
-  }))
+  await Promise.all(donorList.map(
+    donor => sendNewDonationFcm(messenger, donor.user, i18n, log)
+  ))
   
   api.sendData(message)
 }

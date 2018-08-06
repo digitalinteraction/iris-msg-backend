@@ -39,7 +39,7 @@ const AllowedStates = [
   MessageAttemptState.RadioOff
 ]
 
-export default async ({ req, api, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt, i18n, log }: RouteContext) => {
   
   let { updates: rawUpdates } = req.body
   
@@ -109,7 +109,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   })
   
   // Send fcms
-  await reallocator.sendFcms(Array.from(fcmToSend), models)
+  await reallocator.sendFcms(Array.from(fcmToSend), models, i18n, log)
   
   // Send twilios
   await reallocator.sendTwilios(smsToSend, models)

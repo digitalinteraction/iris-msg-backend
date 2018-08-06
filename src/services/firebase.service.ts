@@ -1,4 +1,8 @@
 import * as firebase from 'firebase-admin'
+import { LocalI18n } from '@/src/i18n'
+import { IUser } from '@/src/models'
+import { FcmType } from '@/src/types'
+import winston = require('winston')
 
 export let firebaseApp: firebase.app.App | undefined = undefined
 
@@ -32,4 +36,41 @@ export function getGoogleConfig (): firebase.AppOptions | null {
 
 export function makeFirebaseMessenger (): firebase.messaging.Messaging {
   return firebase.messaging(firebaseApp)
+}
+
+export async function sendNewDonationFcm (
+  messenger: firebase.messaging.Messaging,
+  user: IUser,
+  i18n: LocalI18n,
+  log: winston.Logger
+): Promise<string | null> {
+  
+  return messenger.send({
+    notification: {
+      title: i18n.translate('fcm.new_donations.title'),
+      body: i18n.translate('fcm.new_donations.body')
+    },
+    data: {
+      type: FcmType.NewDonations
+    },
+    android: {
+      priority: 'high',
+      ttl: 30 * 60 * 1000,
+      notification: {
+        icon: 'ic_notifications_black_24dp',
+        color: '#1289b2',
+        tag: 'new_donations',
+        clickAction: 'fcm.action.DONATE'
+      }
+    },
+    token: user.fcmToken!
+  }).catch(err => {
+    log.error('[FirebaseService] failed to send fcm', {
+      msg: err.message,
+      user: user.id,
+      fcmToken: user.fcmToken
+    })
+    return null
+  })
+  
 }

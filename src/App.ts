@@ -4,7 +4,7 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
 import { makeModels, IModelSet } from './models'
-import { I18n, i18n } from './i18n'
+import { I18n, i18n, LocalI18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
 import * as winston from 'winston'
@@ -54,7 +54,7 @@ export default class App {
       await this.connectToMongo()
       logger.debug('Connected to Mongo')
       
-      this.startTasks(models, logger)
+      this.startTasks(models, i18n.makeInstance('en'), logger)
       logger.debug('Started tasks')
     } catch (error) {
       console.log('Failed to start')
@@ -119,8 +119,8 @@ export default class App {
     })
   }
   
-  startTasks (models: IModelSet, log: winston.Logger) {
-    this.reallocTask.schedule({ models, log })
+  startTasks (models: IModelSet, i18n: LocalI18n, log: winston.Logger) {
+    this.reallocTask.schedule({ models, i18n, log })
   }
   
   checkEnvironment () {

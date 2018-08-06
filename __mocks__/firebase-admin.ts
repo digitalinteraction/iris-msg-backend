@@ -8,7 +8,7 @@ export = {
   },
   messaging () {
     return {
-      send (msg: any) { sentMessages.push(msg) }
+      async send (msg: any) { sentMessages.push(msg) }
     }
   }
 }

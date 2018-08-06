@@ -62,7 +62,8 @@ beforeEach(async () => {
   task = new ReallocationTask()
   
   let log = tst.mockLog()
-  ctx = { models, log }
+  let i18n = tst.mockI18n()
+  ctx = { models, log, i18n }
 })
 
 afterEach(async () => {
