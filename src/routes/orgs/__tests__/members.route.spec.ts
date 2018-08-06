@@ -47,6 +47,7 @@ describe('orgs.members', () => {
     
     res.body.data.forEach((member: any) => {
       expect(member).toMatchObject({
+        userId: expect.any(String),
         phoneNumber: expect.any(String),
         locale: expect.any(String)
       })

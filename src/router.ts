@@ -87,6 +87,7 @@ export function applyRoutes (
   // Org Management
   app.get('/organisations', requiredJwt, r(routes.orgs.index))
   app.get('/organisations/:org_id', requiredJwt, r(routes.orgs.show))
+  app.get('/organisations/:org_id/members', requiredJwt, r(routes.orgs.members))
   app.post('/organisations', requiredJwt, r(routes.orgs.create))
   app.delete('/organisations/:org_id', requiredJwt, r(routes.orgs.destroy))
   

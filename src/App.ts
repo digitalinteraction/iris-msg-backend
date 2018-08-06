@@ -80,7 +80,6 @@ export default class App {
     
     let allLevels = winston.config.npm.levels
     let current = winston.config.npm.levels[logLevel]
-    console.log(logLevel, current)
     
     let logsPath = join(__dirname, '../logs')
     

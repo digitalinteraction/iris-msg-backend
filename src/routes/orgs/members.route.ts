@@ -46,6 +46,7 @@ export default async ({ req, api, next, models, authJwt }: RouteContext) => {
     createdAt: m.createdAt,
     updatedAt: m.updatedAt,
     role: m.role,
+    userId: m.user.id,
     phoneNumber: m.user.phoneNumber,
     locale: m.user.locale
   })))

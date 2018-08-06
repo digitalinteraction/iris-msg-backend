@@ -22,6 +22,7 @@ const expectedRoutes = [
   
   { method: 'get', url: '/organisations' },
   { method: 'get', url: '/organisations/:org_id', auth: true },
+  { method: 'get', url: '/organisations/:org_id/members' },
   { method: 'post', url: '/organisations' },
   { method: 'del', url: '/organisations/:org_id' },
   

@@ -38,6 +38,11 @@ orgs:
     params:
       org_id: string - The id of the organisation ti fetch
   
+  - get: /:org_id/members members
+    info: Fetches the members of an organisation with their phone numbers
+    params:
+      org_id: string - The id of the organisation ti fetch
+  
   - post: / create
     info: Creates a new organisation with the current user as a coordinator
     body:
