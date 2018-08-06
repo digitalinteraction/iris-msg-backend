@@ -6,7 +6,9 @@ describe('#makeModels', () => {
   let connection: Connection
   let models: IModelSet
   beforeAll(async () => {
-    connection = createConnection(process.env.MONGO_URI!)
+    connection = createConnection(process.env.MONGO_URI!, {
+      useNewUrlParser: true
+    })
     models = makeModels(connection)
   })
   afterAll(async () => {
