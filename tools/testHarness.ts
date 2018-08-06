@@ -68,7 +68,9 @@ export function mockLog (): winston.Logger {
 }
 
 export async function openDb (): Promise<TestDatabase> {
-  let connection = createConnection(process.env.MONGO_URI!)
+  let connection = createConnection(process.env.MONGO_URI!, {
+    useNewUrlParser: true
+  })
   let models = makeModels(connection)
   await new Promise(resolve => connection.on('connected', resolve))
   return { db: connection, models }
