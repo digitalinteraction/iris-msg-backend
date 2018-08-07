@@ -45,6 +45,8 @@ export async function sendNewDonationFcm (
   log: winston.Logger
 ): Promise<string | null> {
   
+  log.debug(`[Firebase] sending '${FcmType.NewDonations}' fcm to ${user.id}`)
+  
   return messenger.send({
     notification: {
       title: i18n.translate('fcm.new_donations.title'),

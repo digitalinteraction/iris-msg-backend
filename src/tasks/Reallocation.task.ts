@@ -51,8 +51,6 @@ export class ReallocationTask extends Task<ReallocationContext> {
   
   async run ({ models, i18n, log }: ReallocationContext) {
     
-    log.debug(`[ReallocationTask] started ${new Date().toISOString()}`)
-    
     let reallocationPoint = new Date()
     reallocationPoint.setMinutes(
       reallocationPoint.getMinutes() - (MaxDonationAge / 1000 / 60)
@@ -68,7 +66,11 @@ export class ReallocationTask extends Task<ReallocationContext> {
       }
     }).populate('organisation')
     
-    log.debug(`[ReallocationTask] ${messages.length} messages to resend`)
+    if (messages.length === 0) return
+    
+    log.debug(`[Reallocation] resending ${messages.length} messages`, {
+      start: (new Date()).toISOString()
+    })
     
     let smsToSend = new Array<IMessageAttempt>()
     let fcmToSend = new Set<string>()
@@ -107,13 +109,13 @@ export class ReallocationTask extends Task<ReallocationContext> {
     await this.sendFcms(Array.from(fcmToSend), models, i18n, log)
     
     // Send fallback sms
-    await this.sendTwilios(smsToSend, models)
+    await this.sendTwilios(smsToSend, models, log)
     
     // Save the messages
     await Promise.all(messages.map(m => m.save()))
     
     // Log the result
-    log.debug(`[ReallocationTask] Finished`, {
+    log.debug(`[Reallocation] Finished`, {
       resent: reallocationCount,
       sms: smsToSend.length,
       fcm: fcmToSend.size
@@ -176,12 +178,14 @@ export class ReallocationTask extends Task<ReallocationContext> {
   }
   
   /** Send twilio fallback sms */
-  async sendTwilios (attempts: IMessageAttempt[], models: IModelSet) {
+  async sendTwilios (attempts: IMessageAttempt[], models: IModelSet, log: winston.Logger) {
     return Promise.all(attempts.map(async attempt => {
       let message: IMessage = attempt.ownerDocument() as any
       
       let recipient = await models.User.findById(attempt.recipient)
       if (!recipient) return Promise.resolve()
+      
+      log.debug(`[Twilio] Sending sms to ${recipient.id}`)
       
       return sendTwilioMessage(recipient.phoneNumber, message.content)
     }))

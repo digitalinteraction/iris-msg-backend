@@ -112,7 +112,7 @@ export default async ({ req, api, models, authJwt, i18n, log }: RouteContext) =>
   await reallocator.sendFcms(Array.from(fcmToSend), models, i18n, log)
   
   // Send twilios
-  await reallocator.sendTwilios(smsToSend, models)
+  await reallocator.sendTwilios(smsToSend, models, log)
   
   // Save the messages
   await Promise.all(messages.map(m => m.save()))

@@ -57,6 +57,7 @@ describe('messages.create', () => {
     let res = await agent.post('/')
       .set(tst.jwtHeader(seed.User.current.id))
       .send({ content: 'Hey', orgId: org.id })
+    
     expect(res.status).toBe(200)
   })
   it('should create a message record', async () => {
@@ -82,5 +83,23 @@ describe('messages.create', () => {
     let [ fcm ] = sentFcm
     expect(fcm.notification.title).toContain('en:fcm.new_donations.title')
     expect(fcm.notification.body).toContain('en:fcm.new_donations.body')
+  })
+  it('should only send fcm to donors which have been used', async () => {
+    org = seed.Organisation.b
+    
+    tst.addMember(org, seed.User.current, MemberRole.Coordinator)
+    
+    tst.addMember(org, seed.User.donorA, MemberRole.Donor)
+    tst.addMember(org, seed.User.donorB, MemberRole.Donor)
+    
+    tst.addMember(org, seed.User.subA, MemberRole.Subscriber)
+    
+    await org.save()
+    
+    let res = await agent.post('/')
+      .set(tst.jwtHeader(seed.User.current))
+      .send({ content: 'Hey', orgId: org.id })
+    
+    expect(sentFcm).toHaveLength(1)
   })
 })

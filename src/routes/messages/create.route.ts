@@ -56,8 +56,8 @@ export default async ({ req, api, models, i18n, authJwt, log }: RouteContext) =>
   
   // Allocate each subscriber a donor to send the message
   let allocation = roundRobin(
-    subscriberList.map(d => (d.user as any).id),
-    donorList.map(d => (d.user as any).id)
+    subscriberList.map(d => d.user.id),
+    donorList.map(d => d.user.id)
   )
   
   // Create the message
@@ -81,7 +81,15 @@ export default async ({ req, api, models, i18n, authJwt, log }: RouteContext) =>
   
   // Send out fcm's to each donor
   let messenger = makeFirebaseMessenger()
-  await Promise.all(donorList.map(
+  
+  // Filter out the donors which have sms to send
+  let usedDonors = Object.values(allocation)
+  let activeDonors = donorList.filter(
+    donor => usedDonors.includes(donor.user.id)
+  )
+  
+  // Send firebase messages to those donors
+  await Promise.all(activeDonors.map(
     donor => sendNewDonationFcm(messenger, donor.user, i18n, log)
   ))
   
