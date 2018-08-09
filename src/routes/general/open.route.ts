@@ -55,7 +55,7 @@ const downloadAppTemplate = (title: string, appLink: string) => `
           the app
         </li>
         <li>
-          <button class="button is-success is-vertical" onclick="window.location.reload()"> Reload </button>
+          <button class="button is-success is-vertical" onclick="window.open(location.href)"> Reload </button>
           to trigger the link again
         </li>
       </ol>

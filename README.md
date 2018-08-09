@@ -30,7 +30,7 @@
 ```bash
 
 # Run a mongo (in one terminal window)
-npm run mongo:once
+npm run mongo
 
 # Run the docker image once (in a different window)
 docker run -it --rm \
