@@ -47,7 +47,8 @@ export function applyMiddleware (
   app.use(bodyParser.json())
   app.use(middleware.api())
   app.use(middleware.log(log, [
-    /\/docs/
+    /^\/docs/,
+    /^\/health/
   ]))
 }
 
