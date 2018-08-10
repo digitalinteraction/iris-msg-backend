@@ -85,10 +85,7 @@ export default class App {
     
     return winston.createLogger({
       level: logLevel,
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.json()
-      ),
+      format: winston.format.json(),
       transports: [
         new winston.transports.File({
           filename: 'error.log',
@@ -116,7 +113,10 @@ export default class App {
         }),
         new winston.transports.Console({
           level: logLevel,
-          format: winston.format.simple()
+          format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+          )
         })
       ]
     })
