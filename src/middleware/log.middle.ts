@@ -18,10 +18,8 @@ export default function (
     if (!skipLog) {
       let now = new Date().toISOString()
       log.debug(`${req.method.toUpperCase()}: ${req.path}`, {
-        hostname: req.hostname,
-        path: req.path,
-        query: req.query,
-        date: now
+        date: now,
+        query: req.query
       })
     }
     
