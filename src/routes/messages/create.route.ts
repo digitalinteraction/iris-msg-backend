@@ -22,7 +22,6 @@ export default async ({ req, api, models, i18n, authJwt, log }: RouteContext) =>
   if (!orgId || !isMongoId(orgId)) {
     errors.add(makeError('badOrg'))
   }
-  if (!firebaseEnabled()) errors.add('badFirebase')
   if (errors.size > 0) throw errors
   
   // Check the user is valid

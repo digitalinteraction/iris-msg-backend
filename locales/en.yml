@@ -3,54 +3,53 @@
 api:
   general:
     unknown: Something went wrong
-    badAuth: User is not logged in or unverified
+    badAuth: You are not logged in or haven't verified your number yet
   health:
     noDb: Not connected to the database
   
   auth:
     login_request:
-      badNumber: No phoneNumber provided or it was invalid
-      badCountry: No locale provided or it was invalid
+      badNumber: Invalid phone number provided
+      badCountry: Invalid country code provided
     login_check:
-      badCode: No code was provided
+      badCode: That code was invalid
     me:
     update_fcm:
   
   orgs:
     create:
-      badName: No name provided or more than 40 characters
-      badInfo: No info provided or it was invalid
+      badName: Please provide a name which is less than 40 letters
+      badInfo: Please provide information about your organisation
     index:
     show:
-      notFound: Couldn't find that org or no permission to view it
+      notFound: Couldn't find that organisation or you do no have permission to view it
     destroy:
-      notFound: Organisation not found or user doesn't have access to destroy
+      notFound: Couldn't find that organisation or you do no have permission to delete it
     members:
-      badRole: Invalid role filter passed
-      notFound: Couldn't find that org or no permission to view it
+      badRole: Please provide a valid role
+      notFound: Couldn't find that organisation or you do no have permission to view it
   
   members:
     accept:
-      notFound: Organisation was not found or user cannot access it
+      notFound: Couldn't find that organisation or you do no have permission to view it
     create:
-      badNumber: No phoneNumber provided or it was invalid
-      badCountry: No locale provided or it was invalid
-      badRole: No role provided or it was invalid
-      notFound: Organisation was not found or user cannot access it
+      badNumber: That phone number is invalid
+      badCountry: That country code is invalid
+      badRole: That role is invalid
+      notFound: Couldn't find that organisation or you do no have permission to view it
       alreadyMember: That user is already a member in that role
     showInvite:
-      notFound: Invalid jwt or the Organisation / Member do not exist any more
+      notFound: Couldn't find that invite
     destroy:
-      notFound: An Organisation was not found that the current user is a coordinator of and the target member exists exists on it
-      badDestroy: Cannot remove the last coordinator / subscriber for an organisation
+      notFound: Couldn't find that member or you do no have permission to delete it
+      badDestroy: Cannot remove the last coordinator / donor for an organisation
     unsubscribe:
-      notFound: An Organisation was not found where that member exists on it
+      notFound: An organisation was not found where that member exists on it
   
   messages:
     create:
       badContent: No content provided
-      badOrg: Organisation was not found or user cannot access it
-      badFirebase: Firebase isn't available
+      badOrg: Couldn't find that organisation or you do no have permission to view it
     attempts_index:
     attempts_update:
 
@@ -70,4 +69,4 @@ jwt:
 fcm:
   new_donations:
     title: New Donations
-    body: Your organisations need your help, donate some sms!
+    body: Your organisations need your help, new messages need donations
