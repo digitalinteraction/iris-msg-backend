@@ -1,6 +1,6 @@
 {
   "name": "iris-api",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Project setup by robb-j/ts-node-base",
   "main": "index.js",
   "types": "src/index.d.ts",
