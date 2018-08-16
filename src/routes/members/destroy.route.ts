@@ -1,5 +1,6 @@
 import { RouteContext, MemberRole } from '@/src/types'
 import { isMongoId } from '@/src/utils'
+import { IOrganisation, IMember } from '../../models'
 
 function makeError (name: string) {
   return `api.members.destroy.${name}`
@@ -10,6 +11,12 @@ const RequiredRoles = [
   MemberRole.Donor
 ]
 
+// A member can be deleted if it belongs to the user or they are a coordinator
+function canDestroy (org: IOrganisation, member: IMember, userId: string) {
+  return member.user.toHexString() === userId ||
+    org.isMember(userId, MemberRole.Coordinator)
+}
+
 /* auth:
  * - jwt
  *
@@ -19,23 +26,20 @@ const RequiredRoles = [
  */
 export default async ({ req, api, models, authJwt }: RouteContext) => {
   
-  if (!isMongoId(req.params.org_id) || !isMongoId(req.params.org_id)) {
+  if (!isMongoId(req.params.org_id) || !isMongoId(req.params.mem_id)) {
     throw makeError('notFound')
   }
   
-  // Find the current user
-  let user = await models.User.findWithJwt(authJwt)
-  if (!user) throw makeError('api.general.badAuth')
-  
   // Find the organisation
-  let org = await models.Organisation.findByIdForCoordinator(
-    req.params.org_id, user.id
-  )
+  let org = await models.Organisation.findById(req.params.org_id)
   if (!org) throw makeError('notFound')
   
   // Find the membership
   let member = org.members.id(req.params.mem_id)
   if (!member) throw makeError('notFound')
+  
+  // Fail if not their own record or they aren't a coordinator
+  if (!canDestroy(org, member, authJwt!!.usr)) throw makeError('notFound')
   
   // Check for the last of role for non-subscribers
   // TODO: Verified check here!

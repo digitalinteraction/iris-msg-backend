@@ -73,4 +73,10 @@ describe('orgs.members.destroy', () => {
     expect(res.status).toBe(400)
     expect(res.body.meta.codes).toContain('api.members.destroy.badDestroy')
   })
+  
+  it('should delete a users own membership', async () => {
+    let res = await agent.delete(`/${org.id}/${subscriber.id}`)
+      .set(tst.jwtHeader(seed.User.verified.id))
+    expect(res.status).toBe(200)
+  })
 })

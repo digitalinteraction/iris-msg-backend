@@ -15,6 +15,7 @@ export interface IOrganisation extends IBaseModel {
   
   activeSubscribers: IMember[]
   activeDonors: IMember[]
+  isMember (userId: any, role: MemberRole): boolean
   toJSONWithActiveMembers (): any
 }
 
@@ -127,4 +128,12 @@ OrganisationSchema.methods.toJSONWithActiveMembers = function (this: IOrganisati
     ...this.toJSON(),
     members: this.members.filter(member => member.isActive)
   }
+}
+
+OrganisationSchema.methods.isMember = function (
+  this: IOrganisation, userId: any, role: MemberRole
+): boolean {
+  return this.members.some(
+    member => member.isActive && member.user.toHexString() === userId && member.role === role
+  )
 }
