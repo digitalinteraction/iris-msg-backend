@@ -147,7 +147,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
         state: MessageAttemptState.Pending,
         recipient: attempt.recipient,
         donor: newDonor.user,
-        prevAttempt: attempt.id
+        previousAttempt: attempt.id
       })
       
       return { type: ReallocResult.Reallocated, newUser: newDonor.user.toString() }
@@ -158,7 +158,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
         state: MessageAttemptState.Twilio,
         recipient: attempt.recipient,
         donor: null,
-        prevAttempt: attempt.id
+        previousAttempt: attempt.id
       })
       
       return { type: ReallocResult.Twilio }

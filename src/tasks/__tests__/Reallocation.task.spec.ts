@@ -83,13 +83,16 @@ describe('ReallocationTask', () => {
   it('should reallocate the task to another donor', async () => {
     
     await task.run(ctx)
-  
+    
     let updatedMessage = await models.Message.findById(msg.id)
     let nextAttempt = updatedMessage!.attempts[1]
-  
+    
     expect(updatedMessage!.attempts).toHaveLength(2)
     expect(nextAttempt.state).toBe(MessageAttemptState.Pending)
     expect(nextAttempt.donor).toEqual(seed.User.donorB._id)
+    
+    let [ first, second ] = updatedMessage!.attempts
+    expect(second).toHaveProperty('previousAttempt', first._id)
   })
   
   it('should send the new donor an fcm', async () => {
@@ -111,7 +114,13 @@ describe('ReallocationTask', () => {
     
     await task.run(ctx)
     
+    let updatedMessage = await models.Message.findById(msg.id)
+    
     expect(sentSms).toHaveLength(1)
+    expect(updatedMessage!.attempts).toHaveLength(3)
+    
+    let [ _, second, third ] = updatedMessage!.attempts
+    expect(third).toHaveProperty('previousAttempt', second._id)
   })
   it('should not reallocate young attempts', async () => {
     msg.attempts.push({
