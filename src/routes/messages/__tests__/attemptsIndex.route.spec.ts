@@ -107,4 +107,17 @@ describe('messages.attempts_index', () => {
     expect(msg.organisation._id).toBe(org.id)
     expect(msg.organisation.name).toBe(org.name)
   })
+  it('should ignore twilio attempts', async () => {
+    msg.attempts.push({
+      state: MessageAttemptState.Twilio,
+      recipient: seed.User.subA.id,
+      donor: null
+    })
+    await msg.save()
+    
+    let res = await agent.get('/')
+      .set(tst.jwtHeader(seed.User.donorA.id))
+    
+    expect(res.status).toBe(200)
+  })
 })

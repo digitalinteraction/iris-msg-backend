@@ -50,7 +50,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   api.sendData(messages.map(message => {
     let attempts = message.attempts
       .filter(attempt =>
-        attempt.donor.toString() === authJwt.usr &&
+        attempt.donor !== null &&
+        attempt.donor!.toString() === authJwt.usr &&
         attempt.state === MessageAttemptState.Pending
       )
       .map(attempt => ({

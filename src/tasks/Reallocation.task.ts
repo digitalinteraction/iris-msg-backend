@@ -131,8 +131,8 @@ export class ReallocationTask extends Task<ReallocationContext> {
     let usedDonorsIds = message.attempts
       .filter(prevAttempt => prevAttempt.recipient.equals(attempt.recipient))
       .reduce((set, attempt) =>
-        set.add(attempt.donor.toHexString()
-      ), new Set<string>())
+        attempt.donor !== null ? set.add(attempt.donor.toHexString()) : set
+      , new Set<string>())
     
     // Work out the donors we can use
     let potentialDonors = organisation.activeDonors

@@ -8,7 +8,7 @@ const schemaOptions = {
 export interface IMessageAttempt extends IBaseSubModel {
   state: MessageAttemptState
   recipient: Types.ObjectId
-  donor: Types.ObjectId
+  donor: Types.ObjectId | null
   previousAttempt: Types.ObjectId | null
 }
 
