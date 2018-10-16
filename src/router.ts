@@ -138,7 +138,7 @@ export function applyErrorHandler (
       return api.sendFail(`jwt.${error.code}`, 401)
     }
     if (error instanceof Error && api) {
-      log.error(`Caught an error '${error.message}'`)
+      log.error(`Caught an error '${error.message}'`, error)
       return api.sendFail(error.message, 400)
     }
     
