@@ -42,7 +42,6 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   if (!canDestroy(org, member, authJwt!!.usr)) throw makeError('notFound')
   
   // Check for the last of role for non-subscribers
-  // TODO: Verified check here!
   if (RequiredRoles.includes(member.role)) {
     let roleCount = org.members.reduce((sum, mem) => {
       let isSameRole = mem.role === member.role && mem.isActive

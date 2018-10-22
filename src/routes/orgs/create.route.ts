@@ -30,6 +30,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
   let org = await models.Organisation.create({
     name: name,
     info: info,
+    locale: user.locale,
     members: [
       {
         role: MemberRole.Coordinator,
