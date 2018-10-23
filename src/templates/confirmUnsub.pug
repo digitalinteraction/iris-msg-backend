@@ -1,0 +1,36 @@
+doctype html
+
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width,initial-scale=1")
+    title #{title} | Iris Msg
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css")
+    style.
+      .hero.is-primary .hero-body { background-color: #4fc08a }
+      em { text-decoration: underline dashed #aaa; font-style: normal }
+  
+  body
+    .hero.is-primary
+      .hero-body
+        .container
+          h1.title #{title}
+          h2.subtitle Iris Msg &ndash; The open sms donation platform
+    
+    section.section
+      .container
+        h1.title.is-4 Unsubscribe from #[em #{org.name}]?
+
+        .content
+          blockquote.blockquote.is-inline-block
+            strong #{org.name}
+            br
+            span #{org.info}
+
+        .message.is-danger.is-inline-block
+          .message-header
+            p Are you sure you want to unsubscribe?
+          .message-body
+            p.field This will stop this organisation sending you sms. If you unsubscribe from this organisation you will have to be invited to receive their messages again.
+            .buttons.is-centered
+              a.button.field.is-danger(href=unsubLink) Confirm

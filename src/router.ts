@@ -96,7 +96,8 @@ export function applyRoutes (
   app.post('/organisations/:org_id/members', requiredJwt, r(routes.members.create))
   app.delete('/organisations/:org_id/members/:mem_id', requiredJwt, r(routes.members.destroy))
   app.post('/accept/:token', r(routes.members.acceptInvite))
-  app.get('/unsub/:token', r(routes.members.unsubscribe))
+  app.get('/unsub/:token', r(routes.members.confirmUnsub))
+  app.get('/unsub/:token/confirm', r(routes.members.unsubscribe))
   app.get('/invite/:token', r(routes.members.showInvite))
   
   // Messaging

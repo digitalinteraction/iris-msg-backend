@@ -1,4 +1,5 @@
 import { Types } from 'mongoose'
+import * as pug from 'pug'
 
 /**
  * Allocates each item in setA an item from setB,
@@ -49,8 +50,20 @@ export function isMongoId (value: any): boolean {
   return Types.ObjectId.isValid(value)
 }
 
+/**
+ * If a value is a valid member jwt packet, i.e. it has the 'mem' & 'org values
+ */
 export function isMemberJwt (value: any): boolean {
   return typeof value === 'object'
     && typeof value.mem === 'string'
     && typeof value.org === 'string'
+}
+
+/**
+ * Compiles a pug template, with a dev-only middleware that recompiles on render
+ */
+export function compilePug (path: string) {
+  return process.env.NODE_ENV === 'development'
+  ? (...args: any[]) => pug.compileFile(path)(...args)
+  : pug.compileFile(path)
 }

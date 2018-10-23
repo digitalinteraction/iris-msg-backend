@@ -30,6 +30,7 @@ const expectedRoutes = [
   { method: 'del', url: '/organisations/:org_id/members/:mem_id' },
   { method: 'post', url: '/accept/:mem_jwt' },
   { method: 'get', url: '/unsub/:mem_jwt' },
+  { method: 'get', url: '/unsub/:mem_jwt/confirm' },
   { method: 'get', url: '/invite/:mem_jwt' },
   
   { method: 'post', url: '/messages' },

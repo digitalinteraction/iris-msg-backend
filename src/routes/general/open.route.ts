@@ -1,5 +1,5 @@
 import { RouteContext } from '@/src/types'
-import * as pug from 'pug'
+import { compilePug } from '@/src/utils'
 import { join } from 'path'
 
 function makeError (name: string) {
@@ -9,11 +9,7 @@ function makeError (name: string) {
 const inviteTest = /invite\/.*/
 const donateTest = /donate/
 
-const templatePath = join(__dirname, '../../templates/downloadApp.pug')
-
-const template = process.env.NODE_ENV === 'development'
-  ? (...args: any[]) => pug.compileFile(templatePath)(...args)
-  : pug.compileFile(templatePath)
+const template = compilePug(join(__dirname, '../../templates/downloadApp.pug'))
 
 /* params
  * - 0
