@@ -9,7 +9,7 @@ html
     style.
       .is-monospace { font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace; }
       .is-vertical { vertical-align: middle; }
-      .hero.is-primary { background-color: '#4fc08a' }
+      .hero.is-primary .hero-body { background-color: #4fc08a }
 
   body
     .hero.is-primary
@@ -36,7 +36,7 @@ html
               a.button.is-link.is-vertical(href=appLink, target="_blank") Download
               |  the app and come back to this page
             li
-              button.button.is-success.is-vertical(
+              button.button.is-link.is-vertical(
                 onclick="window.open(location.href)"
               ) Reload
               |  to trigger the link again
