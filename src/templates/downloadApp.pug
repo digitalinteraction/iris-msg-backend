@@ -1,0 +1,42 @@
+doctype html
+
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width,initial-scale=1")
+    title #{title} | Iris Msg
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css")
+    style.
+      .is-monospace { font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace; }
+      .is-vertical { vertical-align: middle; }
+      .hero.is-primary { background-color: '#4fc08a' }
+
+  body
+    .hero.is-primary
+      .hero-body
+        .container
+          h1.title #{title}
+          h2.subtitle Iris Msg &ndash; The open sms donation platform
+    
+    section.section
+      .container
+        article.message.is-danger.is-inline-block
+          .message-header
+            p Couldn't find Iris Msg App
+          .message-body
+            p You've opened a link which should open with 
+              strong Iris Msg
+              | , but it doesn't look like you have the app installed.
+        
+        .content
+          h4 What to do
+
+          ol.is-size-5.is-marginless
+            li
+              a.button.is-link.is-vertical(href=appLink, target="_blank") Download
+              |  the app and come back to this page
+            li
+              button.button.is-success.is-vertical(
+                onclick="window.open(location.href)"
+              ) Reload
+              |  to trigger the link again
