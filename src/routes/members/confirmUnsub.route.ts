@@ -7,7 +7,7 @@ function makeError (name: string) {
   return `api.members.confirmUnsub.${name}`
 }
 
-const template = compilePug(join(__dirname, '../../templates/confirmUnsub.pug'))
+const template = compilePug(join(__dirname, '../../../templates/confirmUnsub.pug'))
 
 /*
  *

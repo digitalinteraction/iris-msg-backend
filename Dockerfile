@@ -25,6 +25,7 @@ RUN npm run build:docs -s
 FROM base as dist
 RUN npm prune --production -s
 COPY locales /app/locales
+COPY templates /app/templates
 COPY --from=builder /app/dist /app
 COPY --from=builder /app/docs /app/docs
 COPY tools/cli.js /app/tools/cli.js

@@ -5,6 +5,7 @@
 
 | Name | Description |
 | ---- | ----------- |
+| `NODE_ENV`        | What environment the system is running in. |
 | `MONGO_URI`       | Where the mongo database is and how to connect to it, [more info](https://docs.mongodb.com/manual/reference/connection-string/) |
 | `JWT_SECRET`      | The secret for json web tokens, [more info](https://jwt.io/introduction/) |
 | `API_URL`         | The public url of this api, e.g. `https://api.irismsg.io` |

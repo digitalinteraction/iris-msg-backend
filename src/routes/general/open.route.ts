@@ -9,7 +9,7 @@ function makeError (name: string) {
 const inviteTest = /invite\/.*/
 const donateTest = /donate/
 
-const template = compilePug(join(__dirname, '../../templates/downloadApp.pug'))
+const template = compilePug(join(__dirname, '../../../templates/downloadApp.pug'))
 
 /* params
  * - 0
