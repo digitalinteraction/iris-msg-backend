@@ -41,6 +41,7 @@
     "phone": "^2.0.0",
     "prompts": "^0.1.9",
     "pug": "^2.0.3",
+    "request": "^2.88.0",
     "tsconfig-paths": "^3.4.1",
     "twilio": "^3.17.2",
     "winston": "^3.0.0"
