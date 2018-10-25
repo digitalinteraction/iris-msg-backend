@@ -45,6 +45,8 @@ api:
       badDestroy: Cannot remove the last coordinator / donor for an organisation
     unsubscribe:
       notFound: An organisation was not found where that member exists on it
+    confirmUnsub:
+      notFound: An organisation was not found where that member exists on it
   
   messages:
     create:
