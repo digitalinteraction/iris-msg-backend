@@ -1,0 +1,74 @@
+# The meanings of api errors returned
+
+api:
+  general:
+    unknown: Something went wrong
+    badAuth: You are not logged in or haven't verified your number yet
+  health:
+    noDb: Not connected to the database
+  
+  auth:
+    login_request:
+      badNumber: Invalid phone number provided
+      badCountry: Invalid country code provided
+    login_check:
+      badCode: That code was invalid
+    me:
+    update_fcm:
+  
+  orgs:
+    create:
+      badName: Please provide a name which is less than 40 letters
+      badInfo: Please provide information about your organisation
+    index:
+    show:
+      notFound: Couldn't find that organisation or you do no have permission to view it
+    destroy:
+      notFound: Couldn't find that organisation or you do no have permission to delete it
+    members:
+      badRole: Please provide a valid role
+      notFound: Couldn't find that organisation or you do no have permission to view it
+  
+  members:
+    accept:
+      notFound: Couldn't find that organisation or you do no have permission to view it
+    create:
+      badNumber: That phone number is invalid
+      badCountry: That country code is invalid
+      badRole: That role is invalid
+      notFound: Couldn't find that organisation or you do no have permission to view it
+      alreadyMember: That user is already a member in that role
+    showInvite:
+      notFound: Couldn't find that invite
+    destroy:
+      notFound: Couldn't find that member or you do no have permission to delete it
+      badDestroy: Cannot remove the last coordinator / donor for an organisation
+    unsubscribe:
+      notFound: An organisation was not found where that member exists on it
+    confirmUnsub:
+      notFound: An organisation was not found where that member exists on it
+  
+  messages:
+    create:
+      badContent: No content provided
+      badOrg: Couldn't find that organisation or you do no have permission to view it
+    attempts_index:
+    attempts_update:
+
+sms:
+  loginRequest: Your Iris Msg verification code is {0}
+  newSubscriber: You are now subscribed to {0} on irismsg.io, you can unsubscribe at {1}
+  newDonor: You have been invited to donate for {0} on irismsg.io, you can view the invite at {1}
+  newCoordinator: You have been added as a coordinator to {0} on irismsg.io
+
+jwt:
+  revoked_token: Your access has been revoked, please log in again
+  invalid_token: Your token is invalid, please check it and try again
+  credentials_bad_scheme: Your token is invalid, please check it and try again
+  credentials_bad_format: Your token is invalid, please check it and try again
+  credentials_required: A JWT bearer token is required for this endpoint
+
+fcm:
+  new_donations:
+    title: New Donations
+    body: Your organisations need your help, new messages need donations
