@@ -2,73 +2,73 @@
 
 api:
   general:
-    unknown: Something went wrong
-    badAuth: You are not logged in or haven't verified your number yet
+    unknown: Κάτι πήγε στραβά
+    badAuth: Δεν είσαστε συνδεδεμένοι, είτε δεν έχει εξακριβωθεί ακόμη ο αριθμός σας
   health:
-    noDb: Not connected to the database
+    noDb: Ανυπαρξία σύνδεσης με τη βάση δεδομένων
   
   auth:
     login_request:
-      badNumber: Invalid phone number provided
-      badCountry: Invalid country code provided
+      badNumber: Δηλώθηκε μή έγκυρος τηλεφωνικός αριθμός
+      badCountry: Δηλώθηκε μή έγκυρος κωδικός χώρας
     login_check:
-      badCode: That code was invalid
+      badCode: Ο κωδικός αυτός δεν είναι έγκυρος
     me:
     update_fcm:
   
   orgs:
     create:
-      badName: Please provide a name which is less than 40 letters
-      badInfo: Please provide information about your organisation
+      badName: Παρακαλώ καταχωρήστε ένα όνομα μήκους μικρότερου των 40 χαρακτήρων
+      badInfo: Παρακαλώ καταχωρίστε πληροφορίες σχετικά με τον οργανισμό σας
     index:
     show:
-      notFound: Couldn't find that organisation or you do no have permission to view it
+      notFound: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος προβολής
     destroy:
-      notFound: Couldn't find that organisation or you do no have permission to delete it
+      notFound: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος διαγραφής
     members:
-      badRole: Please provide a valid role
-      notFound: Couldn't find that organisation or you do no have permission to view it
+      badRole: Παρακαλώ καταχωρήστε έναν έγκυρο ρόλο
+      notFound: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος προβολής
   
   members:
     accept:
-      notFound: Couldn't find that organisation or you do no have permission to view it
+      notFound: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος προβολής
     create:
-      badNumber: That phone number is invalid
-      badCountry: That country code is invalid
-      badRole: That role is invalid
-      notFound: Couldn't find that organisation or you do no have permission to view it
-      alreadyMember: That user is already a member in that role
+      badNumber: Ο τηλεφωνικός αριθμός δεν είναι έγκυρος
+      badCountry: Ο κωδικός χώρας δεν είναι έγκυρος
+      badRole: Ο ρόλος δεν είναι έγκυρος
+      notFound: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος προβολής
+      alreadyMember: Ο χρήστης είναι ήδη μέλος σε αυτό το ρόλο
     showInvite:
-      notFound: Couldn't find that invite
+      notFound: Αδυναμία εύρεσης αυτής της πρόσκλησης
     destroy:
-      notFound: Couldn't find that member or you do no have permission to delete it
-      badDestroy: Cannot remove the last coordinator / donor for an organisation
+      notFound: Αδυναμία εύρεσης του μέλους ή ανυπαρξία δικαιώματος διαγραφής του
+      badDestroy: Δεν γίνεται να διαγραφεί ο τελευταίος συντονιστής/ δωρητής ενός οργανισμού
     unsubscribe:
-      notFound: An organisation was not found where that member exists on it
+      notFound: Δεν βρέθηκε οργανισμός, στον οποίο να ανήκει το συγκεκριμένο μέλος
     confirmUnsub:
-      notFound: An organisation was not found where that member exists on it
+      notFound: Δεν βρέθηκε οργανισμός, στον οποίο να ανήκει το συγκεκριμένο μέλος 
   
   messages:
     create:
-      badContent: No content provided
-      badOrg: Couldn't find that organisation or you do no have permission to view it
+      badContent: Δεν παραχωρήθηκε περιεχόμενο
+      badOrg: Αδυναμία εύρεσης του οργανισμού ή ανυπαρξία δικαιώματος προβολής
     attempts_index:
     attempts_update:
 
 sms:
-  loginRequest: Your Iris Msg verification code is {0}
-  newSubscriber: You are now subscribed to {0} on irismsg.io, you can unsubscribe at {1}
-  newDonor: You have been invited to donate for {0} on irismsg.io, you can view the invite at {1}
-  newCoordinator: You have been added as a coordinator to {0} on irismsg.io
+  loginRequest: Ο κωδικός επιβεβαίωσης Iris Msg είναι {0}
+  newSubscriber: Είστε πλέον συνδρομητής στο {0} του irismsg.io, μπορείτε να καταργήσετε την εγγραφή σας στο {1}
+  newDonor: Έχετε πλοσκληθεί να δωρήσετε για {0} στο irismsg.io, μπορείτε να δείτε την πρόσκληση στο {1}
+  newCoordinator: Έχετε προστεθεί ως συντονιστής του {0} στο irismsg.io
 
 jwt:
-  revoked_token: Your access has been revoked, please log in again
-  invalid_token: Your token is invalid, please check it and try again
-  credentials_bad_scheme: Your token is invalid, please check it and try again
-  credentials_bad_format: Your token is invalid, please check it and try again
-  credentials_required: A JWT bearer token is required for this endpoint
+  revoked_token: Η προσβαση σας έχει αναβληθεί, παρακαλούμε επανασυνδεθείτε
+  invalid_token: Το τεκμήριο σας δεν είναι έγκυρο, παρακαλώ ελέγξτε το και προσπαθείστε ξανά
+  credentials_bad_scheme: Το τεκμήριο σας δεν είναι έγκυρο, παρακαλώ ελέγξτε το και προσπαθείστε ξανά
+  credentials_bad_format: Το τεκμήριο σας δεν είναι έγκυρο, παρακαλώ ελέγξτε το και προσπαθείστε ξανά
+  credentials_required: Για αυτό το τελικό σημείο απαιτείται τεκμήριο JWT  
 
 fcm:
   new_donations:
-    title: New Donations
-    body: Your organisations need your help, new messages need donations
+    title: Νέα δωρεά
+    body: Οι οργανισμοί σας χρειάζονται την βοήθεια σας, τα νέα μηνύματα χρειάζονται δωρεές

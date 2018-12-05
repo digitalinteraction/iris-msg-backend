@@ -11,7 +11,8 @@ describe('I18n', () => {
     it('should load files', async () => {
       await i18n.setup()
       expect(i18n.locales).toEqual({
-        en: expect.anything()
+        en: expect.anything(),
+        gr: expect.anything()
       })
       expect(i18n.locales.en.api).toBeDefined()
     })
