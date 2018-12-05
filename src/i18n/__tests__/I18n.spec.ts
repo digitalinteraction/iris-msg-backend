@@ -12,7 +12,7 @@ describe('I18n', () => {
       await i18n.setup()
       expect(i18n.locales).toEqual({
         en: expect.anything(),
-        gr: expect.anything()
+        el: expect.anything()
       })
       expect(i18n.locales.en.api).toBeDefined()
     })

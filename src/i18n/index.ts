@@ -6,7 +6,7 @@ import { LocalI18n } from './LocalI18n'
 import { LocalisedApi } from './LocalisedApi'
 
 const AvailableLocales = [
-  'en'
+  'en', 'el'
 ]
 
 let basepath = join(__dirname, '../../locales')

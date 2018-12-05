@@ -2,6 +2,7 @@
 
 api:
   general:
+    hello: Hello, World!
     unknown: Something went wrong
     badAuth: You are not logged in or haven't verified your number yet
   health:
