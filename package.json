@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "build:docs": "ocedocs",
-    "coverage": "jest --coverage",
+    "build:readme": "md-toc -i",
     "dev:once": "ts-node -r tsconfig-paths/register -r dotenv/config src",
     "dev": "nodemon -q --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev:once -s'",
     "lint": "npx tslint -p .",

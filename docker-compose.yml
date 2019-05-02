@@ -1,0 +1,33 @@
+version: '3'
+
+# docker run -it --rm \
+#   -p 3000:3000 \
+#   --link iris_mongo \
+#   --env-file .env \
+#   -e MONGO_URI=mongodb://iris_mongo/iris_msg \
+#   -v `pwd`/google-account.json:/app/google-account.json \
+#   openlab.ncl.ac.uk:4567/iris/api
+
+services:
+  mongo:
+    image: mongo:3.6-stretch
+    restart: unless-stopped
+    ports: 
+      - 27017:27017
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: iris
+  
+  shrinky:
+    image: robbj/shrinky-link
+    ports:
+      - 8000:3000
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/links
+      SHRINK_KEY: super_duper_secret
+      HOME_URL: http://localhost:3000
+      PUBLIC_URL: http://localhost:8000
+      INIT_TOKEN: shrinky_development_token
