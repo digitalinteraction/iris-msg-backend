@@ -1,8 +1,7 @@
-import { RouteContext, MemberRole, MessageAttemptState, FcmType } from '@/src/types'
-import { IMember, IUser, IOrganisationWithUsers, IMessageAttempt } from '@/src/models'
+import { RouteContext, MemberRole, MessageAttemptState } from '@/src/types'
+import { IMember, IUser, IOrganisationWithUsers } from '@/src/models'
 import { roundRobin, isMongoId } from '@/src/utils'
-import { MongooseDocument } from 'mongoose'
-import { makeFirebaseMessenger, firebaseEnabled, sendNewDonationFcm } from '@/src/services'
+import { makeFirebaseMessenger, sendNewDonationFcm } from '@/src/services'
 
 function makeError (name: string) {
   return `api.messages.create.${name}`
@@ -93,15 +92,6 @@ export default async ({ req, api, models, i18n, authJwt, log }: RouteContext) =>
   ))
   
   api.sendData(message)
-}
-
-type KeyedType<T> = { [id: string]: T }
-
-function keyById<T extends MongooseDocument> (docs: T[]): KeyedType<T> {
-  return docs.reduce((mapping, model) => {
-    mapping[model.id] = model
-    return mapping
-  }, {} as KeyedType<T>)
 }
 
 function isActiveMember (member: IMember, user: IUser, since: Date): boolean {

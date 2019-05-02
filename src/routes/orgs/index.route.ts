@@ -7,7 +7,7 @@ import { RouteContext } from '@/src/types'
 /* auth:
  * - jwt
  */
-export default async ({ req, api, models, authJwt }: RouteContext) => {
+export default async ({ api, models, authJwt }: RouteContext) => {
   
   // Check the user is verified
   let user = await models.User.findWithJwt(authJwt)

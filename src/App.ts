@@ -9,7 +9,10 @@ import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
 import winston from 'winston'
 
-const RequiredVariables = [
+//
+// The environment variables that are required for the app to start
+//
+export const RequiredVariables = [
   'MONGO_URI',
   'JWT_SECRET',
   'API_URL',
@@ -20,16 +23,25 @@ const RequiredVariables = [
   'PLAY_STORE_URL'
 ]
 
-const RequiredFiles = [
+//
+// The files that must be present for the app to start
+//
+export const RequiredFiles = [
   'assetlinks.json',
   'google-account.json'
 ]
 
+//
+// Arguments for mongo (defined here to be reused everywhere)
+//
 export const mongoArgs: mongoose.ConnectionOptionsBase = {
   useNewUrlParser: true,
   useCreateIndex: true
 }
 
+//
+// Wraps up the running of the whole API into an instance of this class
+//
 export default class App {
   reallocTask = new ReallocationTask()
   

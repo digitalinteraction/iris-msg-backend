@@ -9,7 +9,7 @@ function makeError (name: string) {
 /* url params:
  * - token
  */
-export default async ({ req, api, next, models }: RouteContext) => {
+export default async ({ req, api, models }: RouteContext) => {
   
   // Fetch the organisation for that member
   let memberJwt: MemberJwt

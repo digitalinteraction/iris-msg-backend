@@ -1,8 +1,8 @@
 import { createConnection, Connection } from 'mongoose'
-import supertest = require('supertest')
-import express = require('express')
-import expressJwt = require('express-jwt')
-import winston = require('winston')
+import supertest from 'supertest'
+import express from 'express'
+import expressJwt from 'express-jwt'
+import winston from 'winston'
 import { RouteContext, MemberRole } from '@/src/types'
 import { IModelSet, makeModels, IOrganisation, IUser, IMember } from '../src/models'
 import { DebugI18n, LocalI18n } from '../src/i18n'

@@ -1,9 +1,9 @@
 import { Task } from './Task'
 import { IMessageAttempt, IMessage, IOrganisation, IModelSet } from 'src/models'
 import { shuffleArray } from '@/src/utils'
-import { MessageAttemptState, FcmType } from '@/src/types'
+import { MessageAttemptState } from '@/src/types'
 import { sendTwilioMessage, makeFirebaseMessenger, sendNewDonationFcm } from '@/src/services'
-import winston = require('winston')
+import winston from 'winston'
 import { LocalI18n } from '@/src/i18n'
 
 export enum ReallocResult {

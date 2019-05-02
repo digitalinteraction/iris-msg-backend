@@ -1,5 +1,3 @@
-import api from './api.middle'
-import jwt from './jwt.middle'
-import log from './log.middle'
-
-export { api, jwt, log }
+export { default as api } from './api.middle'
+export { default as jwt } from './jwt.middle'
+export { default as log } from './log.middle'

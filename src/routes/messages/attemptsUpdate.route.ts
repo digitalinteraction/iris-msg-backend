@@ -1,6 +1,5 @@
 import {
   RouteContext,
-  AllMessageAttemptStates,
   MessageAttemptState,
   MemberRole
 } from '@/src/types'

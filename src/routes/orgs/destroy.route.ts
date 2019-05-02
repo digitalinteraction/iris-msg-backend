@@ -11,7 +11,7 @@ function makeError (name: string) {
  * url params:
  * - org_id
  */
-export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Fail if passed a bad mongo id
   if (!isMongoId(req.params.org_id)) {
     throw makeError('notFound')
