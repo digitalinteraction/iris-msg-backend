@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { readdirSync, statSync, readFile } from 'fs'
-import yaml = require('js-yaml')
-import dot = require('dot-prop')
+import yaml from 'js-yaml'
+import dot from 'dot-prop'
 
 import { LocalI18n } from './LocalI18n'
 import { LocaliseArgs } from '@/src/types'

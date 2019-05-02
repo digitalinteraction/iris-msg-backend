@@ -10,7 +10,7 @@ import * as routes from './routes'
 import { IModelSet } from './models'
 import { I18n, LocalI18n, AvailableLocales, LocalisedApi } from './i18n'
 import * as middleware from './middleware'
-import * as path from 'path'
+import path from 'path'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
 

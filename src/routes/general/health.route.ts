@@ -1,5 +1,5 @@
 import { RouteContext } from '@/src/types'
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 function makeError (name: string) {
   return `api.general.health.${name}`

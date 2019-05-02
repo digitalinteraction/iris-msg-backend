@@ -8,6 +8,7 @@ import { IModelSet, makeModels, IOrganisation, IUser, IMember } from '../src/mod
 import { DebugI18n, LocalI18n } from '../src/i18n'
 import { applyMiddleware, applyErrorHandler } from '@/src/router'
 import { sign } from 'jsonwebtoken'
+import { mongoArgs } from '@/src/App'
 
 export { applySeed, Seed } from './seeder'
 
@@ -45,7 +46,7 @@ export function mockRoute (route: Route, models: any, options: MockRouteOptions 
   return mockExpressRoute(async (req, res, next) => {
     try {
       let api = (req as any).api
-      let authJwt = req.user
+      let authJwt = (req as any).user
       let i18n = mockI18n()
       let log = mockLog()
       api.setLocaliser(i18n)
@@ -68,9 +69,7 @@ export function mockLog (): winston.Logger {
 }
 
 export async function openDb (): Promise<TestDatabase> {
-  let connection = createConnection(process.env.MONGO_URI!, {
-    useNewUrlParser: true
-  })
+  let connection = createConnection(process.env.MONGO_URI!, mongoArgs)
   let models = makeModels(connection)
   await new Promise(resolve => connection.on('connected', resolve))
   return { db: connection, models }
@@ -80,7 +79,7 @@ export async function closeDb (db: Connection): Promise<void> {
   try {
     let collections = Object.values(db.collections)
     await Promise.all(collections.map(c =>
-      (c as any).remove({})
+      (c as any).deleteMany({})
     ))
     await db.close(true)
     clean(db, 'models')

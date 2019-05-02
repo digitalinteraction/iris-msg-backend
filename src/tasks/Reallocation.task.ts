@@ -98,9 +98,11 @@ export class ReallocationTask extends Task<ReallocationContext> {
         // Handle each response
         switch (result.type) {
           case ReallocResult.Reallocated:
-            return result.newUser && fcmToSend.add(result.newUser)
+            result.newUser && fcmToSend.add(result.newUser)
+            return
           case ReallocResult.Twilio:
-            return smsToSend.push(attempt)
+            smsToSend.push(attempt)
+            return
         }
       })
     })

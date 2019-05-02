@@ -102,9 +102,11 @@ export default async ({ req, api, models, authJwt, i18n, log }: RouteContext) =>
     // Store info depending on the result
     switch (result.type) {
       case ReallocResult.Twilio:
-        return smsToSend.push(attempt)
+        smsToSend.push(attempt)
+        return
       case ReallocResult.Reallocated:
-        return result.newUser && fcmToSend.add(result.newUser)
+        result.newUser && fcmToSend.add(result.newUser)
+        return
     }
   })
   
