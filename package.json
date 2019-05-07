@@ -1,9 +1,7 @@
 {
   "name": "iris-api",
   "version": "0.9.2",
-  "description": "Project setup by robb-j/ts-node-base",
-  "main": "index.js",
-  "types": "src/index.d.ts",
+  "description": "The backend server for api.irismsg.io",
   "scripts": {
     "build": "tsc -p .",
     "build:docs": "ocedocs",
