@@ -77,7 +77,7 @@ describe('auth.login.check', () => {
   })
   
   it('should fail for used codes', async () => {
-    await code.update({ usedOn: new Date() })
+    await code.updateOne({ usedOn: new Date() })
     let res = await agent.post('/').send({ code: 123456 })
     expect(res.status).toBe(400)
   })

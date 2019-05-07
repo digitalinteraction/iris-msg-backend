@@ -15,7 +15,7 @@ function makeError (name: string) {
  * query:
  * - role
  */
-export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   
   // Fail if a bad role is passed
   if (req.query.role && !AllMemberRoles.includes(req.query.role)) {

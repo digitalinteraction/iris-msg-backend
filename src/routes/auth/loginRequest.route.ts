@@ -1,6 +1,6 @@
 import { AuthCodeType, RouteContext } from '@/src/types'
 import { makeTwilioClient } from '@/src/services'
-import phone = require('phone')
+import phone from 'phone'
 
 function makeError (name: string) {
   return `api.auth.login_request.${name}`

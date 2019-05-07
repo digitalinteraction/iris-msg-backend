@@ -1,11 +1,11 @@
 import { ReallocationTask, ReallocationContext } from '../Reallocation.task'
 
 import * as tst from '@/tools/testHarness'
-import { IModelSet, IOrganisation, IMessage } from '@/src/models'
+import { IModelSet, IMessage } from '@/src/models'
 import { MemberRole, MessageAttemptState } from '@/src/types'
 
-import firebase = require('firebase-admin')
-import twilio = require('twilio')
+import firebase from 'firebase-admin'
+import twilio from 'twilio'
 
 jest.mock('firebase-admin')
 jest.mock('twilio')
@@ -119,7 +119,7 @@ describe('ReallocationTask', () => {
     expect(sentSms).toHaveLength(1)
     expect(updatedMessage!.attempts).toHaveLength(3)
     
-    let [ _, second, third ] = updatedMessage!.attempts
+    let [ , second, third ] = updatedMessage!.attempts
     expect(third).toHaveProperty('previousAttempt', second._id)
   })
   it('should not reallocate young attempts', async () => {

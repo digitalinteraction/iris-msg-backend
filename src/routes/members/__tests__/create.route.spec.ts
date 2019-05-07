@@ -4,7 +4,7 @@ import { IModelSet } from '@/src/models'
 import { MemberRole } from '@/src/types'
 import { Response } from 'superagent'
 import { verify } from 'jsonwebtoken'
-import twilio = require('twilio')
+import twilio from 'twilio'
 
 jest.mock('twilio')
 

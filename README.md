@@ -246,6 +246,7 @@ to shorten url which are sent in messages.
 To enable this feature set the following environment variables:
 
 - `SHRINK_URL` - The public URL of the instance, e.g. `http://shrinky:3000`
+  - If using with docker-compose, you can use the container name has the hostname, e.g. `shrinky`
 - `SHRINK_KEY` - Your key for shrinky-link, used to authenticate requests
 
 ---

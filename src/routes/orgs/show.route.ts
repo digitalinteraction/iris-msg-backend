@@ -1,4 +1,4 @@
-import { RouteContext, MemberRole } from '@/src/types'
+import { RouteContext } from '@/src/types'
 import { isMongoId } from '@/src/utils'
 
 function makeError (name: string) {
@@ -11,7 +11,7 @@ function makeError (name: string) {
  * url params:
  * - org_id
  */
-export default async ({ req, api, next, models, authJwt }: RouteContext) => {
+export default async ({ req, api, models, authJwt }: RouteContext) => {
   // Fail for bad mongo ids
   if (!isMongoId(req.params.org_id)) {
     throw makeError('notFound')

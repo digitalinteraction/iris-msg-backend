@@ -6,7 +6,9 @@ A rough guide for keeping a consistent project style
 
 ### Typescript
 
-All JavaScript must adhere to the [JavaScript Standard Style](https://standardjs.com/), it isn't officially endorsed by Ecmascript someone just called it that. This style is set up with [Eslint](https://eslint.org/) so it should be easy to follow.
+All TypeScript must adhere to the [JavaScript Standard Style](https://standardjs.com/),
+it isn't officially endorsed by Ecmascript someone just called it that.
+This style is set up with [tslint](https://palantir.github.io/tslint) so it should be easy to follow.
 
 ## Commit Messages
 

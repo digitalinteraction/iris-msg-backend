@@ -1,13 +1,11 @@
 import * as tst from '@/tools/testHarness'
 import { MemberRole, MessageAttemptState } from '@/src/types'
 import attemptsUpdate from '../attemptsUpdate.route'
-import {
-  IModelSet, IOrganisation, IMessage, IMessageAttempt, IUser, makeModels
-} from '@/src/models'
+import { IModelSet, IMessage, IMessageAttempt, IUser } from '@/src/models'
 import { Response } from 'superagent'
 
-import firebase = require('firebase-admin')
-import twilio = require('twilio')
+import firebase from 'firebase-admin'
+import twilio from 'twilio'
 
 jest.mock('firebase-admin')
 jest.mock('twilio')
@@ -130,7 +128,7 @@ describe('messages.attempts_update', () => {
   })
   
   it('should not update attempts that are not the current user', async () => {
-    let res = await sendUpdate(
+    await sendUpdate(
       seed.User.donorB, msg.attempts[0], MessageAttemptState.Rejected
     )
     let updatedMessage = await models.Message.findById(msg.id)

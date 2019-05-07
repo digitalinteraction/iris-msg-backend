@@ -1,5 +1,5 @@
-import * as express from 'express'
-import * as mongoose from 'mongoose'
+import express from 'express'
+import mongoose from 'mongoose'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { applyMiddleware, applyRoutes, applyErrorHandler } from './router'
@@ -7,9 +7,12 @@ import { makeModels, IModelSet } from './models'
 import { I18n, i18n, LocalI18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
-import * as winston from 'winston'
+import winston from 'winston'
 
-const RequiredVariables = [
+//
+// The environment variables that are required for the app to start
+//
+export const RequiredVariables = [
   'MONGO_URI',
   'JWT_SECRET',
   'API_URL',
@@ -20,11 +23,25 @@ const RequiredVariables = [
   'PLAY_STORE_URL'
 ]
 
-const RequiredFiles = [
+//
+// The files that must be present for the app to start
+//
+export const RequiredFiles = [
   'assetlinks.json',
   'google-account.json'
 ]
 
+//
+// Arguments for mongo (defined here to be reused everywhere)
+//
+export const mongoArgs: mongoose.ConnectionOptionsBase = {
+  useNewUrlParser: true,
+  useCreateIndex: true
+}
+
+//
+// Wraps up the running of the whole API into an instance of this class
+//
 export default class App {
   reallocTask = new ReallocationTask()
   
@@ -170,7 +187,7 @@ export default class App {
   }
   
   async connectToMongo () {
-    return mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true })
+    return mongoose.connect(process.env.MONGO_URI!, mongoArgs)
   }
 }
 

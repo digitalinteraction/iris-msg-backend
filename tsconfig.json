@@ -1,18 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "module": "commonjs",
-    "noImplicitAny": true,
     "outDir": "dist",
+    "target": "es2018",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "declaration": false,
+    "pretty": true,
+    "newLine": "lf",
+    "stripInternal": true,
     "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [ "./*" ]
     }
   },
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "__mocks__"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

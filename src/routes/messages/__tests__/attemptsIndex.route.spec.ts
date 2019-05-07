@@ -1,6 +1,6 @@
 import * as tst from '@/tools/testHarness'
 import attemptsIndex from '../attemptsIndex.route'
-import { IModelSet, IOrganisation, IUser, IMessage } from '@/src/models'
+import { IModelSet, IOrganisation, IMessage } from '@/src/models'
 import { MemberRole, MessageAttemptState } from '@/src/types'
 
 let db: any

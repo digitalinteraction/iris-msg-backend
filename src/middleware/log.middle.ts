@@ -1,5 +1,5 @@
 import { ExpressMiddleware } from '../types'
-import winston = require('winston')
+import winston from 'winston'
 
 type Excluder = RegExp | string
 

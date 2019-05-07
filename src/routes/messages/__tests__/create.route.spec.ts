@@ -3,7 +3,7 @@ import create from '../create.route'
 import { IModelSet, IOrganisation } from '@/src/models'
 import { MemberRole, FcmType } from '@/src/types'
 import { Response } from 'supertest'
-import firebase = require('firebase-admin')
+import firebase from 'firebase-admin'
 
 jest.mock('firebase-admin')
 

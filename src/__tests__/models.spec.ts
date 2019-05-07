@@ -1,14 +1,13 @@
 import { Connection, createConnection } from 'mongoose'
 import { makeModels, IModelSet } from '../models'
+import { mongoArgs } from '../App'
 
 describe('#makeModels', () => {
   
   let connection: Connection
   let models: IModelSet
   beforeAll(async () => {
-    connection = createConnection(process.env.MONGO_URI!, {
-      useNewUrlParser: true
-    })
+    connection = createConnection(process.env.MONGO_URI!, mongoArgs)
     models = makeModels(connection)
   })
   afterAll(async () => {

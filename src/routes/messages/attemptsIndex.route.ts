@@ -6,17 +6,6 @@ import { Types } from 'mongoose'
 //   return `api.messages.attempts_index.${name}`
 // }
 
-interface IMessageOutput {
-  content: string
-  author: string
-  attempts: IAttemptOutput[]
-}
-
-interface IAttemptOutput {
-  recipient: string,
-  phoneNumber: string
-}
-
 type IMessageAttemptWithRecipient = {
   recipient: IUser
 } & IMessageAttempt
@@ -26,7 +15,7 @@ type IMessagePopulated = {
   organisation: IOrganisation
 } & IMessage
 
-export default async ({ req, api, models, authJwt }: RouteContext) => {
+export default async ({ api, models, authJwt }: RouteContext) => {
   
   // Fail if there is no user
   if (!authJwt) throw new Error('api.general.badAuth')

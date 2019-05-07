@@ -3,9 +3,9 @@ import * as tst from '../../tools/testHarness'
 import { IModelSet } from '../models'
 import { DebugI18n } from '../i18n'
 import { sign } from 'jsonwebtoken'
-import supertest = require('supertest')
-import express = require('express')
-import expressJwt = require('express-jwt')
+import supertest from 'supertest'
+import express from 'express'
+import expressJwt from 'express-jwt'
 
 const expectedRoutes = [
   { method: 'get', url: '/' },

@@ -1,7 +1,7 @@
 import { RouteContext, MemberRole, AllMemberRoles, MemberJwt } from '@/src/types'
 import { isMongoId } from '@/src/utils'
 import { makeTwilioClient, makeApiUrl, shrinkLink } from '@/src/services'
-import phone = require('phone')
+import phone from 'phone'
 import { sign } from 'jsonwebtoken'
 import { LocalI18n } from 'src/i18n'
 

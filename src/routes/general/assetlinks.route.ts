@@ -2,12 +2,14 @@ import { RouteContext } from '@/src/types'
 import { readFile } from 'fs'
 import { join } from 'path'
 
+const assetLinkPath = join(__dirname, '../../../assetlinks.json')
+
 export default async ({ res, next }: RouteContext) => {
   
   // Attempt to read the file
-  readFile(join(__dirname, '../../../assetlinks.json'), (err, data) => {
+  readFile(assetLinkPath, (err, data) => {
     if (err) {
-      next()
+      next(err)
     } else {
       res.setHeader('Content-Type', 'application/json')
       res.send(data)

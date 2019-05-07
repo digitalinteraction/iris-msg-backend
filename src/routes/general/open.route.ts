@@ -23,14 +23,14 @@ export default async (ctx: RouteContext) => {
   else return ctx.next()
 }
 
-export function handleInvite ({ req, res }: RouteContext) {
+export function handleInvite ({ res }: RouteContext) {
   res.send(template({
     title: 'Your invitation',
     appLink: process.env.PLAY_STORE_URL!
   }))
 }
 
-export function handleDonate ({ req, res }: RouteContext) {
+export function handleDonate ({ res }: RouteContext) {
   res.send(template({
     title: 'Donation Request',
     appLink: process.env.PLAY_STORE_URL!

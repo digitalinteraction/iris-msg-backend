@@ -82,10 +82,3 @@ export function makeModels (connection: Connection): IModelSet {
     )
   }
 }
-
-// export namespace Model {
-//   export interface User extends IUserClass {}
-//   export interface Organisation extends Model<IOrganisation> {}
-//   export interface Message extends Model<IMessage> {}
-//   export interface AuthCode extends IAuthCodeClass {}
-// }

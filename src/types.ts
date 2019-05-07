@@ -3,7 +3,7 @@ import { LocalI18n } from './i18n'
 import { Api } from 'api-formatter'
 import { Request, Response, NextFunction } from 'express'
 import { Document, Types } from 'mongoose'
-import winston = require('winston')
+import winston from 'winston'
 
 export interface IBaseModel extends Document {
   createdAt: Date

@@ -1,8 +1,8 @@
-import * as firebase from 'firebase-admin'
+import firebase from 'firebase-admin'
 import { LocalI18n } from '@/src/i18n'
 import { IUser } from '@/src/models'
 import { FcmType } from '@/src/types'
-import winston = require('winston')
+import winston from 'winston'
 
 export let firebaseApp: firebase.app.App | undefined = undefined
 

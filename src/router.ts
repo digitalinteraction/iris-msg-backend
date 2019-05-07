@@ -1,16 +1,15 @@
-import express = require('express')
-import bodyParser = require('body-parser')
-import expressJwt = require('express-jwt')
-import langParser = require('accept-language-parser')
-import winston = require('winston')
-import cors = require('cors')
+import express from 'express'
+import bodyParser from 'body-parser'
+import expressJwt from 'express-jwt'
+import langParser from 'accept-language-parser'
+import winston from 'winston'
+import cors from 'cors'
 import { RouteContext } from './types'
-import { Api } from 'api-formatter'
 import * as routes from './routes'
 import { IModelSet } from './models'
-import { I18n, LocalI18n, AvailableLocales, LocalisedApi } from './i18n'
+import { I18n, AvailableLocales, LocalisedApi } from './i18n'
 import * as middleware from './middleware'
-import * as path from 'path'
+import path from 'path'
 
 type CustomRoute = (ctx: RouteContext) => Promise<void>
 

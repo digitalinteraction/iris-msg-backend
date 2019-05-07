@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import * as pug from 'pug'
+import pug from 'pug'
 
 /**
  * Allocates each item in setA an item from setB,
