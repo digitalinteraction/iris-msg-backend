@@ -34,7 +34,7 @@ export const RequiredFiles = [
 //
 // Arguments for mongo (defined here to be reused everywhere)
 //
-export const mongoArgs: mongoose.ConnectionOptionsBase = {
+export const mongoArgs: mongoose.ConnectionOptions = {
   useNewUrlParser: true,
   useCreateIndex: true
 }
