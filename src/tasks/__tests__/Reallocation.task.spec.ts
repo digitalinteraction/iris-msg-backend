@@ -123,10 +123,18 @@ describe('ReallocationTask', () => {
     expect(third).toHaveProperty('previousAttempt', second._id)
   })
   it('should not reallocate young attempts', async () => {
-    msg.attempts.push({
-      state: MessageAttemptState.Pending,
-      recipient: seed.User.subB.id,
-      donor: seed.User.donorB
-    })
+    msg.attempts[0].createdAt = new Date()
+    
+    await msg.save()
+    
+    await task.run(ctx)
+    
+    let updatedMessage = await models.Message.findById(msg.id)
+    let prevAttempt = updatedMessage!.attempts[0]
+    
+    expect(prevAttempt.state).toEqual(MessageAttemptState.Pending)
+  })
+  it('should not reallocate to users without an fcmToken set', () => {
+    // ...
   })
 })
