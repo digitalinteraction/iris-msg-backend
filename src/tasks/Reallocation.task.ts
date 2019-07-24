@@ -1,7 +1,7 @@
 import { Task } from './Task'
-import { IMessageAttempt, IMessage, IOrganisation, IModelSet } from 'src/models'
+import { IMessageAttempt, IMessage, IOrganisation, IModelSet, IOrganisationWithUsers, IMemberWithUser, IMessageWithOrganisation } from 'src/models'
 import { shuffleArray } from '@/src/utils'
-import { MessageAttemptState } from '@/src/types'
+import { MessageAttemptState, MemberRole } from '@/src/types'
 import { sendTwilioMessage, makeFirebaseMessenger, sendNewDonationFcm } from '@/src/services'
 import winston from 'winston'
 import { LocalI18n } from '@/src/i18n'
@@ -64,7 +64,7 @@ export class ReallocationTask extends Task<ReallocationContext> {
           createdAt: { $lte: reallocationPoint }
         }
       }
-    }).populate('organisation')
+    })
     
     if (messages.length === 0) return
     
@@ -77,35 +77,37 @@ export class ReallocationTask extends Task<ReallocationContext> {
     let reallocationCount = 0
     
     // Attempt to reallocate unsent attempts
-    messages.forEach(message => {
-      let org: IOrganisation = message.organisation as any
-      if (!org) return
+    for (let message of messages) {
+      let organisation: IOrganisationWithUsers = await models.Organisation
+        .findOne(message.organisation)
+        .populate('members.user') as any
+      
+      if (!organisation) continue
       
       // Look through each attempt (filtering out too-new / non-pending ones)
-      message.attempts.forEach(attempt => {
-        if (attempt.state !== MessageAttemptState.Pending) return
-        if (attempt.createdAt >= reallocationPoint) return
+      // Uses Array.from() to prevent mutation during the iteration
+      for (let attempt of Array.from(message.attempts)) {
+        if (attempt.state !== MessageAttemptState.Pending) continue
+        if (attempt.createdAt >= reallocationPoint) continue
         
         // Mark it as no-response
         attempt.state = MessageAttemptState.NoResponse
         reallocationCount++
         
         // Reallocate the message
-        let result = this.processAttempt(
-          attempt, message, org
-        )
+        let result = this.processAttempt(attempt, message, organisation)
         
         // Handle each response
         switch (result.type) {
           case ReallocResult.Reallocated:
             result.newUser && fcmToSend.add(result.newUser)
-            return
+            continue
           case ReallocResult.Twilio:
             smsToSend.push(attempt)
-            return
+            continue
         }
-      })
-    })
+      }
+    }
     
     // Send fcm tokens
     await this.sendFcms(Array.from(fcmToSend), models, i18n, log)
@@ -126,19 +128,25 @@ export class ReallocationTask extends Task<ReallocationContext> {
   
   /** Process an attempt to reallocate to a new donor */
   processAttempt (
-    attempt: IMessageAttempt, message: IMessage, organisation: IOrganisation
+    attempt: IMessageAttempt,
+    message: IMessage,
+    organisation: IOrganisationWithUsers
   ): Reallocation {
     
-    // Get the donors that have already been used
-    let usedDonorsIds = message.attempts
-      .filter(prevAttempt => prevAttempt.recipient.equals(attempt.recipient))
-      .reduce((set, attempt) =>
-        attempt.donor !== null ? set.add(attempt.donor.toHexString()) : set
-      , new Set<string>())
+    let usedDonorIds = new Set(
+      Array.from(message.attempts)
+        .filter(a => a.donor && a.recipient.equals(attempt.recipient))
+        .map(a => a.donor!.toHexString())
+    )
     
     // Work out the donors we can use
-    let potentialDonors = organisation.activeDonors
-      .filter(member => !usedDonorsIds.has(member.user.toHexString()))
+    let potentialDonors = organisation.members
+      .filter(member =>
+        member.isActive &&
+        member.role === MemberRole.Donor &&
+        member.user.fcmToken !== null &&
+        !usedDonorIds.has(member.user.id)
+      )
     
     // Randomly pick one of those donors
     let newDonor = shuffleArray(potentialDonors)[0]
@@ -148,11 +156,14 @@ export class ReallocationTask extends Task<ReallocationContext> {
       message.attempts.push({
         state: MessageAttemptState.Pending,
         recipient: attempt.recipient,
-        donor: newDonor.user,
+        donor: newDonor.user._id,
         previousAttempt: attempt.id
       })
       
-      return { type: ReallocResult.Reallocated, newUser: newDonor.user.toString() }
+      return {
+        type: ReallocResult.Reallocated,
+        newUser: newDonor.user.id
+      }
     } else if (process.env.TWILIO_FALLBACK) {
       
       // Add the twilio message

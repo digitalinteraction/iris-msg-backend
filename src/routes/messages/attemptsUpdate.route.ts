@@ -8,7 +8,8 @@ import { isMongoId } from '@/src/utils'
 
 import {
   IMessageAttempt,
-  IMessage
+  IMessage,
+  IOrganisationWithUsers
 } from '@/src/models'
 
 import {
@@ -84,30 +85,34 @@ export default async ({ req, api, models, authJwt, i18n, log }: RouteContext) =>
   let fcmToSend = new Set<string>()
   
   // Process each update
-  updates.map(update => {
+  for (let update of updates) {
     let { message, attempt } = getMessageAndAttempt(update.attempt, messages)
-    if (!attempt || !message || !message.organisation) return
+    if (!attempt || !message || !message.organisation) continue
     
     attempt.state = update.newState
     
     // If not a retry state, stop here
-    if (!RetryStates.includes(update.newState)) return
+    if (!RetryStates.includes(update.newState)) continue
+    
+    let organisation: IOrganisationWithUsers = await models.Organisation
+      .findOne(message.organisation)
+      .populate('members.user') as any
     
     // Update the attempt
     let result = reallocator.processAttempt(
-      attempt!, message, message.organisation as any
+      attempt!, message, organisation
     )
     
     // Store info depending on the result
     switch (result.type) {
       case ReallocResult.Twilio:
         smsToSend.push(attempt)
-        return
+        continue
       case ReallocResult.Reallocated:
         result.newUser && fcmToSend.add(result.newUser)
-        return
+        continue
     }
-  })
+  }
   
   // Send fcms
   await reallocator.sendFcms(Array.from(fcmToSend), models, i18n, log)
@@ -123,7 +128,8 @@ export default async ({ req, api, models, authJwt, i18n, log }: RouteContext) =>
 }
 
 export function getMessageAndAttempt (
-  attemptId: string, messages: IMessage[]): IMessageAndAttempt {
+  attemptId: string, messages: IMessage[]
+): IMessageAndAttempt {
   
   for (let i in messages) {
     let message = messages[i]

@@ -71,7 +71,7 @@ afterEach(async () => {
 })
 
 describe('ReallocationTask', () => {
-  it('should mark the previos attempt as NoResponse', async () => {
+  it('should mark the previous attempt as NoResponse', async () => {
     await task.run(ctx)
   
     let updatedMessage = await models.Message.findById(msg.id)
@@ -81,7 +81,6 @@ describe('ReallocationTask', () => {
   })
   
   it('should reallocate the task to another donor', async () => {
-    
     await task.run(ctx)
     
     let updatedMessage = await models.Message.findById(msg.id)
@@ -134,7 +133,15 @@ describe('ReallocationTask', () => {
     
     expect(prevAttempt.state).toEqual(MessageAttemptState.Pending)
   })
-  it('should not reallocate to users without an fcmToken set', () => {
-    // ...
+  it('should not reallocate to users without an fcmToken set', async () => {
+    seed.User.donorB.fcmToken = null
+    await seed.User.donorB.save()
+    
+    await task.run(ctx)
+    
+    let updatedMessage = await models.Message.findById(msg.id)
+    let newAttempt = updatedMessage!.attempts.slice(-1)[0]
+    
+    expect(newAttempt.state).toEqual(MessageAttemptState.Twilio)
   })
 })
