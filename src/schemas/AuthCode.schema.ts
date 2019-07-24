@@ -6,8 +6,11 @@ const schemaOptions = {
 }
 
 export type IAuthCodeClass = Model<IAuthCode> & {
-  forUser (userId: Types.ObjectId, type: AuthCodeType): Promise<IAuthCode>
-  fromCode (code: any, type: AuthCodeType): DocumentQuery<IAuthCode | null, IAuthCode>
+  forUser(userId: Types.ObjectId, type: AuthCodeType): Promise<IAuthCode>
+  fromCode(
+    code: any,
+    type: AuthCodeType
+  ): DocumentQuery<IAuthCode | null, IAuthCode>
 }
 
 export interface IAuthCode extends IBaseModel {
@@ -16,37 +19,43 @@ export interface IAuthCode extends IBaseModel {
   expiresOn: Date
   usedOn: Date | null
   user: Schema.Types.ObjectId | null
-  
+
   formatted: string
 }
 
-export const AuthCodeSchema = new Schema({
-  code: {
-    type: Number,
-    required: true
+export const AuthCodeSchema = new Schema(
+  {
+    code: {
+      type: Number,
+      required: true
+    },
+    type: {
+      type: String,
+      enum: AllAuthCodeTypes,
+      required: true
+    },
+    expiresOn: {
+      type: Date,
+      required: true
+    },
+    usedOn: {
+      type: Date,
+      default: null
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
   },
-  type: {
-    type: String,
-    enum: AllAuthCodeTypes,
-    required: true
-  },
-  expiresOn: {
-    type: Date,
-    required: true
-  },
-  usedOn: {
-    type: Date,
-    default: null
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  }
-}, schemaOptions)
+  schemaOptions
+)
 
-AuthCodeSchema.static('forUser', function (
-  this: typeof Model, userId: Types.ObjectId, type: AuthCodeType) {
+AuthCodeSchema.static('forUser', function(
+  this: typeof Model,
+  userId: Types.ObjectId,
+  type: AuthCodeType
+) {
   let model: IAuthCode = new this({
     user: userId,
     code: makeCode(),
@@ -56,8 +65,11 @@ AuthCodeSchema.static('forUser', function (
   return model.save()
 })
 
-AuthCodeSchema.static('fromCode', function
-  (this: typeof Model, rawCode: any, type: AuthCodeType) {
+AuthCodeSchema.static('fromCode', function(
+  this: typeof Model,
+  rawCode: any,
+  type: AuthCodeType
+) {
   let code = parseInt(rawCode, 10)
   return this.findOne({
     type,
@@ -67,7 +79,7 @@ AuthCodeSchema.static('fromCode', function
   })
 })
 
-AuthCodeSchema.virtual('formatted').get(function (this: IAuthCode) {
+AuthCodeSchema.virtual('formatted').get(function(this: IAuthCode) {
   let formatted = this.code.toString()
   while (formatted.length < 6) {
     formatted = '0' + formatted
@@ -75,11 +87,11 @@ AuthCodeSchema.virtual('formatted').get(function (this: IAuthCode) {
   return formatted.slice(0, 3) + '-' + formatted.slice(3, 6)
 })
 
-export function makeCode (): number {
+export function makeCode(): number {
   return Math.floor(Math.random() * 999999)
 }
 
-export function makeExpiry (): Date {
+export function makeExpiry(): Date {
   let now = new Date()
   now.setMinutes(now.getMinutes() + 15)
   return now

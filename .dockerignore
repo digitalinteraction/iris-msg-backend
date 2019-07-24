@@ -1,3 +1,7 @@
+# 
+# Files for docker to ignore
+# 
+
 node_modules
 dist
 docs

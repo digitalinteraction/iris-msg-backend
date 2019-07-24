@@ -13,30 +13,33 @@ export interface IUser extends IBaseModel {
 }
 
 export type IUserClass = Model<IUser> & {
-  findWithJwt (jwt: any): DocumentQuery<IUser | null, IUser>
+  findWithJwt(jwt: any): DocumentQuery<IUser | null, IUser>
 }
 
-export const UserSchema = new Schema({
-  phoneNumber: {
-    type: String,
-    index: true,
-    unique: true
+export const UserSchema = new Schema(
+  {
+    phoneNumber: {
+      type: String,
+      index: true,
+      unique: true
+    },
+    locale: {
+      type: String,
+      default: 'en'
+    },
+    fcmToken: {
+      type: String,
+      default: null
+    },
+    verifiedOn: {
+      type: Date,
+      default: null
+    }
   },
-  locale: {
-    type: String,
-    default: 'en'
-  },
-  fcmToken: {
-    type: String,
-    default: null
-  },
-  verifiedOn: {
-    type: Date,
-    default: null
-  }
-}, schemaOptions)
+  schemaOptions
+)
 
-UserSchema.static('findWithJwt', function (this: typeof Model, jwt: any) {
+UserSchema.static('findWithJwt', function(this: typeof Model, jwt: any) {
   if (!jwt || !jwt.usr) return Promise.resolve(null)
   return this.findOne({ _id: jwt.usr, verifiedOn: { $ne: null } })
 })

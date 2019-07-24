@@ -3,7 +3,6 @@ import { makeModels, IModelSet } from '../models'
 import { mongoArgs } from '../App'
 
 describe('#makeModels', () => {
-  
   let connection: Connection
   let models: IModelSet
   beforeAll(async () => {
@@ -13,7 +12,7 @@ describe('#makeModels', () => {
   afterAll(async () => {
     await connection.close()
   })
-  
+
   it('should have the User Model', async () => {
     expect(models.User).toBeDefined()
   })

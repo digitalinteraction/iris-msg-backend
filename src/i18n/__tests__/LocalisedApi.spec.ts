@@ -14,16 +14,16 @@ describe('LocalisedApi', () => {
     it('should a translate single messages', async () => {
       let messages = 'code.a'
       let envelope = api.makeEnvelope(true, messages, 200, null)
-      
-      expect(envelope.meta.messages).toEqual([ 'en:code.a:' ])
-      expect(envelope.meta.codes).toEqual([ 'code.a' ])
+
+      expect(envelope.meta.messages).toEqual(['en:code.a:'])
+      expect(envelope.meta.codes).toEqual(['code.a'])
     })
     it('should a translate multiple messages', async () => {
-      let messages = [ 'code.a', 'code.b' ]
+      let messages = ['code.a', 'code.b']
       let envelope = api.makeEnvelope(true, messages, 200, null)
-      
-      expect(envelope.meta.messages).toEqual([ 'en:code.a:', 'en:code.b:' ])
-      expect(envelope.meta.codes).toEqual([ 'code.a', 'code.b' ])
+
+      expect(envelope.meta.messages).toEqual(['en:code.a:', 'en:code.b:'])
+      expect(envelope.meta.codes).toEqual(['code.a', 'code.b'])
     })
   })
 })

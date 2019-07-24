@@ -11,10 +11,10 @@ let agent: tst.Agent
 let code: IAuthCode
 
 beforeEach(async () => {
-  ({ db, models } = await tst.openDb())
+  ;({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/auth', models)
   agent = tst.mockRoute(loginCheck, models)
-  
+
   code = await models.AuthCode.create({
     code: 123456,
     expiresOn: new Date(Date.UTC(5000, 0)),
@@ -33,19 +33,19 @@ describe('auth.login.check', () => {
     let res = await agent.post('/').send({ code: 123456 })
     expect(res.status).toBe(200)
   })
-  
+
   it('should return the user', async () => {
     let res = await agent.post('/').send({ code: 123456 })
     let user = res.body.data.user
     expect(user._id).toEqual(seed.User.verified.id)
   })
-  
+
   it('should return a jwt', async () => {
     let res = await agent.post('/').send({ code: 123456 })
     let payload = verify(res.body.data.token, process.env.JWT_SECRET!) as any
     expect(payload.usr).toBe(seed.User.verified.id)
   })
-  
+
   it('should fail if the code has expired', async () => {
     await models.AuthCode.create({
       code: 654321,
@@ -57,7 +57,7 @@ describe('auth.login.check', () => {
     let res = await agent.post('/').send({ code: 654321 })
     expect(res.status).toBe(400)
   })
-  
+
   it('should verify a user if not already', async () => {
     await models.AuthCode.create({
       code: 654321,
@@ -69,13 +69,13 @@ describe('auth.login.check', () => {
     let user = await models.User.findById(seed.User.unverified.id)
     expect(user!.verifiedOn).toBeInstanceOf(Date)
   })
-  
+
   it('should mark the code as used', async () => {
     await agent.post('/').send({ code: 123456 })
     let updatedCode = await models.AuthCode.findById(code.id)
     expect(updatedCode!.usedOn).toBeInstanceOf(Date)
   })
-  
+
   it('should fail for used codes', async () => {
     await code.updateOne({ usedOn: new Date() })
     let res = await agent.post('/').send({ code: 123456 })

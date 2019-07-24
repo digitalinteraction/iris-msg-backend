@@ -6,7 +6,7 @@ let models: IModelSet
 let seed: Seed
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
+  ;({ db, models } = await openDb())
   seed = await applySeed('test/auth', models)
 })
 

@@ -17,22 +17,25 @@ export type IMessageClass = Model<IMessage> & {
   // ...
 }
 
-export const MessageSchema = new Schema({
-  content: {
-    type: String,
-    required: true
+export const MessageSchema = new Schema(
+  {
+    content: {
+      type: String,
+      required: true
+    },
+    attempts: {
+      type: [MessageAttemptSchema]
+    },
+    organisation: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Organisation'
+    },
+    author: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
   },
-  attempts: {
-    type: [MessageAttemptSchema]
-  },
-  organisation: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Organisation'
-  },
-  author: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  }
-}, schemaOptions)
+  schemaOptions
+)

@@ -10,32 +10,35 @@ export interface IMember extends IBaseSubModel {
   confirmedOn: Date | null
   deletedOn: Date | null
   user: Types.ObjectId
-  
+
   isActive: boolean
 }
 
-export const MemberSchema = new Schema({
-  role: {
-    type: String,
-    enum: Object.values(MemberRole),
-    index: true,
-    required: true
+export const MemberSchema = new Schema(
+  {
+    role: {
+      type: String,
+      enum: Object.values(MemberRole),
+      index: true,
+      required: true
+    },
+    confirmedOn: {
+      type: Date,
+      default: null
+    },
+    deletedOn: {
+      type: Date,
+      default: null
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
   },
-  confirmedOn: {
-    type: Date,
-    default: null
-  },
-  deletedOn: {
-    type: Date,
-    default: null
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  }
-}, schemaOptions)
+  schemaOptions
+)
 
-MemberSchema.virtual('isActive').get(function (this: IMember): boolean {
+MemberSchema.virtual('isActive').get(function(this: IMember): boolean {
   return this.confirmedOn !== null && this.deletedOn === null
 })

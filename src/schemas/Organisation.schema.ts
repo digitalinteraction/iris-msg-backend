@@ -12,128 +12,138 @@ export interface IOrganisation extends IBaseModel {
   locale: string
   members: Types.DocumentArray<IMember>
   deletedOn: Date | null
-  
+
   activeSubscribers: IMember[]
   activeDonors: IMember[]
-  isMember (userId: any, role: MemberRole): boolean
-  toJSONWithActiveMembers (): any
+  isMember(userId: any, role: MemberRole): boolean
+  toJSONWithActiveMembers(): any
 }
 
 export type IOrganisationClass = Model<IOrganisation> & {
-  findForUser (userId: any)
-    : DocumentQuery<IOrganisation[], IOrganisation>
-  
-  findByIdForCoordinator (orgId: any, userId: any)
-    : DocumentQuery<IOrganisation | null, IOrganisation>
-  
-  memberQuery (
+  findForUser(userId: any): DocumentQuery<IOrganisation[], IOrganisation>
+
+  findByIdForCoordinator(
+    orgId: any,
+    userId: any
+  ): DocumentQuery<IOrganisation | null, IOrganisation>
+
+  memberQuery(
     role?: MemberRole | MemberRole[],
     user?: Types.ObjectId | string,
     overrides?: object
   ): object
 }
 
-export const OrganisationSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  info: {
-    type: String,
-    required: true
-  },
-  locale: {
-    type: String
-  },
-  members: {
-    type: [ MemberSchema ]
-  },
-  deletedOn: {
-    type: Date,
-    default: null
-  }
-}, schemaOptions)
-
-OrganisationSchema.static(
-  'findForUser',
-  function (this: typeof Model, userId: any) {
-    return this.find({
-      deletedOn: null,
-      members: {
-        $elemMatch: {
-          user: userId,
-          confirmedOn: { $ne: null },
-          deletedOn: null
-        }
-      }
-    })
-  }
-)
-
-OrganisationSchema.static(
-  'findByIdForCoordinator',
-  function (this: typeof Model, orgId: any, userId: any) {
-    return this.findOne({
-      _id: orgId,
-      deletedOn: null,
-      members: {
-        $elemMatch: {
-          user: userId,
-          confirmedOn: { $ne: null },
-          deletedOn: null,
-          role: MemberRole.Coordinator
-        }
-      }
-    })
-  }
-)
-
-OrganisationSchema.static(
-  'memberQuery',
-  function (
-    this: typeof Model,
-    role?: MemberRole | MemberRole[],
-    user?: Types.ObjectId | string,
-    overrides: object = {}
-  ): object {
-    if (!role) role = AllMemberRoles
-    
-    let subQuery: any = {
-      deletedOn: null,
-      confirmedOn: { $ne: null }
+export const OrganisationSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    info: {
+      type: String,
+      required: true
+    },
+    locale: {
+      type: String
+    },
+    members: {
+      type: [MemberSchema]
+    },
+    deletedOn: {
+      type: Date,
+      default: null
     }
-    
-    if (role) subQuery.role = role
-    if (user) subQuery.user = user
-    
-    return {
-      deletedOn: null,
-      members: {
-        $elemMatch: { ...subQuery, ...overrides }
+  },
+  schemaOptions
+)
+
+OrganisationSchema.static('findForUser', function(
+  this: typeof Model,
+  userId: any
+) {
+  return this.find({
+    deletedOn: null,
+    members: {
+      $elemMatch: {
+        user: userId,
+        confirmedOn: { $ne: null },
+        deletedOn: null
       }
     }
-  }
-)
+  })
+})
 
-OrganisationSchema.virtual('activeDonors').get(function (this: IOrganisation) {
-  return this.members.filter(member =>
-    member.role === MemberRole.Donor &&
-    member.deletedOn === null &&
-    member.confirmedOn !== null
+OrganisationSchema.static('findByIdForCoordinator', function(
+  this: typeof Model,
+  orgId: any,
+  userId: any
+) {
+  return this.findOne({
+    _id: orgId,
+    deletedOn: null,
+    members: {
+      $elemMatch: {
+        user: userId,
+        confirmedOn: { $ne: null },
+        deletedOn: null,
+        role: MemberRole.Coordinator
+      }
+    }
+  })
+})
+
+OrganisationSchema.static('memberQuery', function(
+  this: typeof Model,
+  role?: MemberRole | MemberRole[],
+  user?: Types.ObjectId | string,
+  overrides: object = {}
+): object {
+  if (!role) role = AllMemberRoles
+
+  let subQuery: any = {
+    deletedOn: null,
+    confirmedOn: { $ne: null }
+  }
+
+  if (role) subQuery.role = role
+  if (user) subQuery.user = user
+
+  return {
+    deletedOn: null,
+    members: {
+      $elemMatch: { ...subQuery, ...overrides }
+    }
+  }
+})
+
+OrganisationSchema.virtual('activeDonors').get(function(this: IOrganisation) {
+  return this.members.filter(
+    member =>
+      member.role === MemberRole.Donor &&
+      member.deletedOn === null &&
+      member.confirmedOn !== null
   )
 })
 
-OrganisationSchema.methods.toJSONWithActiveMembers = function (this: IOrganisation) {
+OrganisationSchema.methods.toJSONWithActiveMembers = function(
+  this: IOrganisation
+) {
   return {
     ...this.toJSON(),
     members: this.members.filter(member => member.isActive)
   }
 }
 
-OrganisationSchema.methods.isMember = function (
-  this: IOrganisation, userId: any, role: MemberRole
+OrganisationSchema.methods.isMember = function(
+  this: IOrganisation,
+  userId: any,
+  role: MemberRole
 ): boolean {
   return this.members.some(
-    member => member.isActive && member.user.toHexString() === userId && member.role === role
+    member =>
+      member.isActive &&
+      member.user.toHexString() === userId &&
+      member.role === role
   )
 }

@@ -22,7 +22,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [ "./*" ]
+      "@/*": ["./*"]
     }
   },
   "include": ["src"],

@@ -1,7 +1,4 @@
-export {
-  makeTwilioClient,
-  sendTwilioMessage
-} from './twilio.service'
+export { makeTwilioClient, sendTwilioMessage } from './twilio.service'
 
 export {
   makeFirebaseMessenger,
@@ -10,9 +7,4 @@ export {
   sendNewDonationFcm
 } from './firebase.service'
 
-export {
-  makeApiUrl,
-  makeWebUrl,
-  shrinkLink,
-  canShrink
-} from './links.service'
+export { makeApiUrl, makeWebUrl, shrinkLink, canShrink } from './links.service'

@@ -1,4 +1,12 @@
-import { applySeed, Seed, mockRoute, Agent, openDb, closeDb, jwtHeader } from '@/tools/testHarness'
+import {
+  applySeed,
+  Seed,
+  mockRoute,
+  Agent,
+  openDb,
+  closeDb,
+  jwtHeader
+} from '@/tools/testHarness'
 import me from '../me.route'
 import { IModelSet } from '@/src/models'
 
@@ -9,29 +17,27 @@ describe('auth.me', () => {
   let agent: Agent
 
   beforeEach(async () => {
-    ({ db, models } = await openDb())
+    ;({ db, models } = await openDb())
     seed = await applySeed('test/auth', models)
     agent = mockRoute(me, models, { jwt: false })
   })
   afterEach(async () => {
     await closeDb(db)
   })
-  
+
   it('should return a 200', async () => {
     let res = await agent.get('/')
     expect(res.status).toBe(200)
   })
-  
+
   it('should return a user from a jwt', async () => {
-    let res = await agent.get('/')
-      .set(jwtHeader(seed.User.verified.id))
+    let res = await agent.get('/').set(jwtHeader(seed.User.verified.id))
     expect(res.body.data).toBeTruthy()
     expect(res.body.data._id).toBe(seed.User.verified.id.toString())
   })
-  
+
   it('should not return unverified users', async () => {
-    let res = await agent.get('/')
-      .set(jwtHeader(seed.User.unverified.id))
+    let res = await agent.get('/').set(jwtHeader(seed.User.unverified.id))
     expect(res.body.data).toBeNull()
   })
 })

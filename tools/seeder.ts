@@ -7,14 +7,14 @@ import { readFile } from 'fs'
 type NamedType<T> = { [name: string]: T }
 
 export type Seed = {
-  User: NamedType<models.IUser>,
-  Organisation: NamedType<models.IOrganisation>,
-  Message: NamedType<models.IMessage>,
-  AuthCode: NamedType<models.IAuthCode>,
+  User: NamedType<models.IUser>
+  Organisation: NamedType<models.IOrganisation>
+  Message: NamedType<models.IMessage>
+  AuthCode: NamedType<models.IAuthCode>
   TwilioMessage: NamedType<models.ITwilioMessage>
 }
 
-export async function applySeed (seedName: String, models: models.IModelSet) {
+export async function applySeed(seedName: String, models: models.IModelSet) {
   let path = resolve(__dirname, `../seeds/${seedName}.yml`)
   let data = await readFileAsync(path)
   let seed = safeLoad(String(data))
@@ -22,18 +22,20 @@ export async function applySeed (seedName: String, models: models.IModelSet) {
   if (!seed) throw new Error('Invalid Seed')
 
   let output: any = {}
-  await Promise.all(Object.entries(seed).map(async ([modelName, data]) => {
-    if (!(models as any)[modelName]) {
-      throw new Error(`Invalid model in seed '${modelName}'`)
-    } else {
-      output[modelName] = await seedModel((models as any)[modelName], data)
-    }
-  }))
+  await Promise.all(
+    Object.entries(seed).map(async ([modelName, data]) => {
+      if (!(models as any)[modelName]) {
+        throw new Error(`Invalid model in seed '${modelName}'`)
+      } else {
+        output[modelName] = await seedModel((models as any)[modelName], data)
+      }
+    })
+  )
 
   return output
 }
 
-async function seedModel (Model: Model<Document>, data: any): Promise<any> {
+async function seedModel(Model: Model<Document>, data: any): Promise<any> {
   let names = Object.keys(data)
   let documents = Object.values(data)
 
@@ -47,7 +49,7 @@ async function seedModel (Model: Model<Document>, data: any): Promise<any> {
   return keyedModels
 }
 
-function readFileAsync (path: string): Promise<Buffer> {
+function readFileAsync(path: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     readFile(path, (err, data) => {
       if (err) reject(err)

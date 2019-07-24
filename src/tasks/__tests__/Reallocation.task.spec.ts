@@ -22,11 +22,11 @@ let sentSms: any[]
 let ctx: ReallocationContext
 
 beforeEach(async () => {
-  ({ db, models } = await tst.openDb())
+  ;({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/messages', models)
-  
+
   let org = seed.Organisation.a
-  
+
   tst.addMember(org, seed.User.current, MemberRole.Coordinator)
   tst.addMember(org, seed.User.donorA, MemberRole.Donor)
   tst.addMember(org, seed.User.donorB, MemberRole.Donor)
@@ -36,15 +36,15 @@ beforeEach(async () => {
   tst.addMember(org, seed.User.donorD, MemberRole.Donor, {
     deletedOn: new Date()
   })
-  
+
   tst.addMember(org, seed.User.subA, MemberRole.Subscriber)
   tst.addMember(org, seed.User.subB, MemberRole.Subscriber)
-  
+
   await org.save()
-  
+
   sentFcm = (firebase as any).__resetMessages()
   sentSms = (twilio as any)().__resetMessages()
-  
+
   msg = await models.Message.create({
     content: 'Hello, World!',
     author: seed.User.current.id,
@@ -58,9 +58,9 @@ beforeEach(async () => {
       }
     ]
   })
-  
+
   task = new ReallocationTask()
-  
+
   let log = tst.mockLog()
   let i18n = tst.mockI18n()
   ctx = { models, log, i18n }
@@ -73,30 +73,30 @@ afterEach(async () => {
 describe('ReallocationTask', () => {
   it('should mark the previous attempt as NoResponse', async () => {
     await task.run(ctx)
-  
+
     let updatedMessage = await models.Message.findById(msg.id)
     let prevAttempt = updatedMessage!.attempts[0]
-  
+
     expect(prevAttempt.state).toEqual(MessageAttemptState.NoResponse)
   })
-  
+
   it('should reallocate the task to another donor', async () => {
     await task.run(ctx)
-    
+
     let updatedMessage = await models.Message.findById(msg.id)
     let nextAttempt = updatedMessage!.attempts[1]
-    
+
     expect(updatedMessage!.attempts).toHaveLength(2)
     expect(nextAttempt.state).toBe(MessageAttemptState.Pending)
     expect(nextAttempt.donor).toEqual(seed.User.donorB._id)
-    
-    let [ first, second ] = updatedMessage!.attempts
+
+    let [first, second] = updatedMessage!.attempts
     expect(second).toHaveProperty('previousAttempt', first._id)
   })
-  
+
   it('should send the new donor an fcm', async () => {
     await task.run(ctx)
-    
+
     expect(sentFcm).toHaveLength(1)
     expect(sentFcm[0].token).toEqual('abcdefg-123456-3')
   })
@@ -108,40 +108,40 @@ describe('ReallocationTask', () => {
       recipient: seed.User.subA.id,
       donor: seed.User.donorB
     })
-    
+
     await msg.save()
-    
+
     await task.run(ctx)
-    
+
     let updatedMessage = await models.Message.findById(msg.id)
-    
+
     expect(sentSms).toHaveLength(1)
     expect(updatedMessage!.attempts).toHaveLength(3)
-    
-    let [ , second, third ] = updatedMessage!.attempts
+
+    let [, second, third] = updatedMessage!.attempts
     expect(third).toHaveProperty('previousAttempt', second._id)
   })
   it('should not reallocate young attempts', async () => {
     msg.attempts[0].createdAt = new Date()
-    
+
     await msg.save()
-    
+
     await task.run(ctx)
-    
+
     let updatedMessage = await models.Message.findById(msg.id)
     let prevAttempt = updatedMessage!.attempts[0]
-    
+
     expect(prevAttempt.state).toEqual(MessageAttemptState.Pending)
   })
   it('should not reallocate to users without an fcmToken set', async () => {
     seed.User.donorB.fcmToken = null
     await seed.User.donorB.save()
-    
+
     await task.run(ctx)
-    
+
     let updatedMessage = await models.Message.findById(msg.id)
     let newAttempt = updatedMessage!.attempts.slice(-1)[0]
-    
+
     expect(newAttempt.state).toEqual(MessageAttemptState.Twilio)
   })
 })

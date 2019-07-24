@@ -29,22 +29,25 @@ export interface ITwilioMessage extends IBaseModel {
   priority: number
 }
 
-export const TwilioMessageSchema = new Schema({
-  type: {
-    type: String,
-    enum: AllTwilioMessageTypes,
-    required: true
+export const TwilioMessageSchema = new Schema(
+  {
+    type: {
+      type: String,
+      enum: AllTwilioMessageTypes,
+      required: true
+    },
+    to: {
+      type: String,
+      required: true
+    },
+    body: {
+      type: String,
+      required: true
+    },
+    priority: {
+      type: Number,
+      default: MessagePriority.Low
+    }
   },
-  to: {
-    type: String,
-    required: true
-  },
-  body: {
-    type: String,
-    required: true
-  },
-  priority: {
-    type: Number,
-    default: MessagePriority.Low
-  }
-}, schemaOptions)
+  schemaOptions
+)

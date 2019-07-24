@@ -136,7 +136,6 @@ These are the key directories in the project, some are git-ignored.
 | `templates`      | Pug templates for generate pages     |
 | `tools`          | Node.js utility scripts              |
 
-
 ### Route definitions
 
 The routes of this API are TypeScript functions that take a context object, `ctx`.
@@ -212,31 +211,32 @@ git push --tags
 
 ### Environment Variables
 
-| Name | Description |
-| ---- | ----------- |
-| `NODE_ENV`        | What environment the system is running in. |
-| `MONGO_URI`       | Where the mongo database is and how to connect to it |
-| `JWT_SECRET`      | The secret for json web tokens |
-| `API_URL`         | The public url of this api, e.g. `https://api.irismsg.io` |
-| `WEB_URL`         | The public url of the web, e.g. `https://web.irismsg.io` (unused) |
+| Name              | Description                                                            |
+| ----------------- | ---------------------------------------------------------------------- |
+| `NODE_ENV`        | What environment the system is running in.                             |
+| `MONGO_URI`       | Where the mongo database is and how to connect to it                   |
+| `JWT_SECRET`      | The secret for json web tokens                                         |
+| `API_URL`         | The public url of this api, e.g. `https://api.irismsg.io`              |
+| `WEB_URL`         | The public url of the web, e.g. `https://web.irismsg.io` (unused)      |
 | `TWILIO_TOKEN`    | Your twilio access token, [more info](https://www.twilio.com/docs/sms) |
-| `TWILIO_SID`      | Your twilio sid |
-| `TWILIO_NUMBER`   | Your twilio number, the number service sms will be sent from |
-| `TWILIO_FALLBACK` | If the sms donation algorithm should fall back to using twilio |
-| `FIREBASE_DB`     | Where your firebase database is |
-| `PLAY_STORE_URL`  | The link to download the Iris Msg app |
+| `TWILIO_SID`      | Your twilio sid                                                        |
+| `TWILIO_NUMBER`   | Your twilio number, the number service sms will be sent from           |
+| `TWILIO_FALLBACK` | If the sms donation algorithm should fall back to using twilio         |
+| `FIREBASE_DB`     | Where your firebase database is                                        |
+| `PLAY_STORE_URL`  | The link to download the Iris Msg app                                  |
 
 Useful links:
+
 - [Mongo connection strings](https://docs.mongodb.com/manual/reference/connection-string)
 - [About JWT](https://jwt.io/introduction)
 - [Shrinky Link](https://github.com/robb-j/shrinky-link)
 
 ### Mounted Files
 
-| File | Description |
-| ---- | ----------- |
+| File                       | Description                                                                                                      |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `/app/assetlinks.json`     | Your android asset links file, [more info](https://developers.google.com/digital-asset-links/v1/getting-started) |
-| `/app/google-account.json` | Your Firebase account file, [more info](https://firebase.google.com/docs/admin/setup) |
+| `/app/google-account.json` | Your Firebase account file, [more info](https://firebase.google.com/docs/admin/setup)                            |
 
 ### Using a URL Shortener
 

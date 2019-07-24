@@ -18,7 +18,7 @@ export interface IBaseSubModel extends Types.Subdocument {
 export type LocaliseArgs = { [id: string]: any } | Array<any>
 
 export interface ILocaliser {
-  translate (locale: string, key: string, args?: LocaliseArgs): string
+  translate(locale: string, key: string, args?: LocaliseArgs): string
   // pluralise (locale: string, key: string, count: number): string
 }
 
@@ -28,13 +28,15 @@ export interface RouteContext {
   api: Api
   req: Request
   res: Response
-  next: NextFunction,
-  authJwt?: AuthJwt,
+  next: NextFunction
+  authJwt?: AuthJwt
   log: winston.Logger
 }
 
 export type ExpressMiddleware = (
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => void
 
 export enum AuthCodeType {
@@ -49,7 +51,7 @@ export interface AuthJwt {
 }
 
 export interface MemberJwt {
-  mem: string,
+  mem: string
   org: string
 }
 

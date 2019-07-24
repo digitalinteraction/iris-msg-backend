@@ -6,17 +6,17 @@ let db: any
 let models: IModelSet
 let seed: Seed
 
-function makeOrg (member: any, extraArgs: any = {}) {
+function makeOrg(member: any, extraArgs: any = {}) {
   return models.Organisation.create({
     name: 'Org',
     info: 'Organisation',
-    members: [ member ],
+    members: [member],
     ...extraArgs
   })
 }
 
 beforeEach(async () => {
-  ({ db, models } = await openDb())
+  ;({ db, models } = await openDb())
   seed = await applySeed('test/orgs', models)
 })
 
@@ -33,17 +33,20 @@ describe('Organisation', () => {
         confirmedOn: new Date(),
         deletedOn: null
       })
-      
+
       let orgs = await models.Organisation.findForUser(seed.User.verified.id)
       expect(orgs).toHaveLength(1)
     })
     it('should ignore deleted organisations', async () => {
-      await makeOrg({
-        user: seed.User.verified.id,
-        role: MemberRole.Coordinator,
-        confirmedOn: new Date()
-      }, { deletedOn: new Date() })
-      
+      await makeOrg(
+        {
+          user: seed.User.verified.id,
+          role: MemberRole.Coordinator,
+          confirmedOn: new Date()
+        },
+        { deletedOn: new Date() }
+      )
+
       let orgs = await models.Organisation.findForUser(seed.User.verified.id)
       expect(orgs).toHaveLength(0)
     })
@@ -56,22 +59,27 @@ describe('Organisation', () => {
         confirmedOn: new Date(),
         deletedOn: null
       })
-      
+
       let matched = await models.Organisation.findByIdForCoordinator(
-        org.id, seed.User.verified.id
+        org.id,
+        seed.User.verified.id
       )
       expect(matched).toBeDefined()
     })
     it('should ignore deleted organisations', async () => {
-      let org = await makeOrg({
-        user: seed.User.verified.id,
-        role: MemberRole.Coordinator,
-        confirmedOn: new Date(),
-        deletedOn: null
-      }, { deletedOn: new Date() })
-      
+      let org = await makeOrg(
+        {
+          user: seed.User.verified.id,
+          role: MemberRole.Coordinator,
+          confirmedOn: new Date(),
+          deletedOn: null
+        },
+        { deletedOn: new Date() }
+      )
+
       let matched = await models.Organisation.findByIdForCoordinator(
-        org.id, seed.User.verified.id
+        org.id,
+        seed.User.verified.id
       )
       expect(matched).toBeNull()
     })

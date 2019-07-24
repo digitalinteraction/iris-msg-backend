@@ -2,13 +2,12 @@ import { LocaliseArgs } from '@/src/types'
 import { I18n } from './I18n'
 
 export class DebugI18n extends I18n {
-  
-  constructor () {
+  constructor() {
     super('__tests__')
     this.isSetup = true
   }
-  
-  translate (locale: string, key: string, args?: LocaliseArgs): string {
+
+  translate(locale: string, key: string, args?: LocaliseArgs): string {
     let formattedArgs = ''
     if (args) {
       formattedArgs = Object.keys(args)
@@ -17,8 +16,8 @@ export class DebugI18n extends I18n {
     }
     return `${locale}:${key}:${formattedArgs}`
   }
-  
-  pluralise (locale: string, key: string, count: number): string {
+
+  pluralise(locale: string, key: string, count: number): string {
     return `${locale}:${key}:${count}`
   }
 }

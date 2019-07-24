@@ -13,10 +13,10 @@ let member: IMember
 let token: string
 
 beforeEach(async () => {
-  ({ db, models } = await tst.openDb())
+  ;({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/members', models)
   agent = tst.mockRoute(showInvite, models, { path: '/:token' })
-  
+
   org = seed.Organisation.a
   member = org.members.create({
     role: MemberRole.Subscriber,
@@ -25,7 +25,7 @@ beforeEach(async () => {
   })
   org.members.push(member)
   await org.save()
-  
+
   token = tst.makeMemberToken(member.id, org.id)
 })
 
@@ -38,15 +38,15 @@ describe('orgs.members.showInvite', () => {
     let res = await agent.get(`/${token}`)
     expect(res.status).toBe(200)
   })
-  
+
   it('should return the organisation and member', async () => {
     let res = await agent.get(`/${token}`)
     expect(res.body.data).toBeDefined()
-    
+
     expect(res.body.data.organisation).toBeDefined()
     expect(res.body.data.member).toBeDefined()
     expect(res.body.data.user).toBeDefined()
-    
+
     expect(res.body.data.organisation._id).toBe(org.id)
     expect(res.body.data.member._id).toBe(member.id)
     expect(res.body.data.user._id).toBe(seed.User.current.id)

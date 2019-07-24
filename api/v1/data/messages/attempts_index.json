@@ -22,7 +22,7 @@
       "content": "Hello, World!! A fine top hat was spotted in Jesmond",
       "organisation": {
         "deletedOn": null,
-        "members": [ ],
+        "members": [],
         "_id": "5b311cf24bf2d200119ecda4",
         "name": "Top Hat Notifications",
         "info": "The latest alerts about hats of all kinds",

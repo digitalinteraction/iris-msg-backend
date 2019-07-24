@@ -5,9 +5,7 @@ import { DebugI18n } from './DebugI18n'
 import { LocalI18n } from './LocalI18n'
 import { LocalisedApi } from './LocalisedApi'
 
-const AvailableLocales = [
-  'en', 'el'
-]
+const AvailableLocales = ['en', 'el']
 
 let basepath = join(__dirname, '../../locales')
 let i18n = new I18n(basepath)

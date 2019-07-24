@@ -2,7 +2,7 @@ import { RouteContext, MemberJwt } from '@/src/types'
 import { isMemberJwt } from '@/src/utils'
 import { verify } from 'jsonwebtoken'
 
-function makeError (name: string) {
+function makeError(name: string) {
   return `api.members.showInvite.${name}`
 }
 
@@ -10,7 +10,6 @@ function makeError (name: string) {
  * - token
  */
 export default async ({ req, api, models }: RouteContext) => {
-  
   // Fetch the organisation for that member
   let memberJwt: MemberJwt
   try {
@@ -18,10 +17,10 @@ export default async ({ req, api, models }: RouteContext) => {
   } catch (error) {
     throw makeError('notFound')
   }
-  
+
   // Fail for invalid member jwts
   if (!isMemberJwt(memberJwt)) throw makeError('notFound')
-  
+
   // Fetch the organisation the jwt is for
   let organisation = await models.Organisation.findOne({
     _id: memberJwt.org,
@@ -34,10 +33,10 @@ export default async ({ req, api, models }: RouteContext) => {
       }
     }
   })
-  
+
   // Fail for invalid organisation/member combos
   if (!organisation) throw makeError('notFound')
-  
+
   // Return the organisation and member records
   let member = organisation.members.id(memberJwt.mem)
   api.sendData({

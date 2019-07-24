@@ -1,14 +1,15 @@
-
 let sentMessages = new Array<any>()
 
 export = {
-  __resetMessages () {
+  __resetMessages() {
     sentMessages = []
     return sentMessages
   },
-  messaging () {
+  messaging() {
     return {
-      async send (msg: any) { sentMessages.push(msg) }
+      async send(msg: any) {
+        sentMessages.push(msg)
+      }
     }
   }
 }

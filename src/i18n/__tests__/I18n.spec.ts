@@ -32,25 +32,26 @@ describe('I18n', () => {
         }
       }
     })
-    
+
     it('should return the translated string', async () => {
       let text = i18n.translate('en', 'basic')
       expect(text).toEqual('Hello, World!')
     })
-    
+
     it('should default to the key', async () => {
       let text = i18n.translate('en', 'unknown')
       expect(text).toEqual('unknown')
     })
-    
+
     it('should process array args', async () => {
-      let text = i18n.translate('en', 'array', [ 'first', 'second' ])
+      let text = i18n.translate('en', 'array', ['first', 'second'])
       expect(text).toEqual('A: first, B: second')
     })
-    
+
     it('should process object args', async () => {
       let text = i18n.translate('en', 'object', {
-        a: 'first', b: 'second'
+        a: 'first',
+        b: 'second'
       })
       expect(text).toEqual('a: first, b: second')
     })

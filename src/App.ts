@@ -27,10 +27,7 @@ export const RequiredVariables = [
 //
 // The files that must be present for the app to start
 //
-export const RequiredFiles = [
-  'assetlinks.json',
-  'google-account.json'
-]
+export const RequiredFiles = ['assetlinks.json', 'google-account.json']
 
 //
 // Arguments for mongo (defined here to be reused everywhere)
@@ -45,33 +42,33 @@ export const mongoArgs: mongoose.ConnectionOptions = {
 //
 export default class App {
   reallocTask = new ReallocationTask()
-  
-  static create (): App {
+
+  static create(): App {
     return new this()
   }
-  
-  async run () {
+
+  async run() {
     try {
       let logger = this.makeLogger()
       logger.debug('Starting up')
-      
+
       this.checkEnvironment()
       logger.debug('Environment is ok')
-      
+
       initializeFirebase()
       logger.debug('Initialized Firebase')
-      
+
       let i18n = await this.makeI18n()
       let models = makeModels(mongoose.connection)
       let app = this.createExpressApp(models, i18n, logger)
       logger.debug('Created app')
-      
+
       await new Promise(resolve => app.listen(3000, resolve))
       logger.info('Server started on 0.0.0.0:3000')
-      
+
       await this.connectToMongo()
       logger.debug('Connected to Mongo')
-      
+
       this.startTasks(models, i18n.makeInstance('en'), logger)
       logger.debug('Started tasks')
     } catch (error) {
@@ -79,28 +76,27 @@ export default class App {
       console.log(error)
     }
   }
-  
-  async makeI18n (): Promise<I18n> {
+
+  async makeI18n(): Promise<I18n> {
     await i18n.setup()
     return i18n
   }
-  
-  makeLogger (): winston.Logger {
-    
+
+  makeLogger(): winston.Logger {
     let logLevel = (process.env.LOG_LEVEL || 'error').toLowerCase()
-    
-    let allowedLevels = [ 'error', 'warn', 'info', 'verbose', 'debug', 'silly' ]
-    
+
+    let allowedLevels = ['error', 'warn', 'info', 'verbose', 'debug', 'silly']
+
     if (!allowedLevels.includes(logLevel)) {
       console.log(`Invalid Log level '${logLevel}'`)
       process.exit(1)
     }
-    
+
     let allLevels = winston.config.npm.levels
     let current = winston.config.npm.levels[logLevel]
-    
+
     let logsPath = join(__dirname, '../logs')
-    
+
     return winston.createLogger({
       level: logLevel,
       format: winston.format.json(),
@@ -139,27 +135,27 @@ export default class App {
       ]
     })
   }
-  
-  startTasks (models: IModelSet, i18n: LocalI18n, log: winston.Logger) {
+
+  startTasks(models: IModelSet, i18n: LocalI18n, log: winston.Logger) {
     this.reallocTask.schedule({ models, i18n, log })
   }
-  
-  checkEnvironment () {
+
+  checkEnvironment() {
     // See if there are any missing variables
     // and fail if there are any missing variables
     validateEnvironment(RequiredVariables)
-    
+
     // See if there are any missing files
     // Uses `sync` because the app cannot start without them
-    let missingFiles = RequiredFiles
-      .map(filename => join(__dirname, '..', filename))
-      .filter(path => !existsSync(path))
-    
+    let missingFiles = RequiredFiles.map(filename =>
+      join(__dirname, '..', filename)
+    ).filter(path => !existsSync(path))
+
     if (missingFiles.length > 0) {
       console.log(`Missing files: ${missingFiles.join(', ')}`)
       process.exit(1)
     }
-    
+
     // Work out if we can use firebase
     if (!firebaseEnabled()) {
       console.log(`Firebase isn't configured`)
@@ -168,9 +164,11 @@ export default class App {
       process.exit(1)
     }
   }
-  
-  createExpressApp (
-    models: IModelSet, i18n: I18n, log: winston.Logger
+
+  createExpressApp(
+    models: IModelSet,
+    i18n: I18n,
+    log: winston.Logger
   ): express.Application {
     let app = express()
     applyMiddleware(app, log)
@@ -178,8 +176,8 @@ export default class App {
     applyErrorHandler(app, i18n, log)
     return app
   }
-  
-  async connectToMongo () {
+
+  async connectToMongo() {
     return mongoose.connect(process.env.MONGO_URI!, mongoArgs)
   }
 }

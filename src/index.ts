@@ -3,7 +3,6 @@
 //
 
 import App from './App'
-
 ;(async () => {
   try {
     App.create().run()

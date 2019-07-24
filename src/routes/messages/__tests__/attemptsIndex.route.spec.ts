@@ -12,22 +12,22 @@ let org: IOrganisation
 let msg: IMessage
 
 beforeEach(async () => {
-  ({ db, models } = await tst.openDb())
+  ;({ db, models } = await tst.openDb())
   seed = await tst.applySeed('test/messages', models)
   agent = tst.mockRoute(attemptsIndex, models, { jwt: true })
-  
+
   org = seed.Organisation.a
-  
+
   tst.addMember(org, seed.User.current, MemberRole.Coordinator)
-  
+
   tst.addMember(org, seed.User.donorA, MemberRole.Donor)
   tst.addMember(org, seed.User.donorB, MemberRole.Donor)
-  
+
   // tst.addMember(org, seed.User.subA, MemberRole.Subscriber)
   // tst.addMember(org, seed.User.subB, MemberRole.Subscriber)
   // tst.addMember(org, seed.User.subC, MemberRole.Subscriber)
   // tst.addMember(org, seed.User.subD, MemberRole.Subscriber)
-  
+
   msg = await models.Message.create({
     content: 'Hey there!',
     organisation: org.id,
@@ -63,14 +63,12 @@ afterEach(async () => {
 
 describe('messages.attempts_index', () => {
   it('should succeed with http/200', async () => {
-    let res = await agent.get('/')
-      .set(tst.jwtHeader(seed.User.current.id))
+    let res = await agent.get('/').set(tst.jwtHeader(seed.User.current.id))
     expect(res.status).toBe(200)
   })
   it('should return the attempts for the message', async () => {
-    let res = await agent.get('/')
-      .set(tst.jwtHeader(seed.User.donorA.id))
-    
+    let res = await agent.get('/').set(tst.jwtHeader(seed.User.donorA.id))
+
     // Check the structure of the message
     expect(res.body.data).toBeInstanceOf(Array)
     expect(res.body.data).toHaveLength(1)
@@ -79,7 +77,7 @@ describe('messages.attempts_index', () => {
       organisation: expect.any(Object),
       author: seed.User.current.id
     })
-    
+
     // Check the attempts were formatted
     let attempts = res.body.data[0].attempts
     expect(attempts).toBeInstanceOf(Array)
@@ -100,9 +98,8 @@ describe('messages.attempts_index', () => {
     })
   })
   it('should embed organisations', async () => {
-    let res = await agent.get('/')
-      .set(tst.jwtHeader(seed.User.donorA.id))
-    
+    let res = await agent.get('/').set(tst.jwtHeader(seed.User.donorA.id))
+
     let msg = res.body.data[0]
     expect(msg.organisation._id).toBe(org.id)
     expect(msg.organisation.name).toBe(org.name)
@@ -114,10 +111,9 @@ describe('messages.attempts_index', () => {
       donor: null
     })
     await msg.save()
-    
-    let res = await agent.get('/')
-      .set(tst.jwtHeader(seed.User.donorA.id))
-    
+
+    let res = await agent.get('/').set(tst.jwtHeader(seed.User.donorA.id))
+
     expect(res.status).toBe(200)
   })
 })

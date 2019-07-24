@@ -12,25 +12,28 @@ export interface IMessageAttempt extends IBaseSubModel {
   previousAttempt: Types.ObjectId | null
 }
 
-export const MessageAttemptSchema = new Schema({
-  state: {
-    type: String,
-    enum: Object.values(MessageAttemptState),
-    required: true
+export const MessageAttemptSchema = new Schema(
+  {
+    state: {
+      type: String,
+      enum: Object.values(MessageAttemptState),
+      required: true
+    },
+    recipient: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
+    donor: {
+      type: Schema.Types.ObjectId,
+      default: null,
+      ref: 'User'
+    },
+    previousAttempt: {
+      type: Schema.Types.ObjectId,
+      default: null,
+      ref: 'Message.attempts'
+    }
   },
-  recipient: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'User'
-  },
-  donor: {
-    type: Schema.Types.ObjectId,
-    default: null,
-    ref: 'User'
-  },
-  previousAttempt: {
-    type: Schema.Types.ObjectId,
-    default: null,
-    ref: 'Message.attempts'
-  }
-}, schemaOptions)
+  schemaOptions
+)
