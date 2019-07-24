@@ -24,6 +24,7 @@ run_automated_tests:
   variables:
     MONGO_URI: mongodb://mongo/test-database
   script:
+    - npm run build:docs
     - npm install --no-audit --no-optional &> /dev/null
     - npm run test -- --coverage --runInBand
 
