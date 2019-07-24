@@ -43,6 +43,7 @@
     "tsconfig-paths": "^3.8.0",
     "twilio": "^3.33.1",
     "uuid": "^3.3.2",
+    "valid-env": "^1.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

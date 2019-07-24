@@ -8,6 +8,7 @@ import { I18n, i18n, LocalI18n } from './i18n'
 import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
 import winston from 'winston'
+import validateEnvironment from 'valid-env'
 
 //
 // The environment variables that are required for the app to start
@@ -144,17 +145,9 @@ export default class App {
   }
   
   checkEnvironment () {
-    
     // See if there are any missing variables
-    let missingVars = RequiredVariables.filter(varName => {
-      return process.env[varName] === undefined
-    })
-    
-    // Fail if there are any missing variables
-    if (missingVars.length > 0) {
-      console.log(`Missing variables: ${missingVars.join(', ')}`)
-      process.exit(1)
-    }
+    // and fail if there are any missing variables
+    validateEnvironment(RequiredVariables)
     
     // See if there are any missing files
     // Uses `sync` because the app cannot start without them
