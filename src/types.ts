@@ -33,6 +33,10 @@ export interface RouteContext {
   log: winston.Logger
 }
 
+export interface MigrateContext {
+  models: IModelSet
+}
+
 export type ExpressMiddleware = (
   req: Request,
   res: Response,

@@ -9,6 +9,7 @@ import { initializeFirebase, firebaseEnabled } from './services'
 import { ReallocationTask } from './tasks'
 import winston from 'winston'
 import validateEnvironment from 'valid-env'
+import { runMigrations } from './migrator'
 
 //
 // The environment variables that are required for the app to start
@@ -68,6 +69,16 @@ export default class App {
 
       await this.connectToMongo()
       logger.debug('Connected to Mongo')
+
+      let migrations = await runMigrations(
+        mongoose.connection,
+        join(__dirname, 'migrations')
+      )
+      if (migrations.length === 0) {
+        logger.debug('No migrations to run')
+      } else {
+        logger.debug('Ran migrations: ' + migrations.join(', '))
+      }
 
       this.startTasks(models, i18n.makeInstance('en'), logger)
       logger.debug('Started tasks')

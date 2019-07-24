@@ -13,7 +13,6 @@
     "dev:once": "ts-node -r tsconfig-paths/register -r dotenv/config src",
     "dev": "nodemon -q --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'npm run dev:once -s'",
     "preversion": "./tools/preversion",
-    "mongo": "docker run -it --rm --name iris_mongo -v iris_dev:/data/db -p 27017:27017 mongo",
     "start": "node -r tsconfig-paths/register -r dotenv/config src",
     "lint": "tsc --noEmit",
     "prettier": "prettier --write '**/*.{js,json,css,md,ts,tsx}'",

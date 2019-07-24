@@ -10,6 +10,7 @@ export interface IMember extends IBaseSubModel {
   confirmedOn: Date | null
   deletedOn: Date | null
   user: Types.ObjectId
+  label: string
 
   isActive: boolean
 }
@@ -34,6 +35,10 @@ export const MemberSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User'
+    },
+    label: {
+      type: String,
+      default: ''
     }
   },
   schemaOptions
