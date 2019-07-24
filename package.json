@@ -13,9 +13,9 @@
     "preversion": "./tools/preversion",
     "mongo": "docker run -it --rm --name iris_mongo -v iris_dev:/data/db -p 27017:27017 mongo",
     "start": "node -r tsconfig-paths/register -r dotenv/config src",
-    "test": "jest --runInBand",
-    "test:coverage": "jest --runInBand --coverage",
-    "test:watch": "jest --runInBand --watch"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "author": "robb-j",
   "license": "ISC",
@@ -42,6 +42,7 @@
     "request": "^2.88.0",
     "tsconfig-paths": "^3.8.0",
     "twilio": "^3.33.1",
+    "uuid": "^3.3.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -65,6 +66,7 @@
     "@types/twilio": "0.0.10",
     "jest": "^24.8.0",
     "jest-environment-node": "^24.8.0",
+    "mongodb-memory-server-core": "^5.1.8",
     "nodemon": "^1.19.1",
     "ocelot-docs": "^0.4.0",
     "supertest": "^3.4.2",
@@ -75,31 +77,19 @@
     "typescript": "^3.5.3"
   },
   "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "preset": "ts-jest",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/dist/"
     ],
-    "verbose": false,
     "testEnvironment": "./tools/MongooseEnvironment.js",
     "globalSetup": "./tools/globalTestSetup.js",
     "globalTeardown": "./tools/globalTestTeardown.js",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
+    "collectCoverageFrom": [
+      "src/**/*.ts"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
     }
-  },
-  "optionalDependencies": {
-    "mongodb-memory-server": "^1.8.0"
   }
 }
