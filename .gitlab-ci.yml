@@ -22,7 +22,7 @@ run_automated_tests:
     paths:
       - node_modules
   variables:
-    MONGO_URL: mongodb://mongo/test-database
+    MONGO_URI: mongodb://mongo/test-database
   script:
     - npm install --no-audit --no-optional &> /dev/null
     - npm run test -- --coverage --runInBand
