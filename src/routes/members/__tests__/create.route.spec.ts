@@ -35,12 +35,13 @@ afterEach(async () => {
 
 async function inviteMember(
   phoneNumber: string,
-  role: MemberRole
+  role: MemberRole,
+  label?: string
 ): Promise<Response> {
   return agent
     .post('/' + seed.Organisation.a.id)
     .set(tst.jwtHeader(seed.User.current.id))
-    .send({ phoneNumber, role, countryCode: 'GB' })
+    .send({ phoneNumber, role, countryCode: 'GB', label })
 }
 
 function jwtPayloadFromMessageUrl(url: string): any {
@@ -98,6 +99,14 @@ describe('orgs.members.invite', () => {
     await org.save()
     let res = await inviteMember('07880123002', MemberRole.Donor)
     expect(res.status).toBe(400)
+  })
+
+  it('should add a label to the member', async () => {
+    await inviteMember('07880123002', MemberRole.Subscriber, 'new-sub')
+
+    let org = await models.Organisation.findById(seed.Organisation.a.id)
+    let member = org!.members.slice(-1)[0]
+    expect(member.label).toBe('new-sub')
   })
 
   describe('#makeMessage', () => {

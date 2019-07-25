@@ -48,9 +48,10 @@ export async function makeMessage(
  * - phoneNumber
  * - countryCode
  * - role
+ * - label
  */
 export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
-  let { phoneNumber, countryCode, role } = req.body
+  let { phoneNumber, countryCode, role, label } = req.body
 
   // Fail if 'phoneNumber', 'countryCode' or 'role' are not set
   let errors = new Set<String>()
@@ -102,7 +103,8 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   let member = org.members.create({
     user: newUser.id,
     confirmedOn: role === MemberRole.Donor ? null : new Date(),
-    role: role
+    role: role,
+    label: label
   })
 
   // Save the Organisation
