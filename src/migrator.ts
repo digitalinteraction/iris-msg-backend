@@ -17,10 +17,13 @@ export async function runMigrations(
   directory: string
 ) {
   // Get the migrations that have been ran
-  const migrations = await connection
+  const migrationRecords = await connection
     .collection(migrationTable)
     .find()
     .toArray()
+
+  // Create a O(1) lookup set of previously ran migration names
+  const previousMigrations = new Set<string>(migrationRecords.map(r => r.name))
 
   // Find the migrations in the directory specified
   // - Filter out non-js files
@@ -31,7 +34,7 @@ export async function runMigrations(
     .readdirSync(directory)
     .filter(name => name.match(isMigration))
     .map(name => name.replace(isMigration, ''))
-    .filter(name => !migrations.includes((record: any) => record.name === name))
+    .filter(name => !previousMigrations.has(name))
     .map(name => ({ name, ...require(join(directory, name)) }))
     .filter(migrator => typeof migrator.exec === 'function')
 
