@@ -48,7 +48,8 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
       role: m.role,
       userId: m.user.id,
       phoneNumber: m.user.phoneNumber,
-      locale: m.user.locale
+      locale: m.user.locale,
+      label: m.label
     }))
   )
 }
