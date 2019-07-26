@@ -66,6 +66,7 @@ members:
       phoneNumber: string - The phone number of the person to invite
       countryCode: string - The ISO_3166-2 country where the phone is
       role: string - The role of the new user (coordinator|donor|subscriber)
+      label: string - A label for the new member
   
   - delete: /members/:mem_id destroy
     info: Remove a member from an organisation (uses a soft delete)

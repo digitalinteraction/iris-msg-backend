@@ -15,7 +15,8 @@
       "role": "coordinator",
       "userId": "5b2d0a9f6b6fe5e4bc9acd34",
       "phoneNumber": "+447880123456",
-      "locale": "en"
+      "locale": "en",
+      "label": ""
     },
     {
       "_id": "5b4cc989f4f54c1601863184",
@@ -24,7 +25,8 @@
       "role": "donor",
       "userId": "5b4caef1317cf211af7b5200",
       "phoneNumber": "+447880654321",
-      "locale": "en"
+      "locale": "en",
+      "label": ""
     },
     {
       "_id": "5b4db5bea4c3051c363e68f5",
@@ -33,7 +35,8 @@
       "role": "subscriber",
       "userId": "5b2d0a9f6b6fe5e4bc9acd34",
       "phoneNumber": "+447880123456",
-      "locale": "en"
+      "locale": "en",
+      "label": "Geoff Testington"
     },
     {
       "_id": "5b4db5cba4c3051c363e68f6",
@@ -42,7 +45,8 @@
       "role": "donor",
       "userId": "5b2d0a9f6b6fe5e4bc9acd34",
       "phoneNumber": "+447880123456",
-      "locale": "en"
+      "locale": "en",
+      "label": "Tommy Thompson"
     }
   ]
 }
