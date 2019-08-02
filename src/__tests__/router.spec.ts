@@ -10,6 +10,7 @@ import expressJwt from 'express-jwt'
 const expectedRoutes = [
   { method: 'get', url: '/' },
   { method: 'get', url: '/health' },
+  { method: 'get', url: '/app-version' },
   { method: 'get', url: '/.well-known/assetlinks.json' },
   { method: 'get', url: '/docs' },
   { method: 'get', url: '/open/invite/:mem_jwt' },

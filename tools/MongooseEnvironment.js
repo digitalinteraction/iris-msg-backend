@@ -17,6 +17,8 @@ module.exports = class MongooseEnvironment extends NodeEnvironment {
     this.global.process.env.FIREBASE_SANDBOX = 'true'
     this.global.process.env.TWILIO_FALLBACK = 'true'
     this.global.process.env.TWILIO_NUMBER = '+4401234567890'
+    this.global.process.env.LATEST_APP_VERSION = '1.2'
+    this.global.process.env.LATEST_APP_URL = 'http://app.irismsg.io'
   }
 
   async teardown() {
