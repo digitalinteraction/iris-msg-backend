@@ -43,6 +43,7 @@ describe('001-add-member-label', () => {
       ]
     })
 
+    // NOTE: MemberSchema.label.default kinda makes this pointless ...
     await exec({ models })
 
     let org = await models.Organisation.findOne({ _id })
