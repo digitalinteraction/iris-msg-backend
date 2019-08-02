@@ -211,19 +211,21 @@ git push --tags
 
 ### Environment Variables
 
-| Name              | Description                                                            |
-| ----------------- | ---------------------------------------------------------------------- |
-| `NODE_ENV`        | What environment the system is running in.                             |
-| `MONGO_URI`       | Where the mongo database is and how to connect to it                   |
-| `JWT_SECRET`      | The secret for json web tokens                                         |
-| `API_URL`         | The public url of this api, e.g. `https://api.irismsg.io`              |
-| `WEB_URL`         | The public url of the web, e.g. `https://web.irismsg.io` (unused)      |
-| `TWILIO_TOKEN`    | Your twilio access token, [more info](https://www.twilio.com/docs/sms) |
-| `TWILIO_SID`      | Your twilio sid                                                        |
-| `TWILIO_NUMBER`   | Your twilio number, the number service sms will be sent from           |
-| `TWILIO_FALLBACK` | If the sms donation algorithm should fall back to using twilio         |
-| `FIREBASE_DB`     | Where your firebase database is                                        |
-| `PLAY_STORE_URL`  | The link to download the Iris Msg app                                  |
+| Name                 | Description                                                            |
+| -------------------- | ---------------------------------------------------------------------- |
+| `NODE_ENV`           | What environment the system is running in.                             |
+| `MONGO_URI`          | Where the mongo database is and how to connect to it                   |
+| `JWT_SECRET`         | The secret for json web tokens                                         |
+| `API_URL`            | The public url of this api, e.g. `https://api.irismsg.io`              |
+| `WEB_URL`            | The public url of the web, e.g. `https://web.irismsg.io` (unused)      |
+| `TWILIO_TOKEN`       | Your twilio access token, [more info](https://www.twilio.com/docs/sms) |
+| `TWILIO_SID`         | Your twilio sid                                                        |
+| `TWILIO_NUMBER`      | Your twilio number, the number service sms will be sent from           |
+| `TWILIO_FALLBACK`    | If the sms donation algorithm should fall back to using twilio         |
+| `FIREBASE_DB`        | Where your firebase database is                                        |
+| `PLAY_STORE_URL`     | The link to download the Iris Msg app (used on deep link fallback)     |
+| `LATEST_APP_VERSION` | The name of the latest version of the app                              |
+| `LATEST_APP_URL`     | The url of the latest version of the app                               |
 
 Useful links:
 
@@ -248,6 +250,11 @@ To enable this feature set the following environment variables:
 - `SHRINK_URL` - The public URL of the instance, e.g. `http://shrinky:3000`
   - If using with docker-compose, you can use the container name has the hostname, e.g. `shrinky`
 - `SHRINK_KEY` - Your key for shrinky-link, used to authenticate requests
+
+## Future work
+
+- Deprecate `PLAY_STORE_URL` in favour of `LATEST_APP_URL`
+- Reference the install guide in [downloadApp.pug](/template/downloadApp.pug)
 
 ---
 
