@@ -2,7 +2,10 @@ import { Model, Document } from 'mongoose'
 import { resolve } from 'path'
 import { safeLoad } from 'js-yaml'
 import * as models from '../src/models'
-import { readFile } from 'fs'
+import fs from 'fs'
+import { promisify } from 'util'
+
+const readFile = promisify(fs.readFile)
 
 type NamedType<T> = { [name: string]: T }
 
@@ -16,12 +19,13 @@ export type Seed = {
 
 export async function applySeed(seedName: String, models: models.IModelSet) {
   let path = resolve(__dirname, `../seeds/${seedName}.yml`)
-  let data = await readFileAsync(path)
-  let seed = safeLoad(String(data))
+  let data = await readFile(path, 'utf8')
+  let seed = safeLoad(data)
 
   if (!seed) throw new Error('Invalid Seed')
 
   let output: any = {}
+
   await Promise.all(
     Object.entries(seed).map(async ([modelName, data]) => {
       if (!(models as any)[modelName]) {
@@ -42,18 +46,10 @@ async function seedModel(Model: Model<Document>, data: any): Promise<any> {
   let models = await Model.insertMany(documents)
 
   let keyedModels: any = {}
-  models.forEach((model, index) => {
+  for (let index in models) {
+    let model = models[index]
     keyedModels[names[index]] = model
-  })
+  }
 
   return keyedModels
-}
-
-function readFileAsync(path: string): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    readFile(path, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
 }

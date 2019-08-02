@@ -25,6 +25,7 @@ export type ExpressRoute = (
 ) => void
 export type Route = (ctx: RouteContext) => Promise<void>
 export type Agent = supertest.SuperTest<supertest.Test>
+export { IModelSet }
 
 export interface TestDatabase {
   db: any
@@ -104,7 +105,8 @@ export async function openDb(): Promise<TestDatabase> {
 export async function closeDb(db: Connection): Promise<void> {
   try {
     let collections = Object.values(db.collections)
-    await Promise.all(collections.map(c => (c as any).deleteMany({})))
+
+    await Promise.all(collections.map(c => c.deleteMany({})))
     await db.close(true)
     clean(db, 'models')
     clean(db, 'modelSchemas')
