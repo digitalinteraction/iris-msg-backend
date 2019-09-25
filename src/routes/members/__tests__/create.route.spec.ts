@@ -110,37 +110,39 @@ describe('orgs.members.invite', () => {
   })
 
   describe('#makeMessage', () => {
-    let memberId = 'fake-mem-id'
-    let orgId = 'fake-org-id'
+    // let memberId = 'fake-mem-id'
+    // let orgId = 'fake-org-id'
 
     it('should add an unsub link for subscribers', async () => {
+      const memberId = seed.Organisation.a.members[0].id
+
       let message = await makeMessage(
         i18n,
         MemberRole.Subscriber,
-        'Fake Org',
-        memberId,
-        orgId
+        seed.Organisation.a,
+        memberId
       )
 
       let { mem, org } = jwtPayloadFromMessageUrl(message)
 
       expect(mem).toBe(memberId)
-      expect(org).toBe(orgId)
+      expect(org).toBe(seed.Organisation.a.id)
     })
 
     it('should add a accept link for donors', async () => {
+      const memberId = seed.Organisation.a.members[0].id
+
       let message = await makeMessage(
         i18n,
         MemberRole.Donor,
-        'Fake Org',
-        memberId,
-        orgId
+        seed.Organisation.a,
+        memberId
       )
 
       let { mem, org } = jwtPayloadFromMessageUrl(message)
 
       expect(mem).toBe(memberId)
-      expect(org).toBe(orgId)
+      expect(org).toBe(seed.Organisation.a.id)
     })
   })
 })

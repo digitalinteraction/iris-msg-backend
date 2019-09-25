@@ -19,10 +19,9 @@ export async function makeMessage(
   i18n: LocalI18n,
   role: MemberRole,
   org: IOrganisation,
-  memberId: any,
-  orgId: any
+  memberId: any
 ): Promise<string> {
-  let payload: MemberJwt = { mem: memberId, org: orgId }
+  let payload: MemberJwt = { mem: memberId, org: org.id }
   let token = sign(payload, process.env.JWT_SECRET!)
 
   switch (role) {
@@ -37,7 +36,7 @@ export async function makeMessage(
 
     case MemberRole.Donor:
       const acceptLink = await shrinkLink(makeApiUrl(`open/invite/${token}`))
-      return i18n.translate('sms.newDonor', [orgName, acceptLink])
+      return i18n.translate('sms.newDonor', [org.name, acceptLink])
 
     case MemberRole.Coordinator:
       return i18n.translate('sms.newCoordinator')
@@ -117,13 +116,7 @@ export default async ({ req, api, models, i18n, authJwt }: RouteContext) => {
   org.members.push(member)
   await org.save()
 
-  let message = await makeMessage(
-    i18n,
-    role as any,
-    org.name,
-    member.id,
-    org.id
-  )
+  let message = await makeMessage(i18n, role as any, org, member.id)
 
   // Send the member an sms
   await makeTwilioClient().messages.create({
