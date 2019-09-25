@@ -44,6 +44,7 @@ export function makeRoute(
 }
 
 export function applyMiddleware(app: express.Application, log: winston.Logger) {
+  app.use(bodyParser.urlencoded({ extended: false }))
   app.use(bodyParser.json())
   app.use(middleware.api())
   app.use(middleware.log(log, [/^\/docs/, /^\/health/]))
@@ -114,6 +115,9 @@ export function applyRoutes(
   app.post('/messages', requiredJwt, r(routes.messages.create))
   app.get('/messages/attempts', requiredJwt, r(routes.messages.attemptsIndex))
   app.post('/messages/attempts', requiredJwt, r(routes.messages.attemptsUpdate))
+
+  // SMS hooks
+  app.post('/sms/handle', r(routes.sms.handle))
 
   // Public folder fallback
   app.use(
