@@ -7,7 +7,7 @@ api:
     badAuth: You are not logged in or haven't verified your number yet
   health:
     noDb: Not connected to the database
-  
+
   auth:
     login_request:
       badNumber: Invalid phone number provided
@@ -16,7 +16,7 @@ api:
       badCode: That code was invalid
     me:
     update_fcm:
-  
+
   orgs:
     create:
       badName: Please provide a name which is less than 40 letters
@@ -29,7 +29,7 @@ api:
     members:
       badRole: Please provide a valid role
       notFound: Couldn't find that organisation or you do no have permission to view it
-  
+
   members:
     accept:
       notFound: Couldn't find that organisation or you do no have permission to view it
@@ -48,7 +48,7 @@ api:
       notFound: An organisation was not found where that member exists on it
     confirmUnsub:
       notFound: An organisation was not found where that member exists on it
-  
+
   messages:
     create:
       badContent: No content provided
@@ -58,7 +58,7 @@ api:
 
 sms:
   loginRequest: Your Iris Msg verification code is {0}
-  newSubscriber: You are now subscribed to {0} on irismsg.io, you can unsubscribe at {1}
+  newSubscriber: You have been subscribed to {0} on irismsg.io, text "STOP {1}" to {2} to unsubscribe or go to {1}
   newDonor: You have been invited to donate for {0} on irismsg.io, you can view the invite at {1}
   newCoordinator: You have been added as a coordinator to {0} on irismsg.io
 

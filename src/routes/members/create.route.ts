@@ -9,6 +9,7 @@ import { makeTwilioClient, makeApiUrl, shrinkLink } from '@/src/services'
 import phone from 'phone'
 import { sign } from 'jsonwebtoken'
 import { LocalI18n } from 'src/i18n'
+import { IOrganisation } from '@/src/models'
 
 function makeError(name: string) {
   return `api.members.create.${name}`
@@ -17,7 +18,7 @@ function makeError(name: string) {
 export async function makeMessage(
   i18n: LocalI18n,
   role: MemberRole,
-  orgName: string,
+  org: IOrganisation,
   memberId: any,
   orgId: any
 ): Promise<string> {
@@ -27,7 +28,12 @@ export async function makeMessage(
   switch (role) {
     case MemberRole.Subscriber:
       const unsubLink = await shrinkLink(makeApiUrl(`unsub/${token}`))
-      return i18n.translate('sms.newSubscriber', [orgName, unsubLink])
+      return i18n.translate('sms.newSubscriber', [
+        org.name,
+        org.shortcode,
+        process.env.TWILIO_NUMBER,
+        unsubLink
+      ])
 
     case MemberRole.Donor:
       const acceptLink = await shrinkLink(makeApiUrl(`open/invite/${token}`))
