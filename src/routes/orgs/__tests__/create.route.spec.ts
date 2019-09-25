@@ -44,6 +44,7 @@ describe('orgs.create', () => {
     let org = await models.Organisation.findOne({ name: 'New Org' })
     expect(org).toBeTruthy()
     expect(org).toHaveProperty('info', 'Some info')
+    expect(org).toHaveProperty('shortcode', expect.any(Number))
   })
 
   it('should add the user as a coordinator', async () => {

@@ -6,7 +6,16 @@ let db: any
 let models: IModelSet
 let seed: Seed
 
-function makeOrg(member: any, extraArgs: any = {}) {
+function makeOrg(name: string, shortcode: number) {
+  return models.Organisation.create({
+    name: name,
+    info: 'test organisation',
+    locale: 'GB',
+    shortcode: shortcode
+  })
+}
+
+function makeOrgWithMember(member: any, extraArgs: any = {}) {
   return models.Organisation.create({
     name: 'Org',
     info: 'Organisation',
@@ -27,7 +36,7 @@ afterEach(async () => {
 describe('Organisation', () => {
   describe('.findForUser', () => {
     it('should return organisations the user is a member of', async () => {
-      await makeOrg({
+      await makeOrgWithMember({
         user: seed.User.verified.id,
         role: MemberRole.Coordinator,
         confirmedOn: new Date(),
@@ -38,7 +47,7 @@ describe('Organisation', () => {
       expect(orgs).toHaveLength(1)
     })
     it('should ignore deleted organisations', async () => {
-      await makeOrg(
+      await makeOrgWithMember(
         {
           user: seed.User.verified.id,
           role: MemberRole.Coordinator,
@@ -53,7 +62,7 @@ describe('Organisation', () => {
   })
   describe('.findByIdForCoordinator', () => {
     it('should find an org when the user is a coordinator', async () => {
-      let org = await makeOrg({
+      let org = await makeOrgWithMember({
         user: seed.User.verified.id,
         role: MemberRole.Coordinator,
         confirmedOn: new Date(),
@@ -67,7 +76,7 @@ describe('Organisation', () => {
       expect(matched).toBeDefined()
     })
     it('should ignore deleted organisations', async () => {
-      let org = await makeOrg(
+      let org = await makeOrgWithMember(
         {
           user: seed.User.verified.id,
           role: MemberRole.Coordinator,
@@ -82,6 +91,17 @@ describe('Organisation', () => {
         seed.User.verified.id
       )
       expect(matched).toBeNull()
+    })
+  })
+  describe('.nextShortcode', () => {
+    it('should return the make of all shortcodes plus one', async () => {
+      await makeOrg('orgA', 1)
+      await makeOrg('orgB', 2)
+      await makeOrg('orgB', 41)
+
+      let result = await models.Organisation.nextShortcode()
+
+      expect(result).toEqual(42)
     })
   })
 })

@@ -31,6 +31,7 @@ export default async ({ req, api, models, authJwt }: RouteContext) => {
     name: name,
     info: info,
     locale: user.locale,
+    shortcode: await models.Organisation.nextShortcode(),
     members: [
       {
         role: MemberRole.Coordinator,

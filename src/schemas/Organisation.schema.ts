@@ -12,6 +12,7 @@ export interface IOrganisation extends IBaseModel {
   locale: string
   members: Types.DocumentArray<IMember>
   deletedOn: Date | null
+  shortcode: number
 
   activeSubscribers: IMember[]
   activeDonors: IMember[]
@@ -32,7 +33,11 @@ export type IOrganisationClass = Model<IOrganisation> & {
     user?: Types.ObjectId | string,
     overrides?: object
   ): object
+
+  nextShortcode(): Promise<number>
 }
+
+type OrganisationModel = Model<IOrganisation, IOrganisationClass>
 
 export const OrganisationSchema = new Schema(
   {
@@ -53,6 +58,9 @@ export const OrganisationSchema = new Schema(
     deletedOn: {
       type: Date,
       default: null
+    },
+    shortcode: {
+      type: Number
     }
   },
   schemaOptions
@@ -75,7 +83,7 @@ OrganisationSchema.static('findForUser', function(
 })
 
 OrganisationSchema.static('findByIdForCoordinator', function(
-  this: typeof Model,
+  this: OrganisationModel,
   orgId: any,
   userId: any
 ) {
@@ -94,7 +102,7 @@ OrganisationSchema.static('findByIdForCoordinator', function(
 })
 
 OrganisationSchema.static('memberQuery', function(
-  this: typeof Model,
+  this: OrganisationModel,
   role?: MemberRole | MemberRole[],
   user?: Types.ObjectId | string,
   overrides: object = {}
@@ -115,6 +123,21 @@ OrganisationSchema.static('memberQuery', function(
       $elemMatch: { ...subQuery, ...overrides }
     }
   }
+})
+
+OrganisationSchema.static('nextShortcode', async function(
+  this: OrganisationModel
+) {
+  //
+  // ref: https://www.tutorialspoint.com/getting-the-highest-value-of-a-column-in-mongodb
+  //
+  let largest = await this.findOne({ shortcode: { $ne: null } })
+    .sort({
+      shortcode: -1
+    })
+    .limit(1)
+
+  return largest ? largest.shortcode + 1 : 1
 })
 
 OrganisationSchema.virtual('activeDonors').get(function(this: IOrganisation) {
