@@ -218,7 +218,7 @@ git push --tags
 | `JWT_SECRET`         | The secret for json web tokens                                         |
 | `API_URL`            | The public url of this api, e.g. `https://api.irismsg.io`              |
 | `WEB_URL`            | The public url of the web, e.g. `https://web.irismsg.io` (unused)      |
-| `TWILIO_TOKEN`       | Your twilio access token, [more info](https://www.twilio.com/docs/sms) |
+| `TWILIO_AUTH_TOKEN`  | Your twilio access token, [more info](https://www.twilio.com/docs/sms) |
 | `TWILIO_SID`         | Your twilio sid                                                        |
 | `TWILIO_NUMBER`      | Your twilio number, the number service sms will be sent from           |
 | `TWILIO_FALLBACK`    | If the sms donation algorithm should fall back to using twilio         |

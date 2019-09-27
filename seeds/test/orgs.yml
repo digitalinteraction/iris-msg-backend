@@ -12,6 +12,7 @@ Organisation:
   a:
     name: Existing A
     info: An organisation that already exists in the database
+    shortcode: 123456
   b:
     name: Existing B
     info: Another organisation that already exists in the database

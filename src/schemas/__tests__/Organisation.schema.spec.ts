@@ -95,13 +95,11 @@ describe('Organisation', () => {
   })
   describe('.nextShortcode', () => {
     it('should return the make of all shortcodes plus one', async () => {
-      await makeOrg('orgA', 1)
-      await makeOrg('orgB', 2)
-      await makeOrg('orgB', 41)
+      // The highest shortcode in the seed is 123456
 
       let result = await models.Organisation.nextShortcode()
 
-      expect(result).toEqual(42)
+      expect(result).toEqual(123457)
     })
   })
 })

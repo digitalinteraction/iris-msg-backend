@@ -19,7 +19,7 @@ export const RequiredVariables = [
   'JWT_SECRET',
   'API_URL',
   'WEB_URL',
-  'TWILIO_TOKEN',
+  'TWILIO_AUTH_TOKEN',
   'TWILIO_SID',
   'TWILIO_NUMBER',
   'PLAY_STORE_URL'
@@ -35,7 +35,8 @@ export const RequiredFiles = ['assetlinks.json', 'google-account.json']
 //
 export const mongoArgs: mongoose.ConnectionOptions = {
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 }
 
 //
