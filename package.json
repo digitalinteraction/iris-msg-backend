@@ -39,7 +39,7 @@
     "mongoose": "^5.7.1",
     "phone": "^2.3.21",
     "prompts": "^0.1.14",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "request": "^2.88.0",
     "tsconfig-paths": "^3.9.0",
     "twilio": "^3.35.0",
